@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Button, SafeAreaView,StyleSheet, View, Text, TextInput, Keyboard } from 'react-native';
-import { bttConfigure, bttStartTimer, bttStopTimer } from 'react-native-btt-sdk';
+import React, { useState, useRef } from 'react';
+import { Button,StyleSheet, View, Text, TextInput } from 'react-native';
+import {BTTScreenTracker, BTTTimer} from 'react-native-btt-sdk';
 
 function App() {
     const currentDate = new Date();
@@ -8,8 +8,10 @@ function App() {
      const [startTimerPageValue, setStartTimerPageValue] = useState('');
      const [startTimerCheckoutPageValue, setStartTimerCheckoutPageValue] = useState('');
      const [startTimerCheckoutValue, setStartTimerCheckoutValue] = useState('');
-     const [startTimerValue, setStartTimerValue] = useState('');
-     
+
+     const timerId = useRef(0)
+     const checkoutTimerId = useRef(0)
+
      const handleStartTimerPageChange = (text) => {
          setStartTimerPageValue(text);
      };
@@ -23,61 +25,33 @@ function App() {
             setAddCartValue(text);
      };
      
-      const configureBTT = () => {
-         const dictionary = {
-             "btt_site_id": 'sdkdemo26621z',
-             "btt_session_id": sessionId
-         };
-         bttConfigure(dictionary)
-     }
-     
-     
-     const startTimer = () => {
-         if (startTimerPageValue.length === 0) {
-         console.log('startTimerPageValue is empty.');
-         return;
-         }
-         const dictionary = {
-             "btt_page_name": startTimerPageValue
-         };
- 
-     bttStartTimer(dictionary)
-         .then(result => {
-             console.log(result);
-             setStartTimerValue(result.btt_timer_id)
-         })
-         .catch(error => {
-             console.error(error);
-         });
-     }
- 
-     const stopTimer = () => {
-         const dictionary = {
-             "btt_timer_id": startTimerValue
-         };
-         console.log(dictionary);
-         bttStopTimer(dictionary)
-         handleStartTimerPageChange("")
+     const startTimer = async () => {
+    if (startTimerPageValue.length === 0) {
+      console.log('startTimerPageValue is empty.');
+      return;
+      }
+    const result = await BTTTimer.startTimer({
+      "btt_page_name":startTimerPageValue
+    })
+    timerId.current = result.btt_timer_id
   }
-  
-    const startCheckoutTimer = () => {
+  const stopTimer = () => {
+    BTTTimer.stopTimer({
+      "btt_timer_id": timerId.current
+    })
+    handleStartTimerPageChange("")
+  }
+
+    const startCheckoutTimer = async () => {
        if (startTimerCheckoutPageValue.length === 0) {
          console.log('startTimerPageValue is empty.');
          return;
      }
-     
-     const dictionary = {
-          "btt_page_name": startTimerCheckoutPageValue
-     };
-     bttStartTimer(dictionary)
-     .then(result => {
-         console.log(result);
-         setStartTimerCheckoutValue(result.btt_timer_id)
-         console.log(startTimerCheckoutValue);
-     })
-     .catch(error => {
-         console.error(error);
-     });
+
+     const result = await BTTTimer.startTimer({
+      "btt_page_name":startTimerCheckoutPageValue
+    })
+    checkoutTimerId.current = result.btt_timer_id
  }
  
   const stopCheckoutTimer = () => {
@@ -90,12 +64,10 @@ function App() {
  
       var cartValue = addCartValue
      
-      const dictionary = {
-          "btt_timer_id": startTimerCheckoutValue,
-          "btt_cartValue":cartValue
-     };
-     console.log(dictionary);
-     bttStopTimer(dictionary)
+      BTTTimer.stopTimer({
+        "btt_timer_id": startTimerCheckoutValue,
+        "btt_cartValue":cartValue
+   })
      handleAddCartValue("")
      handleStartTimerCheckoutPageChange("")
   }
@@ -109,13 +81,17 @@ function App() {
     console.log('anrReport.');
  }
 
+ const screenTracker = () => {
+  BTTScreenTracker.loadStarted("1","2");
+}
+
+
   return (
    <View style={styles.container}>
 
         <View style={styles.lineWrapper}>
       <View style={styles.line} />
       </View>
-      <Button title={'Configure'} onPress={configureBTT} />
       <Text>Seesion ID: {sessionId}</Text>
       <View style={styles.lineWrapper}>
       <View style={styles.line} />
@@ -145,6 +121,7 @@ function App() {
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
             </View>
+            <Button title={'BTTScreenTracker'} onPress={screenTracker} />
 
    </View>
   );

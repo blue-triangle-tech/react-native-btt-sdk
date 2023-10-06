@@ -1,7 +1,7 @@
 {
   "name": "react-native-btt-sdk",
-  "version": "0.1.0",
-  "description": "This is Btt SDK",
+  "version": "0.0.1",
+  "description": "Blue Triangle analytics SDK for React Native supports iOS and Android.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.d.ts",
@@ -43,13 +43,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/JP-aloha/react-native-btt-sdk",
-  "author": "JP <jaib@alohatechnology.com> (https://github.com/JP-aloha)",
+  "repository": "https://github.com/blue-triangle-tech/react-native-btt-sdk.git",
+  "author":  "BlueTriangle <support@bluetriangle.com> (https://bluetriangle.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JP-aloha/react-native-btt-sdk/issues"
+    "url": "https://github.com/blue-triangle-tech/react-native-btt-sdk.git/issues"
   },
-  "homepage": "https://github.com/JP-aloha/react-native-btt-sdk#readme",
+  "homepage": "https://github.com/blue-triangle-tech/react-native-btt-sdk.git",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

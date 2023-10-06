@@ -9,6 +9,8 @@ import android.content.Context
 import com.bluetriangle.analytics.BlueTriangleConfiguration
 import com.bluetriangle.analytics.Timer
 import com.bluetriangle.analytics.Tracker
+import com.bluetriangle.analytics.model.Screen
+import com.bluetriangle.analytics.model.ScreenType
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
@@ -30,7 +32,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
   companion object {
     const val NAME = "BttSdk"
 
- 	fun bttDefaultConfigure(context: Context) {
+    fun bttDefaultConfigure(context: Context) {
       val config = BlueTriangleConfiguration()
       config.siteId = "sdkdemo26621z"
       config.isDebug = true
@@ -47,18 +49,17 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun bttConfigure(dictionary: ReadableMap) {
 
-    var siteID = dictionary.getString("btt_site_id")
-    println("siteID: $siteID")
-
     var sessionID = dictionary.getString("btt_session_id")
-
+   // var memoryWarning = dictionary.getBoolean("memoryWarning")
 
     val config = BlueTriangleConfiguration()
-    config.siteId = siteID
-    config.isDebug = true
-    config.isTrackCrashesEnabled = true
-    config.isTrackAnrEnabled = true
+    config.siteId = dictionary.getString("btt_site_id")
+    config.isDebug = dictionary.getBoolean("debug")
+    config.isTrackCrashesEnabled = dictionary.getBoolean("trackCrash")
     config.isScreenTrackingEnabled = true
+    config.isTrackAnrEnabled = dictionary.getBoolean("trackAnr")
+    config.isPerformanceMonitorEnabled = dictionary.getBoolean("performanceMonitoring")
+    config.performanceMonitorIntervalMs = dictionary.getDouble("performanceMonitoringInterval").toLong()
 
     if (sessionID?.isNotEmpty() == true)
     {
@@ -114,5 +115,33 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     }
     timer?.submit()
     timerMap.remove(timerID)
+  }
+
+  @ReactMethod
+  fun loadStarted(id : String , name : String){
+    var screen = Screen(id, name, ScreenType.Composable)
+    Tracker.instance?.screenTrackMonitor?.onLoadStarted(screen)
+    Tracker.instance?.configuration?.logger?.debug("Android :: loadStarted.")
+  }
+
+  @ReactMethod
+  fun loadFinish(id : String , name : String){
+    var screen = Screen(id, name, ScreenType.Composable)
+    Tracker.instance?.screenTrackMonitor?.onLoadEnded(screen)
+    Tracker.instance?.configuration?.logger?.debug("Android :: loadFinish.")
+  }
+
+  @ReactMethod
+  fun viewStart(id : String , name : String){
+    var screen = Screen(id, name, ScreenType.Composable)
+    Tracker.instance?.screenTrackMonitor?.onViewStarted(screen)
+    Tracker.instance?.configuration?.logger?.debug("Android :: viewStart.")
+  }
+
+  @ReactMethod
+  fun viewingEnd(id : String , name : String){
+    var screen = Screen(id, name, ScreenType.Composable)
+    Tracker.instance?.screenTrackMonitor?.onViewEnded(screen)
+    Tracker.instance?.configuration?.logger?.debug("Android :: viewingEnd.")
   }
 }

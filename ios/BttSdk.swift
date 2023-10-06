@@ -16,16 +16,39 @@ class BttSdk: NSObject {
                 config.siteID = siteID
             }
             
-            config.enableDebugLogging = true
-            config.performanceMonitorSampleRate = 1
-            config.crashTracking  = .nsException
+            if let trackAnr = dictionary["trackAnr"] as? Bool {
+                config.ANRMonitoring = trackAnr
+            }
+            
+            if let performanceMonitoring = dictionary["performanceMonitoring"] as? Bool {
+            }
+            
+            if let performanceMonitoringInterval = dictionary["performanceMonitoringInterval"] as? Double  {
+                config.performanceMonitorSampleRate = performanceMonitoringInterval //TODO:: Need to check
+            }
+            
+            if let memoryWarning = dictionary["memoryWarning"] as? Bool {
+            }
+            
+            if let trackCrash = dictionary["trackCrash"] as? Bool {
+                if(trackCrash){
+                    config.crashTracking  = .nsException
+                }
+                else{
+                    config.crashTracking = .none
+                }
+            }
+            
+            if let debug = dictionary["debug"] as? Bool {
+                config.enableDebugLogging = debug
+            }
+            
             
             if let sessionID = dictionary["btt_session_id"] as? String {
                 if let uintValue = UInt64(sessionID) {
                     config.sessionID = uintValue
                 }
             }
-            config.ANRMonitoring = true
             config.ANRWarningTimeInterval = 1
             config.enableScreenTracking = true
         }
@@ -86,5 +109,25 @@ class BttSdk: NSObject {
                 timerDict.removeValue(forKey: timerID)
             }
         }
+    }
+    
+    @objc
+    func loadStarted(_ id : String, _ name : String){
+        
+    }
+    
+    @objc
+    func loadFinish(_ id : String, _ name : String){
+        
+    }
+    
+    @objc
+    func viewStart(_ id : String, _ name : String){
+        
+    }
+    
+    @objc
+    func viewingEnd(_ id : String, _ name : String){
+        
     }
 }
