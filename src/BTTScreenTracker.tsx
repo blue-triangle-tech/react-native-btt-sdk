@@ -1,5 +1,6 @@
 // BTTScreenTracker.js
-import { NativeModules, Platform } from 'react-native';
+import { NativeModules } from 'react-native';
+
 const BttSdk = NativeModules.BttSdk
   ? NativeModules.BttSdk
   : new Proxy(
@@ -12,7 +13,7 @@ const BttSdk = NativeModules.BttSdk
     );
 
 class BTTScreenTracker  {
-
+ 
      static loadStarted(id : String,  name : String){
          BttSdk.loadStarted(id , name)
       }
@@ -28,5 +29,5 @@ class BTTScreenTracker  {
       }
   }
   
-  module.exports = BTTScreenTracker;
+export default BTTScreenTracker;
   

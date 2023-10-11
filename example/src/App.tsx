@@ -3,6 +3,10 @@ import { Button,StyleSheet, View, Text, TextInput } from 'react-native';
 import {BTTScreenTracker, BTTTimer} from 'react-native-btt-sdk';
 
 function App() {
+ 
+  var timer:BTTTimer
+  var cartTimer:BTTTimer
+
     const currentDate = new Date();
     const sessionId = formatDate(currentDate);
      const [startTimerPageValue, setStartTimerPageValue] = useState('');
@@ -11,6 +15,8 @@ function App() {
 
      const timerId = useRef(0)
      const checkoutTimerId = useRef(0)
+
+
 
      const handleStartTimerPageChange = (text) => {
          setStartTimerPageValue(text);
@@ -25,20 +31,19 @@ function App() {
             setAddCartValue(text);
      };
      
-     const startTimer = async () => {
+  const startTimer = async () => {
     if (startTimerPageValue.length === 0) {
       console.log('startTimerPageValue is empty.');
       return;
       }
-    const result = await BTTTimer.startTimer({
-      "btt_page_name":startTimerPageValue
-    })
-    timerId.current = result.btt_timer_id
+    
+    timer = new BTTTimer(startTimerPageValue)
+    timer.startTimer()
   }
+
   const stopTimer = () => {
-    BTTTimer.stopTimer({
-      "btt_timer_id": timerId.current
-    })
+    timer.setCartValue("12")
+    timer.stopTimer()
     handleStartTimerPageChange("")
   }
 
@@ -47,11 +52,8 @@ function App() {
          console.log('startTimerPageValue is empty.');
          return;
      }
-
-     const result = await BTTTimer.startTimer({
-      "btt_page_name":startTimerCheckoutPageValue
-    })
-    checkoutTimerId.current = result.btt_timer_id
+     cartTimer = new BTTTimer(startTimerCheckoutPageValue)
+     cartTimer.startTimer()
  }
  
   const stopCheckoutTimer = () => {
@@ -61,13 +63,11 @@ function App() {
      }
       console.log('=========stopCheckoutTimer==============');
       console.log(startTimerCheckoutValue);
- 
-      var cartValue = addCartValue
-     
-      BTTTimer.stopTimer({
-        "btt_timer_id": startTimerCheckoutValue,
-        "btt_cartValue":cartValue
-   })
+      console.log(cartTimer);
+
+    cartTimer.setCartValue(addCartValue)
+    cartTimer.stopTimer()
+
      handleAddCartValue("")
      handleStartTimerCheckoutPageChange("")
   }
@@ -82,7 +82,7 @@ function App() {
  }
 
  const screenTracker = () => {
-  BTTScreenTracker.loadStarted("1","2");
+  BTTScreenTracker.viewStart("1","2");
 }
 
 

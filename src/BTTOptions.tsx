@@ -7,4 +7,4 @@ class BTTOptions  {
      debug = false
 }
 
-module.exports = BTTOptions;
+export default BTTOptions;

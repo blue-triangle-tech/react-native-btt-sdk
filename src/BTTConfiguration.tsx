@@ -1,4 +1,4 @@
-import { NativeModules, Platform } from 'react-native';
+import { NativeModules } from 'react-native';
 import BTTOptions from './BTTOptions';
 
 const BttSdk = NativeModules.BttSdk
