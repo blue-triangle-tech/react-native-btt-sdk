@@ -24,7 +24,8 @@ class BttSdk: NSObject {
             }
             
             if let performanceMonitoringInterval = dictionary["performanceMonitoringInterval"] as? Double  {
-                config.performanceMonitorSampleRate = performanceMonitoringInterval //TODO:: Need to check
+                let secondsInInterval: Double = performanceMonitoringInterval / 1000
+                config.performanceMonitorSampleRate = secondsInInterval
             }
             
             if let memoryWarning = dictionary["memoryWarning"] as? Bool {

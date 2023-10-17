@@ -37,6 +37,7 @@ Add the SDK to the project using the following command:
 yarn add 'file:/<project-code-location>/react-native-btt-sdk'
 ```
 replace `<project-code-location>` with the local directory location where you have saved the SDK.
+
 ### Configuration
 To configure, in your `index.js` file, add the following snippet:
 ```js
@@ -48,53 +49,63 @@ const bttOptions = new BTTOptions()
 bttOptions.anr = true
 bttOptions.performanceMonitoring = true
 bttOptions.performanceMonitoringInterval = true
-bttOptions.memoryWarning = true
 bttOptions.trackCrash = true
 bttOptions.debug = false
 BTTConfiguration.configure(siteId, bttOptions)
 AppRegistry.registerComponent(appName, () => App);
 ```
-### Using Manual Timers
+
+### Timer<br/>
+
+a) Using Manual Timers:<br/>
+
 To use a manual timer, you need to first import the `BTTTimer` object from `react-native-btt-sdk`. Create timer object with pageName.
 
  The `BTTTimer` object
-has the following functions:
+has the following functions: 
 - `timer.startTimer()`:
-- `timer.setCartValue(cartValue)`:
 - `timer.stopTimer()`:
 
-```js
+ ```js
+import {BTTTimer} from 'react-native-btt-sdk';
+
 const timer = new BTTTimer(pageName)
 timer.startTimer()
 timer.stopTimer()
 ```
 
-The following code snippet shows the usage of `startTimer` and `stopTimer`:
-```javascript
+b) Set Cart Value:
+
+We can set cart value to `BTTTimer` object using following function.
+
+- `timer.setCartValue(cartValue)`:
+
+ ```js
 import {BTTTimer} from 'react-native-btt-sdk';
-import React, {useRef} from 'react';
-import {View, Button} from 'react-native';
-function YourComponent() {
-  
-  var timer:BTTTimer
 
-  const startTimer = async () => {
-    timer = new BTTTimer(startTimerPageValue)
-    timer.startTimer()
-  }
+const timer = new BTTTimer(pageName)
+timer.startTimer()
+timer.setCartValue(cartValue)
+timer.stopTimer()
+ ```
 
-  const stopTimer = () => {
-   timer.stopTimer()
-  }
-  return (
-    <View>
-        <Button title={'Start Timer'} onPress={startTimer} />
-        <Button title={'Stop Timer'} onPress={stopTimer} />
-    </View>
-  )
-}
-```
-### Manual Screen Tracking
+c) Performance Monitor:
+
+PerformanceMonitoring - enables or disables tracking of memory and CPU usage. To enable Performance Monitor we need to enable performanceMonitoring from `BTTOptions` at the time of configuration.
+
+ ```js
+import {BTTConfiguration, BTTOptions} from 'react-native-btt-sdk';
+
+const bttOptions = new BTTOptions()
+bttOptions.performanceMonitoring = true
+bttOptions.performanceMonitoringInterval = 500
+
+BTTConfiguration.configure(siteId, bttOptions)
+ ```
+
+### Screen Tracker <br/>
+
+a) Manual Tracker
 
 To use a manual timer, you need to first import the `BTTScreenTracker` object from `react-native-btt-sdk`. Create timer object with pageName.
 
@@ -111,7 +122,6 @@ var manualTracker:BTTScreenTracker
 
   useEffect(() => {
 
-    // This is similar to viewWillAppear
     const unsubscribeFocus = navigation.addListener('focus', () =>{
 
       if(manualTracker == undefined){
@@ -125,7 +135,8 @@ var manualTracker:BTTScreenTracker
     });
 
     return () => {
-
+        unsubscribeFocus()
+        unsubscribeBlur()
     };
   }, []);
 
@@ -136,19 +147,22 @@ var manualTracker:BTTScreenTracker
 
  ```
 
+b) Screen Tracking for [React Navigation](https://reactnavigation.org/):
 
-### Screen Tracking for React Navigation
-At the time of this writing, Screen tracking is supported for [React Navigation](https://reactnavigation.org/) only. The following code snippet shows how to use `BTTNavigationContainerTracker` from `react-native-btt-sdk` to enable Screen tracking:
-```js
-import React from 'react';
-import `BTTNavigationContainerTracker` from `react-native-btt-sdk`
-import 'NavigationContainer, {useNavigationContainerRef} from '@react-navigation/native';
+All screen can be tracked by adding two lines of code in container, as shown in below example.
+
+
+ ```js
+ import React from 'react';
+import BTTNavigationContainerTracker from 'react-native-btt-sdk';
+import NavigationContainer, {useNavigationContainerRef} from '@react-navigation/native';
+
 function App() {
   const navigationRef = useNavigationContainerRef();
   return (
     <NavigationContainer
-      ref={navigationRef}
-      onReady={() => {
+      ref = { navigationRef }
+      onReady = {() => {
           BTTNavigationContainerTracker.onContainerStateChange(navigationRef)
       }}
       onStateChange={async () => {
@@ -160,3 +174,46 @@ function App() {
   );
 }
 ```
+BTTNavigationContainerTracker has a single method for screen tracking which is called in onReady and onStateChange.This two line of code can track all the happening in the navigation controller, This solution is based on [React Navigation](https://reactnavigation.org/docs/screen-tracking/) reference for screen tracking analytics.
+
+
+### Track Crash<br/>
+
+TrackCrash - enable or disable collecting and sending crash reports to the server. To enable crash tracking we need to enable trackCrash and debug from `BTTOptions` at the time of configuration.
+
+
+ ```js
+import {BTTConfiguration, BTTOptions} from 'react-native-btt-sdk';
+
+const bttOptions = new BTTOptions()
+bttOptions.trackCrash = true
+bttOptions.debug = true
+
+BTTConfiguration.configure(siteId, bttOptions)
+ ```
+
+ Crash report for iOS App:
+
+```
+"Unhandled JS Exception: Error: , js engine: hermes, 
+stack:
+errorReport@52951:21
+_performTransitionSideEffects@30619:21
+_receiveSignal@30569:44
+onResponderRelease@30432:33
+invokeGuardedCallbackImpl@24186:16
+...
+ ```
+
+  Crash report for Android App:
+
+```
+  com.facebook.react.common.JavascriptException: Error: , js engine: hermes, 
+  stack: 
+  errorReport@1:583513 
+  _performTransitionSideEffects@1:344797 
+  _receiveSignal@1:344387 
+  onResponderRelease@1:343211 
+  invokeGuardedCallbackImpl@1:267605 
+  ...
+ ```
