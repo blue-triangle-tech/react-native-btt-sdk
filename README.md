@@ -49,6 +49,7 @@ bttOptions.anr = true
 bttOptions.performanceMonitoring = true
 bttOptions.performanceMonitoringInterval = true
 bttOptions.memoryWarning = true
+bttOptions.trackCrash = true
 bttOptions.debug = false
 BTTConfiguration.configure(siteId, bttOptions)
 AppRegistry.registerComponent(appName, () => App);
@@ -56,13 +57,17 @@ AppRegistry.registerComponent(appName, () => App);
 ### Using Manual Timers
 To use a manual timer, you need to first import the `BTTTimer` object from `react-native-btt-sdk`. Create timer object with pageName.
 
-const timer = new BTTTimer(pageName)
-
  The `BTTTimer` object
 has the following functions:
 - `timer.startTimer()`:
 - `timer.setCartValue(cartValue)`:
 - `timer.stopTimer()`:
+
+```js
+const timer = new BTTTimer(pageName)
+timer.startTimer()
+timer.stopTimer()
+```
 
 The following code snippet shows the usage of `startTimer` and `stopTimer`:
 ```javascript
@@ -89,9 +94,52 @@ function YourComponent() {
   )
 }
 ```
-### Screen Tracking
+### Manual Screen Tracking
+
+To use a manual timer, you need to first import the `BTTScreenTracker` object from `react-native-btt-sdk`. Create timer object with pageName.
+
+ The `BTTScreenTracker` object has the following functions:
+- `manualTracker.startTracking()`:
+- `manualTracker.stopTracking()`:
+
+ ```js
+import React, { useEffect } from 'react';
+import {BTTScreenTracker} from 'react-native-btt-sdk';
+
+function App({ }) {
+var manualTracker:BTTScreenTracker
+
+  useEffect(() => {
+
+    // This is similar to viewWillAppear
+    const unsubscribeFocus = navigation.addListener('focus', () =>{
+
+      if(manualTracker == undefined){
+        manualTracker = new BTTScreenTracker("PageName")
+      }
+      manualTracker.startTracking()
+      
+    });
+    const unsubscribeBlur = navigation.addListener('blur', () =>{
+      manualTracker.stopTracking()
+    });
+
+    return () => {
+
+    };
+  }, []);
+
+  return (
+     {/* ... */}
+  );
+}
+
+ ```
+
+
+### Screen Tracking for React Navigation
 At the time of this writing, Screen tracking is supported for [React Navigation](https://reactnavigation.org/) only. The following code snippet shows how to use `BTTNavigationContainerTracker` from `react-native-btt-sdk` to enable Screen tracking:
-```
+```js
 import React from 'react';
 import `BTTNavigationContainerTracker` from `react-native-btt-sdk`
 import 'NavigationContainer, {useNavigationContainerRef} from '@react-navigation/native';

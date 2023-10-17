@@ -6,16 +6,13 @@ function App() {
  
   var timer:BTTTimer
   var cartTimer:BTTTimer
+  var manualscreenTracker:BTTScreenTracker
 
     const currentDate = new Date();
     const sessionId = formatDate(currentDate);
      const [startTimerPageValue, setStartTimerPageValue] = useState('');
      const [startTimerCheckoutPageValue, setStartTimerCheckoutPageValue] = useState('');
      const [startTimerCheckoutValue, setStartTimerCheckoutValue] = useState('');
-
-     const timerId = useRef(0)
-     const checkoutTimerId = useRef(0)
-
 
 
      const handleStartTimerPageChange = (text) => {
@@ -42,7 +39,6 @@ function App() {
   }
 
   const stopTimer = () => {
-    timer.setCartValue("12")
     timer.stopTimer()
     handleStartTimerPageChange("")
   }
@@ -76,13 +72,34 @@ function App() {
      throw new Error()
  }
  
-  const anrReport = () => {
-     setTimeout(anrReport, 1) // infinite loop
-    console.log('anrReport.');
- }
+//   const anrReport = async () => {
+//     console.log('=========anrReport==============');
+
+//     await sleep(10000)
+//  }
+
+const anrReport = () => {
+  //setTimeout(anrReport, 1) // infinite loop
+  for (let i = 0; i < 1000000000; i++) {
+    // Simulating a long-running synchronous operation
+    const value = i * Math.random();
+  }
+}
 
  const screenTracker = () => {
   BTTScreenTracker.viewStart("1","2");
+}
+
+const manualTrackerStart = () => {
+
+  if(manualscreenTracker == undefined){
+    manualscreenTracker = new BTTScreenTracker("ManualTracker")
+  }
+
+  manualscreenTracker.startTracking()
+}
+const manualTrackerStop = () => {
+  manualscreenTracker.stopTracking()
 }
 
 
@@ -102,7 +119,7 @@ function App() {
         <Button title={'Stop Timer'} onPress={stopTimer} />
         <View style={styles.lineWrapper}>
         <View style={styles.line} />
-        </View>
+      </View>
 
             <TextInput style={styles.textInput} placeholder="Enter start checkout timer page name"
             onChangeText={handleStartTimerCheckoutPageChange} value={startTimerCheckoutPageValue} />
@@ -122,6 +139,11 @@ function App() {
             <View style={styles.line} />
             </View>
             <Button title={'BTTScreenTracker'} onPress={screenTracker} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'Manual Screen Tracker Start'} onPress={manualTrackerStart} />
+            <Button title={'Manual Screen Tracker Stop'} onPress={manualTrackerStop} />
 
    </View>
   );

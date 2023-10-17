@@ -3,13 +3,14 @@ import App from './src/App';
 import { name as appName } from './app.json';
 
 import {BTTConfiguration, BTTOptions} from 'react-native-btt-sdk';
+
 const bttOptions = new BTTOptions()
 bttOptions.trackAnr = true
-bttOptions.performanceMonitoring = true
+bttOptions.performanceMonitoring = false
 bttOptions.performanceMonitoringInterval = 500
-bttOptions.memoryWarning = true
+bttOptions.memoryWarning = false
 bttOptions.trackCrash = true
-bttOptions.debug = false
+bttOptions.debug = true
 BTTConfiguration.configure('sdkdemo26621z', bttOptions)
 
 AppRegistry.registerComponent(appName, () => App);

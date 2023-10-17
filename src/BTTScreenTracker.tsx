@@ -13,6 +13,19 @@ const BttSdk = NativeModules.BttSdk
     );
 
 class BTTScreenTracker  {
+
+  constructor(pageName){
+    this.pageName = pageName
+    this.customPageID =  Math.random().toString(36).substr(2, 9);
+  }
+
+  startTracking(){
+    BTTScreenTracker.viewStart(this.customPageID, this.pageName)
+  }
+
+  stopTracking(){
+    BTTScreenTracker.viewingEnd(this.customPageID, this.pageName)
+  }
  
      static loadStarted(id : String,  name : String){
          BttSdk.loadStarted(id , name)
