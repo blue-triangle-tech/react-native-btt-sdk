@@ -46,14 +46,16 @@ import App from './App';
 import {name as appName} from './app.json';
 import {BTTConfiguration, BTTOptions} from 'react-native-btt-sdk';
 const bttOptions = new BTTOptions()
-bttOptions.anr = true
+
 bttOptions.performanceMonitoring = true
 bttOptions.performanceMonitoringInterval = true
 bttOptions.trackCrash = true
 bttOptions.debug = false
-BTTConfiguration.configure(siteId, bttOptions)
+BTTConfiguration.configure(<siteId>, bttOptions)
 AppRegistry.registerComponent(appName, () => App);
 ```
+
+In the place of `<siteId>`, put your project's siteId.
 
 ### Timer<br/>
 
@@ -74,7 +76,7 @@ timer.startTimer()
 timer.stopTimer()
 ```
 
-b) Set Cart Value:
+b) Cart Value:
 
 We can set cart value to `BTTTimer` object using following function.
 
@@ -91,7 +93,7 @@ timer.stopTimer()
 
 c) Performance Monitor:
 
-PerformanceMonitoring - enables or disables tracking of memory and CPU usage. To enable Performance Monitor we need to enable performanceMonitoring from `BTTOptions` at the time of configuration.
+PerformanceMonitoring - enables or disables tracking of memory and CPU usage. To enable Performance Monitor we need to enable performanceMonitoring from `BTTOptions` at the time of configuration. Also you can set `performanceMonitoringInterval` which is in milliseconds.
 
  ```js
 import {BTTConfiguration, BTTOptions} from 'react-native-btt-sdk';
@@ -107,7 +109,7 @@ BTTConfiguration.configure(siteId, bttOptions)
 
 a) Manual Tracker
 
-To use a manual timer, you need to first import the `BTTScreenTracker` object from `react-native-btt-sdk`. Create timer object with pageName.
+To use a manual tracker, you need to first import the `BTTScreenTracker` object from `react-native-btt-sdk`. Create timer object with pageName.
 
  The `BTTScreenTracker` object has the following functions:
 - `manualTracker.startTracking()`:
@@ -190,30 +192,4 @@ bttOptions.trackCrash = true
 bttOptions.debug = true
 
 BTTConfiguration.configure(siteId, bttOptions)
- ```
-
- Crash report for iOS App:
-
-```
-"Unhandled JS Exception: Error: , js engine: hermes, 
-stack:
-errorReport@52951:21
-_performTransitionSideEffects@30619:21
-_receiveSignal@30569:44
-onResponderRelease@30432:33
-invokeGuardedCallbackImpl@24186:16
-...
- ```
-
-  Crash report for Android App:
-
-```
-  com.facebook.react.common.JavascriptException: Error: , js engine: hermes, 
-  stack: 
-  errorReport@1:583513 
-  _performTransitionSideEffects@1:344797 
-  _receiveSignal@1:344387 
-  onResponderRelease@1:343211 
-  invokeGuardedCallbackImpl@1:267605 
-  ...
  ```
