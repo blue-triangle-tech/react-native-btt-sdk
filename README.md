@@ -39,7 +39,7 @@ yarn add 'file:/<project-code-location>/react-native-btt-sdk'
 replace `<project-code-location>` with the local directory location where you have saved the SDK.
 
 ### Configuration
-It is recommended to configure sdk in your `index.js` file. you can add following code snippet:
+Before using BTT SDK, It need to be configured.It is recommended to configure sdk in your `index.js` file. First import the `BTTConfiguration` and `BTTOptions` as showns in below code snippet. Then configure it using `BTTConfiguration.configure(<siteId>, <bttOptions>)` with `<siteId>` and `BTTOptions`.
 
 ```js
 //First import the BTTConfiguration and BTTOptions
