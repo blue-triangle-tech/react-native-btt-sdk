@@ -85,7 +85,15 @@ function App() {
   BTTScreenTracker.loadStarted("1","2");
 }
 
-
+const makeNetworkCall = async () => {
+  console.log("Network call")
+  try {
+    const response = await fetch("https://dummyjson.com/products")
+    console.log("API Response Received: ", response);
+  } catch(err) {
+    console.error("API Error: ", err);
+  }
+}
   return (
    <View style={styles.container}>
 
@@ -122,7 +130,10 @@ function App() {
             <View style={styles.line} />
             </View>
             <Button title={'BTTScreenTracker'} onPress={screenTracker} />
-
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'Network Call'} onPress={makeNetworkCall} />
    </View>
   );
 }

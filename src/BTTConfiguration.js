@@ -1,5 +1,6 @@
 import { NativeModules, Platform } from 'react-native';
 import BTTOptions from './BTTOptions';
+import setUpInterceptors from './networking/interceptors'
 
 const BttSdk = NativeModules.BttSdk
   ? NativeModules.BttSdk
@@ -24,8 +25,9 @@ class BTTConfiguration  {
                "debug": bttOptions.debug
            };
       console.log('BTTConfiguration.configure ::', dictionary); 
-
-       BttSdk.bttConfigure(dictionary);
+    
+      setUpInterceptors();
+      BttSdk.bttConfigure(dictionary);
     }
 
 }
