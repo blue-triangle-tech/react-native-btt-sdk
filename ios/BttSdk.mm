@@ -8,6 +8,14 @@ RCT_EXTERN_METHOD(bttStopTimer:(NSDictionary *)dictionary)
 RCT_EXTERN_METHOD(bttStartTimer:(NSDictionary *)pageDict
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(loadStarted:(NSString *)id
+                  name:(NSString *)name)
+RCT_EXTERN_METHOD(loadFinish:(NSString *)id
+                  name:(NSString *)name)
+RCT_EXTERN_METHOD(viewStart:(NSString *)id
+                  name:(NSString *)name)
+RCT_EXTERN_METHOD(viewingEnd:(NSString *)id
+                  name:(NSString *)name)
 
 + (BOOL)requiresMainQueueSetup
 {

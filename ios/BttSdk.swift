@@ -24,7 +24,8 @@ class BttSdk: NSObject {
             }
             
             if let performanceMonitoringInterval = dictionary["performanceMonitoringInterval"] as? Double  {
-                config.performanceMonitorSampleRate = performanceMonitoringInterval //TODO:: Need to check
+                let secondsInInterval: Double = performanceMonitoringInterval / 1000
+                config.performanceMonitorSampleRate = secondsInInterval
             }
             
             if let memoryWarning = dictionary["memoryWarning"] as? Bool {
@@ -112,22 +113,22 @@ class BttSdk: NSObject {
     }
     
     @objc
-    func loadStarted(_ id : String, _ name : String){
+    func loadStarted(_ id : String, name : String){
         
     }
     
     @objc
-    func loadFinish(_ id : String, _ name : String){
+    func loadFinish(_ id : String, name : String){
         
     }
     
     @objc
-    func viewStart(_ id : String, _ name : String){
+    func viewStart(_ id : String, name : String){
         
     }
     
     @objc
-    func viewingEnd(_ id : String, _ name : String){
+    func viewingEnd(_ id : String, name : String){
         
     }
 }

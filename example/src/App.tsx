@@ -3,14 +3,17 @@ import { Button,StyleSheet, View, ScrollView, TextInput } from 'react-native';
 import {BTTScreenTracker, BTTTimer} from 'react-native-btt-sdk';
 
 function App() {
+ 
+  var timer:BTTTimer
+  var cartTimer:BTTTimer
+  var manualscreenTracker:BTTScreenTracker
+
     const currentDate = new Date();
     const sessionId = formatDate(currentDate);
      const [startTimerPageValue, setStartTimerPageValue] = useState('');
      const [startTimerCheckoutPageValue, setStartTimerCheckoutPageValue] = useState('');
      const [startTimerCheckoutValue, setStartTimerCheckoutValue] = useState('');
 
-     const timerId = useRef(0)
-     const checkoutTimerId = useRef(0)
 
      const handleStartTimerPageChange = (text) => {
          setStartTimerPageValue(text);
@@ -25,20 +28,18 @@ function App() {
             setAddCartValue(text);
      };
      
-     const startTimer = async () => {
+  const startTimer = async () => {
     if (startTimerPageValue.length === 0) {
       console.log('startTimerPageValue is empty.');
       return;
       }
-    const result = await BTTTimer.startTimer({
-      "btt_page_name":startTimerPageValue
-    })
-    timerId.current = result.btt_timer_id
+    
+    timer = new BTTTimer(startTimerPageValue)
+    timer.startTimer()
   }
+
   const stopTimer = () => {
-    BTTTimer.stopTimer({
-      "btt_timer_id": timerId.current
-    })
+    timer.stopTimer()
     handleStartTimerPageChange("")
   }
 
@@ -47,11 +48,8 @@ function App() {
          console.log('startTimerPageValue is empty.');
          return;
      }
-
-     const result = await BTTTimer.startTimer({
-      "btt_page_name":startTimerCheckoutPageValue
-    })
-    checkoutTimerId.current = result.btt_timer_id
+     cartTimer = new BTTTimer(startTimerCheckoutPageValue)
+     cartTimer.startTimer()
  }
  
   const stopCheckoutTimer = () => {
@@ -61,13 +59,11 @@ function App() {
      }
       console.log('=========stopCheckoutTimer==============');
       console.log(startTimerCheckoutValue);
- 
-      var cartValue = addCartValue
-     
-      BTTTimer.stopTimer({
-        "btt_timer_id": startTimerCheckoutValue,
-        "btt_cartValue":cartValue
-   })
+      console.log(cartTimer);
+
+    cartTimer.setCartValue(addCartValue)
+    cartTimer.stopTimer()
+
      handleAddCartValue("")
      handleStartTimerCheckoutPageChange("")
   }
@@ -76,13 +72,34 @@ function App() {
      throw new Error()
  }
  
-  const anrReport = () => {
-     setTimeout(anrReport, 1) // infinite loop
-    console.log('anrReport.');
- }
+//   const anrReport = async () => {
+//     console.log('=========anrReport==============');
+
+//     await sleep(10000)
+//  }
+
+const anrReport = () => {
+  //setTimeout(anrReport, 1) // infinite loop
+  for (let i = 0; i < 1000000000; i++) {
+    // Simulating a long-running synchronous operation
+    const value = i * Math.random();
+  }
+}
 
  const screenTracker = () => {
-  BTTScreenTracker.loadStarted("1","2");
+  BTTScreenTracker.viewStart("1","2");
+}
+
+const manualTrackerStart = () => {
+
+  if(manualscreenTracker == undefined){
+    manualscreenTracker = new BTTScreenTracker("ManualTracker")
+  }
+
+  manualscreenTracker.startTracking()
+}
+const manualTrackerStop = () => {
+  manualscreenTracker.stopTracking()
 }
 
 const getNetworkApiCall = async () => {
@@ -215,7 +232,7 @@ const get302ApiCall = async () => {
         <Button title={'Stop Timer'} onPress={stopTimer} />
         <View style={styles.lineWrapper}>
         <View style={styles.line} />
-        </View>
+      </View>
 
             <TextInput style={styles.textInput} placeholder="Enter start checkout timer page name"
             onChangeText={handleStartTimerCheckoutPageChange} value={startTimerCheckoutPageValue} />
@@ -238,6 +255,7 @@ const get302ApiCall = async () => {
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
             </View>
+<<<<<<< HEAD
             <Button title={'Get API Call'} onPress={getNetworkApiCall} />
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
@@ -266,6 +284,11 @@ const get302ApiCall = async () => {
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
             </View>
+=======
+            <Button title={'Manual Screen Tracker Start'} onPress={manualTrackerStart} />
+            <Button title={'Manual Screen Tracker Stop'} onPress={manualTrackerStop} />
+
+>>>>>>> develop
    </View>
    </ScrollView>
 
