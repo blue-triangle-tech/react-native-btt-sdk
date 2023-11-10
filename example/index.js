@@ -9,7 +9,7 @@ bttOptions.performanceMonitoring = true
 bttOptions.performanceMonitoringInterval = 500
 bttOptions.memoryWarning = true
 bttOptions.trackCrash = true
-bttOptions.debug = false
+bttOptions.debug = true
 BTTConfiguration.configure('sdkdemo26621z', bttOptions)
 
 AppRegistry.registerComponent(appName, () => App);

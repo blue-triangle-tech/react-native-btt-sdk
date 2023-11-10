@@ -6,11 +6,14 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import com.bluetriangle.analytics.BlueTriangleConfiguration
 import com.bluetriangle.analytics.Timer
 import com.bluetriangle.analytics.Tracker
 import com.bluetriangle.analytics.model.Screen
 import com.bluetriangle.analytics.model.ScreenType
+import com.bluetriangle.analytics.networkcapture.CapturedRequest
+import com.bluetriangle.analytics.networkcapture.RequestType
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
@@ -72,6 +75,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
   //private var timer: Timer?=null
   private var timerMap: MutableMap<String, Timer> = mutableMapOf()
+  private var networkTrackerMap: MutableMap<String, CapturedRequest> = mutableMapOf()
 
   fun generateRandomString(length: Int): String {
     val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
@@ -143,5 +147,45 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     var screen = Screen(id, name, ScreenType.Composable)
     Tracker.instance?.screenTrackMonitor?.onViewEnded(screen)
     Tracker.instance?.configuration?.logger?.debug("Android :: viewingEnd.")
+  }
+
+  @ReactMethod
+  fun networkTrackerStart(networkUrl : String ,promise: Promise){
+
+    // create a captured request object
+    val capturedRequest = CapturedRequest()
+    capturedRequest.url = networkUrl
+
+    val networkTrackerID: String = generateRandomString(10)
+    this.networkTrackerMap?.put(networkTrackerID, capturedRequest)
+
+    // start timing the request
+    capturedRequest.start()
+
+    try {
+      val dictionary: WritableMap = Arguments.createMap()
+
+      dictionary.putString("networkTrackerID", networkTrackerID)
+      promise.resolve(dictionary)
+    } catch (e: Exception) {
+      promise.reject("ERROR", e.message)
+    }
+  }
+
+  @ReactMethod
+  fun networkTrackerSubmit(dictionary: ReadableMap){
+    val networkTrackerID = dictionary.getString("bttNetworkTrackerID")
+    val encodedBodySize = dictionary.getString("bttEncodedBodySize")
+    val requestType = dictionary.getString("bttRequestType")
+    val responseStatusCode = dictionary.getInt("bttResponseStatusCode")
+
+    val capturedRequest: CapturedRequest? = networkTrackerMap?.get(networkTrackerID)
+    capturedRequest?.encodedBodySize = encodedBodySize?.toLong() ?: 0
+    capturedRequest?.requestType = RequestType.fromFilePath(requestType)
+    capturedRequest?.responseStatusCode = responseStatusCode
+
+    capturedRequest?.stop()
+    // submit the captured request to the tracker instance
+    Tracker.instance?.submitCapturedRequest(capturedRequest)
   }
 }

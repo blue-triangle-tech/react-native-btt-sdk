@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Button,StyleSheet, View, Text, TextInput } from 'react-native';
+import { Button,StyleSheet, View, ScrollView, TextInput } from 'react-native';
 import {BTTScreenTracker, BTTTimer} from 'react-native-btt-sdk';
 
 function App() {
@@ -85,22 +85,127 @@ function App() {
   BTTScreenTracker.loadStarted("1","2");
 }
 
-const makeNetworkCall = async () => {
-  console.log("Network call")
+const getNetworkApiCall = async () => {
+  console.log("Get Network Api Call")
   try {
-    const response = await fetch("https://dummyjson.com/products")
+    const response = await fetch("https://postman-echo.com/get?foo1=bar1&foo2=bar2", {
+      method: 'GET'})
     console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
   } catch(err) {
     console.error("API Error: ", err);
   }
 }
-  return (
-   <View style={styles.container}>
 
-        <View style={styles.lineWrapper}>
-      <View style={styles.line} />
-      </View>
-      <Text>Seesion ID: {sessionId}</Text>
+const postNetworkApiCall = async () => {
+  console.log("Post Network Api Call")
+  try {
+    const response = await fetch("https://postman-echo.com/post", {
+      method: 'POST',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          username: 'test',
+          password: 'test123',
+      })
+   })
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+  } catch(err) {
+    console.error("API Error: ", err);
+  }
+}
+
+const putNetworkApiCall = async () => {
+  console.log("Put Network Api Call")
+  try {
+    const response = await fetch("https://postman-echo.com/put", {
+      method: 'PUT',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title: 'React PUT Request Example' })
+   })
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+  } catch(err) {
+    console.error("API Error: ", err);
+  }
+}
+
+const patchNetworkApiCall = async () => {
+  console.log("Patch Network Api Call")
+  try {
+    const response = await fetch("https://postman-echo.com/patch", {
+      method: 'PATCH',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title: 'React PATCH Request Example' })
+   })
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+  } catch(err) {
+    console.error("API Error: ", err);
+  }
+}
+
+const deleteNetworkApiCall = async () => {
+  console.log("Delete Network Api Call")
+  try {
+    const response = await fetch("https://postman-echo.com/delete", {
+      method: 'DELETE',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id: 'deleteId' })
+   })
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+  } catch(err) {
+    console.error("API Error: ", err);
+  }
+}
+
+const get400ApiCall = async () => {
+  console.log("Get Network Api Call")
+  try {
+    const response = await fetch("https://postman-echo.com/status/404", {
+      method: 'GET'})
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+  } catch(err) {
+    console.error("API Error: ", err);
+  }
+}
+
+const get302ApiCall = async () => {
+  console.log("Get Network Api Call")
+  try {
+    const response = await fetch("https://postman-echo.com/redirect-to?url=https://postman-echo.com/get?foo1=bar1&foo2=bar2", {
+      method: 'GET'})
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+  } catch(err) {
+    console.error("API Error: ", err);
+  }
+}
+
+  return (
+    <ScrollView>
+   <View style={styles.container}>
       <View style={styles.lineWrapper}>
       <View style={styles.line} />
       </View>
@@ -133,8 +238,37 @@ const makeNetworkCall = async () => {
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
             </View>
-            <Button title={'Network Call'} onPress={makeNetworkCall} />
+            <Button title={'Get API Call'} onPress={getNetworkApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'Post API Call'} onPress={postNetworkApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'Put API Call'} onPress={putNetworkApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'Patch API Call'} onPress={patchNetworkApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'Delete API Call'} onPress={deleteNetworkApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'400 Error API Call'} onPress={get400ApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'302 Error API Call'} onPress={get302ApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
    </View>
+   </ScrollView>
+
   );
 }
 
