@@ -35,12 +35,17 @@ function App() {
       }
     
     timer = new BTTTimer(startTimerPageValue)
-    timer.startTimer()
+    await timer.startTimer()
+
+    timer.stopTimer()
+    handleStartTimerPageChange("")
   }
 
   const stopTimer = () => {
-    timer.stopTimer()
-    handleStartTimerPageChange("")
+    if(timer != undefined){
+      timer.stopTimer()
+      handleStartTimerPageChange("")
+    }
   }
 
     const startCheckoutTimer = async () => {
@@ -102,21 +107,53 @@ const manualTrackerStop = () => {
   manualscreenTracker.stopTracking()
 }
 
+const getXHRNetwork = async () => {
+
+ const timer =  new BTTTimer("getXHRNetwork")
+ timer.startTimer()
+
+  const xhr = new XMLHttpRequest();
+xhr.open('GET', 'https://postman-echo.com/get?foo1=bar1&foo2=bar2', true);
+xhr.setRequestHeader('Content-Type', 'application/json');
+
+xhr.onreadystatechange = function () {
+  if (xhr.readyState === 4) {
+    if (xhr.status === 200) {
+      const data = JSON.parse(xhr.responseText);
+      console.log('Data:', data);
+    } else {
+      console.error('HTTP error! Status:', xhr.status);
+    }
+
+    timer.stopTimer()
+  }
+};
+
+xhr.send();
+}
+
 const getNetworkApiCall = async () => {
   console.log("Get Network Api Call")
+  const timer =  new BTTTimer("getNetworkApiCall")
+  timer.startTimer()
+
   try {
     const response = await fetch("https://postman-echo.com/get?foo1=bar1&foo2=bar2", {
       method: 'GET'})
     console.log("API Response Received: ", response);
     const data = await response.json();
     console.log('Data:', data);
+    timer.stopTimer();
   } catch(err) {
     console.error("API Error: ", err);
+    timer.stopTimer();
   }
 }
 
 const postNetworkApiCall = async () => {
   console.log("Post Network Api Call")
+  const timer =  new BTTTimer("postNetworkApiCall")
+  timer.startTimer()
   try {
     const response = await fetch("https://postman-echo.com/post", {
       method: 'POST',
@@ -132,13 +169,17 @@ const postNetworkApiCall = async () => {
     console.log("API Response Received: ", response);
     const data = await response.json();
     console.log('Data:', data);
+    timer.stopTimer()
   } catch(err) {
     console.error("API Error: ", err);
+    timer.stopTimer()
   }
 }
 
 const putNetworkApiCall = async () => {
   console.log("Put Network Api Call")
+  const timer =  new BTTTimer("putNetworkApiCall")
+  timer.startTimer()
   try {
     const response = await fetch("https://postman-echo.com/put", {
       method: 'PUT',
@@ -151,12 +192,17 @@ const putNetworkApiCall = async () => {
     console.log("API Response Received: ", response);
     const data = await response.json();
     console.log('Data:', data);
+    timer.stopTimer()
   } catch(err) {
     console.error("API Error: ", err);
+    timer.stopTimer()
   }
 }
 
 const patchNetworkApiCall = async () => {
+  const timer =  new BTTTimer("patchNetworkApiCall")
+  timer.startTimer()
+  
   console.log("Patch Network Api Call")
   try {
     const response = await fetch("https://postman-echo.com/patch", {
@@ -170,13 +216,17 @@ const patchNetworkApiCall = async () => {
     console.log("API Response Received: ", response);
     const data = await response.json();
     console.log('Data:', data);
+    timer.stopTimer()
   } catch(err) {
     console.error("API Error: ", err);
+    timer.stopTimer()
   }
 }
 
 const deleteNetworkApiCall = async () => {
   console.log("Delete Network Api Call")
+  const timer =  new BTTTimer("deleteNetworkApiCall")
+  timer.startTimer()
   try {
     const response = await fetch("https://postman-echo.com/delete", {
       method: 'DELETE',
@@ -189,34 +239,44 @@ const deleteNetworkApiCall = async () => {
     console.log("API Response Received: ", response);
     const data = await response.json();
     console.log('Data:', data);
+    timer.stopTimer()
   } catch(err) {
     console.error("API Error: ", err);
+    timer.stopTimer()
   }
 }
 
 const get400ApiCall = async () => {
   console.log("Get Network Api Call")
+  const timer =  new BTTTimer("get400ApiCall")
+  timer.startTimer()
   try {
     const response = await fetch("https://postman-echo.com/status/404", {
       method: 'GET'})
     console.log("API Response Received: ", response);
     const data = await response.json();
     console.log('Data:', data);
+    timer.stopTimer()
   } catch(err) {
     console.error("API Error: ", err);
+    timer.stopTimer()
   }
 }
 
 const get302ApiCall = async () => {
   console.log("Get Network Api Call")
+  const timer =  new BTTTimer("get400ApiCall")
+  timer.startTimer()
   try {
     const response = await fetch("https://postman-echo.com/redirect-to?url=https://postman-echo.com/get?foo1=bar1&foo2=bar2", {
       method: 'GET'})
     console.log("API Response Received: ", response);
     const data = await response.json();
     console.log('Data:', data);
+    timer.stopTimer()
   } catch(err) {
     console.error("API Error: ", err);
+    timer.stopTimer()
   }
 }
 
@@ -234,7 +294,7 @@ const get302ApiCall = async () => {
         <View style={styles.line} />
       </View>
 
-            <TextInput style={styles.textInput} placeholder="Enter start checkout timer page name"
+            {/*<TextInput style={styles.textInput} placeholder="Enter start checkout timer page name"
             onChangeText={handleStartTimerCheckoutPageChange} value={startTimerCheckoutPageValue} />
             <Button title={'Start Checkout Timer'} onPress={startCheckoutTimer} />
             <TextInput style={styles.textInput} placeholder="Add cart value"
@@ -243,19 +303,22 @@ const get302ApiCall = async () => {
 
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
-            </View>
+  </View>
             
             <Button title={'JS ERROR'} onPress={errorReport} />
             <Button title={'ANR'} onPress={anrReport} />
 
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
-            </View>
+  </View>
             <Button title={'BTTScreenTracker'} onPress={screenTracker} />
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
+  </View>*/}
+            <Button title={'Get XML API Call'} onPress={getXHRNetwork} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
             </View>
-<<<<<<< HEAD
             <Button title={'Get API Call'} onPress={getNetworkApiCall} />
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
@@ -284,11 +347,8 @@ const get302ApiCall = async () => {
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
             </View>
-=======
             <Button title={'Manual Screen Tracker Start'} onPress={manualTrackerStart} />
             <Button title={'Manual Screen Tracker Stop'} onPress={manualTrackerStop} />
-
->>>>>>> develop
    </View>
    </ScrollView>
 

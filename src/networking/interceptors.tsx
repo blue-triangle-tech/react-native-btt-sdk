@@ -1,6 +1,5 @@
 import BTTHTTPTracker from "./BTTHTTPTracker";
-
-
+import XHRInterceptor from "./XHRInterceptor";
 
 const setUpXMLHTTPRequestInterceptor = () => {
     //  const xhrOpen = XMLHttpRequest.prototype.open;
@@ -15,6 +14,32 @@ const setUpXMLHTTPRequestInterceptor = () => {
     //      console.log("Send: ", data);
     //      xhrSend(data);
     //  }
+    console.log("::setUpXMLHTTPRequestInterceptor::")
+
+    XHRInterceptor.enableInterception()
+    var tracker
+    XHRInterceptor.setOpenCallback((method, url)=>{
+         tracker = new BTTHTTPTracker(method || "GET", url);
+         tracker.start()
+    });
+
+    var contentType
+    var contentSize
+    XHRInterceptor.setHeaderReceivedCallback(( responseContentType,
+        responseSize) => {
+            console.log(`setHeaderReceivedCallback(${responseContentType}, ${responseSize}`)
+        contentType = responseContentType
+        contentSize = responseSize.toString()
+    });
+
+    XHRInterceptor.setResponseCallback((status,
+        timeout,
+        response,
+       responseURL,
+        responseType)=>{
+            console.log(`setResponseCallback(${status}, ${contentSize}, ${contentType}`)
+        tracker.submitResponse(contentType, contentSize, status);
+    });
 }
 
 const setUpFetchInterceptor = () => {
@@ -44,6 +69,7 @@ const setUpFetchInterceptor = () => {
 }
 
 export default setUpInterceptors = ()=> {
+    console.log("::setUpInterceptors::")
     setUpXMLHTTPRequestInterceptor();
-    setUpFetchInterceptor();
+    //setUpFetchInterceptor();
 }

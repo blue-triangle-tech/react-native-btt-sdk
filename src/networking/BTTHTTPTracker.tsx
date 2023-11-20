@@ -11,7 +11,6 @@ const BttSdk = NativeModules.BttSdk
       }
     );
 
-
 class BTTHTTPTracker {
 
     constructor(method, url) {
@@ -22,21 +21,32 @@ class BTTHTTPTracker {
     async start() {
         // create captured request for android
         console.log("BTTHTTPTracker::start")
+        BttSdk.bttLogger()
+        console.log("BTTHTTPTracker::start1")
+        try {
         const result = await BttSdk.networkTrackerStart(this.url);
         this.networkTrackerID = result.networkTrackerID
+        console.log(`BTTHTTPTracker::start::networkTrackerID(${this.networkTrackerID})`)
+
+        }
+        catch (error) {
+          // Handle error
+          console.log(`BTTHTTPTracker::error(${error})`)
+        }
     }
 
     submitResponse(contentType, bodySize, statusCode) {
         // Submit Network request
         console.log(`BTTHTTPTracker::submitResponse(${contentType}, ${bodySize}, ${statusCode})`)
         console.log(`BTTHTTPTracker::networkTrackerID(${this.networkTrackerID})`)
-
-        BttSdk.networkTrackerSubmit({
+        if(this.networkTrackerID != undefined){
+          BttSdk.networkTrackerSubmit({
             "bttNetworkTrackerID": this.networkTrackerID,
             "bttEncodedBodySize": bodySize,
             "bttRequestType":contentType,
             "bttResponseStatusCode":statusCode
           })
+        }
     }
 
     submitError(err) {

@@ -63,13 +63,14 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     config.isTrackAnrEnabled = dictionary.getBoolean("trackAnr")
     config.isPerformanceMonitorEnabled = dictionary.getBoolean("performanceMonitoring")
     config.performanceMonitorIntervalMs = dictionary.getDouble("performanceMonitoringInterval").toLong()
+    config.networkSampleRate = 1.0
 
     if (sessionID?.isNotEmpty() == true)
     {
       config.sessionId = sessionID
     }
     Tracker.init(reactApplicationContext.applicationContext as Application, config)
-
+    Log.d("BlueTriangle", "Logger" + config.logger)
     config.logger?.debug("configure")
   }
 
@@ -114,6 +115,8 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     val cartVal = dictionary.getString("btt_cartValue")
 
     val timer: Timer? = timerMap?.get(timerID)
+    Tracker.instance?.configuration?.logger?.debug("bttStopTimer." + timer)
+
     if(cartVal?.isNotEmpty() == true) {
       cartVal?.toDoubleOrNull()?.let { timer?.setCartValue(it) }
     }
@@ -178,14 +181,27 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     val encodedBodySize = dictionary.getString("bttEncodedBodySize")
     val requestType = dictionary.getString("bttRequestType")
     val responseStatusCode = dictionary.getInt("bttResponseStatusCode")
+    Tracker.instance?.configuration?.logger?.debug("Android :: networkTrackerID." + networkTrackerID.toString())
 
     val capturedRequest: CapturedRequest? = networkTrackerMap?.get(networkTrackerID)
+    Log.d("capturedRequest", capturedRequest.toString())
+    Tracker.instance?.configuration?.logger?.debug("Android :: capturedRequest." + capturedRequest.toString())
+
     capturedRequest?.encodedBodySize = encodedBodySize?.toLong() ?: 0
     capturedRequest?.requestType = RequestType.fromFilePath(requestType)
     capturedRequest?.responseStatusCode = responseStatusCode
 
     capturedRequest?.stop()
+    Tracker.instance?.configuration?.logger?.debug("Android :: capturedRequest.stop.")
+
     // submit the captured request to the tracker instance
     Tracker.instance?.submitCapturedRequest(capturedRequest)
+    Tracker.instance?.configuration?.logger?.debug("Android :: submitCapturedRequest.")
+    networkTrackerMap.remove(networkTrackerID)
+
+  }
+
+  fun bttLogger(){
+    Tracker.instance?.configuration?.logger?.debug("Android :: bttLogger.")
   }
 }
