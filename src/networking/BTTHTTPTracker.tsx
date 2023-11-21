@@ -21,7 +21,6 @@ class BTTHTTPTracker {
     async start() {
         // create captured request for android
         console.log("BTTHTTPTracker::start")
-        BttSdk.bttLogger()
         console.log("BTTHTTPTracker::start1")
         try {
         const result = await BttSdk.networkTrackerStart(this.url);
