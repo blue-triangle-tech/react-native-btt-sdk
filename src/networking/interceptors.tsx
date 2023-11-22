@@ -29,7 +29,9 @@ const setUpXMLHTTPRequestInterceptor = () => {
         responseSize) => {
             console.log(`setHeaderReceivedCallback(${responseContentType}, ${responseSize}`)
         contentType = responseContentType
-        contentSize = responseSize.toString()
+        if(responseSize != undefined){
+            contentSize = responseSize.toString()
+        }
     });
 
     XHRInterceptor.setResponseCallback((status,
