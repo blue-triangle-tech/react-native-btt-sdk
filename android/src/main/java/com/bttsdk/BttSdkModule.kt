@@ -10,7 +10,7 @@ import android.util.Log
 import com.bluetriangle.analytics.BlueTriangleConfiguration
 import com.bluetriangle.analytics.Timer
 import com.bluetriangle.analytics.Tracker
-import com.bluetriangle.analytics.model.Screen
+import com.bluetriangle.analytics.screenTracking.BTTScreenTracker
 import com.bluetriangle.analytics.model.ScreenType
 import com.bluetriangle.analytics.networkcapture.CapturedRequest
 import com.bluetriangle.analytics.networkcapture.RequestType
@@ -77,6 +77,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
   //private var timer: Timer?=null
   private var timerMap: MutableMap<String, Timer> = mutableMapOf()
   private var networkTrackerMap: MutableMap<String, CapturedRequest> = mutableMapOf()
+  private var screenTrackerMap: MutableMap<String, BTTScreenTracker> = mutableMapOf()
 
   fun generateRandomString(length: Int): String {
     val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
@@ -124,32 +125,48 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     timerMap.remove(timerID)
   }
 
+  private fun getScreenTracker(page : String, pageId : String):BTTScreenTracker{
+    // create a captured request object
+    val tracker: BTTScreenTracker? = screenTrackerMap?.get(pageId)
+    if(tracker == null) {
+      val tracker = BTTScreenTracker(page)
+      this.screenTrackerMap?.put(pageId, tracker)
+      return tracker
+    }
+    return tracker
+  }
+
   @ReactMethod
-  fun loadStarted(id : String , name : String){
-    var screen = Screen(id, name, ScreenType.Composable)
-    Tracker.instance?.screenTrackMonitor?.onLoadStarted(screen)
+  fun loadStarted(page : String, pageId : String){
+    val tracker: BTTScreenTracker? = getScreenTracker(page, pageId)
+    tracker?.onLoadStarted()
     Tracker.instance?.configuration?.logger?.debug("Android :: loadStarted.")
+    Tracker.instance?.configuration?.logger?.debug("Android :: loadStarted." + tracker)
   }
 
   @ReactMethod
-  fun loadFinish(id : String , name : String){
-    var screen = Screen(id, name, ScreenType.Composable)
-    Tracker.instance?.screenTrackMonitor?.onLoadEnded(screen)
+  fun loadFinish(page : String, pageId : String){
+    val tracker: BTTScreenTracker? = getScreenTracker(page, pageId)
+    tracker?.onLoadEnded()
     Tracker.instance?.configuration?.logger?.debug("Android :: loadFinish.")
+    Tracker.instance?.configuration?.logger?.debug("Android :: loadFinish." + tracker)
   }
 
   @ReactMethod
-  fun viewStart(id : String , name : String){
-    var screen = Screen(id, name, ScreenType.Composable)
-    Tracker.instance?.screenTrackMonitor?.onViewStarted(screen)
+  fun viewStart(page : String, pageId : String){
+    val tracker: BTTScreenTracker? = getScreenTracker(page, pageId)
+    tracker?.onViewStarted()
     Tracker.instance?.configuration?.logger?.debug("Android :: viewStart.")
+    Tracker.instance?.configuration?.logger?.debug("Android :: viewStart." + tracker)
   }
 
   @ReactMethod
-  fun viewingEnd(id : String , name : String){
-    var screen = Screen(id, name, ScreenType.Composable)
-    Tracker.instance?.screenTrackMonitor?.onViewEnded(screen)
+  fun viewingEnd(page : String, pageId : String){
+    val tracker: BTTScreenTracker? = getScreenTracker(page, pageId)
+    tracker?.onViewEnded()
     Tracker.instance?.configuration?.logger?.debug("Android :: viewingEnd.")
+    Tracker.instance?.configuration?.logger?.debug("Android :: viewingEnd." + tracker)
+    screenTrackerMap.remove(pageId)
   }
 
   @ReactMethod

@@ -14,7 +14,7 @@ class BTTNavigationContainerTracker{
         const previousRouteId = trackerID;
         
         if(previousRouteId == null){
-            BTTScreenTracker.viewStart(currentKey, currentName);
+            BTTScreenTracker.viewStart(currentName, currentKey);
             trackerName = currentName;
             trackerID = currentKey;
           }
@@ -24,8 +24,8 @@ class BTTNavigationContainerTracker{
       
           if (previousRouteId !== currentRouteId) {
       
-            BTTScreenTracker.viewingEnd(previousRouteId, previousRouteName);
-            BTTScreenTracker.viewStart(currentRouteId, currentRouteName);
+            BTTScreenTracker.viewingEnd(previousRouteName, previousRouteId);
+            BTTScreenTracker.viewStart(currentRouteName, currentRouteId);
       
             trackerName = currentName;
             trackerID = currentKey;
