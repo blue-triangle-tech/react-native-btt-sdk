@@ -5,6 +5,7 @@ class BTTOptions  {
      memoryWarning = false
      trackCrash = false
      debug = false
+     sessionID = ""
 }
 
 export default BTTOptions;

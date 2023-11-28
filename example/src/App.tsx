@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { Button,StyleSheet, View, ScrollView, TextInput } from 'react-native';
+import { Button,StyleSheet, View, ScrollView, TextInput, Text } from 'react-native';
 import {BTTScreenTracker, BTTTimer} from 'react-native-btt-sdk';
+import DataManagement from './DataManagement'
 
 function App() {
  
@@ -8,8 +9,7 @@ function App() {
   var cartTimer:BTTTimer
   var manualscreenTracker:BTTScreenTracker
 
-    const currentDate = new Date();
-    const sessionId = formatDate(currentDate);
+    const sessionId = DataManagement.getSessionId();
      const [startTimerPageValue, setStartTimerPageValue] = useState('');
      const [startTimerCheckoutPageValue, setStartTimerCheckoutPageValue] = useState('');
      const [startTimerCheckoutValue, setStartTimerCheckoutValue] = useState('');
@@ -282,7 +282,8 @@ const get302ApiCall = async () => {
 
   return (
     <ScrollView>
-   <View style={styles.container}>
+      <View style={styles.container}>
+      <Text style={styles.text}>Session Id: {sessionId}</Text>
       <View style={styles.lineWrapper}>
       <View style={styles.line} />
       </View>
@@ -380,15 +381,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: 'black', // You can change the color as needed
   },
+  text: {
+    fontSize: 20,
+  },
 });
-
-const formatDate = (date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
-
-  return `${year}${month}${day}${hours}${minutes}`;
-};

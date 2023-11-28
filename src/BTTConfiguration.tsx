@@ -22,7 +22,8 @@ class BTTConfiguration  {
                "performanceMonitoringInterval": bttOptions.performanceMonitoringInterval,
                "memoryWarning": bttOptions.memoryWarning,
                "trackCrash" : bttOptions.trackCrash,
-               "debug": bttOptions.debug
+               "debug": bttOptions.debug,
+               "btt_session_id": bttOptions.sessionID
            };
       console.log('BTTConfiguration.configure ::', dictionary); 
     
