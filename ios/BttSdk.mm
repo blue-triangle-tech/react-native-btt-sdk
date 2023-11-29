@@ -16,6 +16,8 @@ RCT_EXTERN_METHOD(viewStart:(NSString *)id
                   name:(NSString *)name)
 RCT_EXTERN_METHOD(viewingEnd:(NSString *)id
                   name:(NSString *)name)
+RCT_EXTERN_METHOD(getSessionId:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
 
 + (BOOL)requiresMainQueueSetup
 {

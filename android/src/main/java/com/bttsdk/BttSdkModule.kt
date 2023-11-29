@@ -74,6 +74,11 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     config.logger?.debug("configure")
   }
 
+  @ReactMethod
+  fun getSessionId(promise: Promise) {
+    promise.resolve(Tracker.instance?.configuration?.sessionId)
+  }
+
   //private var timer: Timer?=null
   private var timerMap: MutableMap<String, Timer> = mutableMapOf()
   private var networkTrackerMap: MutableMap<String, CapturedRequest> = mutableMapOf()

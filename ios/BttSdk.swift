@@ -58,6 +58,12 @@ class BttSdk: NSObject {
         print("Received dictionary: \(dictionary)")
     }
     
+    @objc(getSessionId:withRejecter:)
+    func getSessionId( resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+        let sessionID = BlueTriangle.sessionID
+        resolve(String(sessionID))
+    }
+    
     @objc func bttDefaultConfigure() {
       debugPrint(" Print Here ")
       // Configure BlueTriangle

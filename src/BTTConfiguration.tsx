@@ -22,15 +22,25 @@ class BTTConfiguration  {
                "performanceMonitoringInterval": bttOptions.performanceMonitoringInterval,
                "memoryWarning": bttOptions.memoryWarning,
                "trackCrash" : bttOptions.trackCrash,
-               "debug": bttOptions.debug,
-               "btt_session_id": bttOptions.sessionID
-           };
+               "debug": bttOptions.debug           };
       console.log('BTTConfiguration.configure ::', dictionary); 
     
       setUpInterceptors();
       BttSdk.bttConfigure(dictionary);
     }
 
+    static async getSessionId(){
+      console.log('SessionId:1');
+
+      try {
+      const sessionId = await BttSdk.getSessionId()
+      console.log('SessionId:', sessionId);
+      return sessionId;
+       } catch (error) {
+           console.error('Error fetching SessionId:', error);
+         throw error; // Rethrow the error for the calling code to handle
+       }
+    }
 }
 
 export default BTTConfiguration;

@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button,StyleSheet, View, ScrollView, TextInput, Text } from 'react-native';
 import {BTTScreenTracker, BTTTimer} from 'react-native-btt-sdk';
 import DataManagement from './DataManagement'
+import {BTTConfiguration} from 'react-native-btt-sdk';
 
 function App() {
  
@@ -9,10 +10,25 @@ function App() {
   var cartTimer:BTTTimer
   var manualscreenTracker:BTTScreenTracker
 
-    const sessionId = DataManagement.getSessionId();
+  const [sessionId, setSessionId] = useState(null);
+
      const [startTimerPageValue, setStartTimerPageValue] = useState('');
      const [startTimerCheckoutPageValue, setStartTimerCheckoutPageValue] = useState('');
      const [startTimerCheckoutValue, setStartTimerCheckoutValue] = useState('');
+   
+     useEffect(() => {
+      // Call the API function when the component mounts
+      getSessionId()
+    }, []);
+
+    const getSessionId = async () => {
+      try{
+        const sID =  await BTTConfiguration.getSessionId();
+        console.log("sID", sID)
+        setSessionId(sID)
+      }
+      catch{}
+    }
 
 
      const handleStartTimerPageChange = (text) => {
