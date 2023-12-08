@@ -175,7 +175,11 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun networkTrackerStart(networkUrl : String ,promise: Promise){
+  fun networkTrackerStart(dictionary: ReadableMap ,promise: Promise){
+
+    val networkUrl = dictionary.getString("networkUrl")
+    val requestMethod = dictionary.getString("requestMethod")
+    val bodyLength = dictionary.getString("bodyLength")
 
     // create a captured request object
     val capturedRequest = CapturedRequest()
@@ -199,10 +203,12 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun networkTrackerSubmit(dictionary: ReadableMap){
-    val networkTrackerID = dictionary.getString("bttNetworkTrackerID")
-    val encodedBodySize = dictionary.getString("bttEncodedBodySize")
-    val requestType = dictionary.getString("bttRequestType")
-    val responseStatusCode = dictionary.getInt("bttResponseStatusCode")
+    Tracker.instance?.configuration?.logger?.debug("Android :: networkTrackerSubmit.")
+
+    val networkTrackerID = dictionary.getString("networkTrackerID")
+    val encodedBodySize = dictionary.getString("encodedBodySize")
+    val requestType = dictionary.getString("requestType")
+    val responseStatusCode = dictionary.getInt("responseStatusCode")
     Tracker.instance?.configuration?.logger?.debug("Android :: networkTrackerID." + networkTrackerID.toString())
 
     val capturedRequest: CapturedRequest? = networkTrackerMap?.get(networkTrackerID)

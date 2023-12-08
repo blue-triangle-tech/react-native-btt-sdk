@@ -28,16 +28,21 @@ class BTTScreenTracker  {
   }
  
      static loadStarted(name : String, pageId : String){
+      console.log("React loadStarted")
+
          BttSdk.loadStarted(name, pageId)
       }
 
       static viewStart(name : String, pageId : String){
+        console.log("React viewStart")
         BttSdk.loadStarted(name, pageId) //TODO:: We should not be call load start and finished this should be handled in native. for screen if directly view start called then native sdk should implicitly do load start and load finish.
         BttSdk.loadFinish(name, pageId)
         BttSdk.viewStart(name, pageId)
       }
       
       static viewingEnd(name : String, pageId : String){
+        console.log("React viewingEnd")
+
         BttSdk.viewingEnd(name, pageId)
       }
   }

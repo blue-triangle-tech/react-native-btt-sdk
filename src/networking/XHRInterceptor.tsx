@@ -68,6 +68,7 @@ const XHRInterceptor = {
     // method and url, then pass them through the `openCallback`.
     XMLHttpRequest.prototype.open = function(method, url) {
       if (openCallback) {
+        
         openCallback(method, url, this);
       }
       originalXHROpen.apply(this, arguments);

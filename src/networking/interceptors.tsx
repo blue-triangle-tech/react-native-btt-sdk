@@ -18,9 +18,26 @@ const setUpXMLHTTPRequestInterceptor = () => {
 
     XHRInterceptor.enableInterception()
     var tracker
+    var httpMethod
+    var requestUrl
     XHRInterceptor.setOpenCallback((method, url)=>{
-         tracker = new BTTHTTPTracker(method || "GET", url);
+        console.log(`setOpenCallback(${method}, ${url}`)
+        httpMethod = method
+        requestUrl = url
+    });
+
+    XHRInterceptor.setSendCallback(( data) => {
+        console.log(`setSendCallback ${data}`)
+        if(data != undefined){
+            console.log(`setSendCallback ${data.length}`)
+        var dataLength = data.length.toString()
+         tracker = new BTTHTTPTracker(httpMethod || "GET", requestUrl, dataLength);
          tracker.start()
+        }
+        else{
+            tracker = new BTTHTTPTracker(httpMethod || "GET", requestUrl, "");
+            tracker.start()
+        }
     });
 
     var contentType
