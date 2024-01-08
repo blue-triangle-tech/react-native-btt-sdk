@@ -64,7 +64,8 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     config.isPerformanceMonitorEnabled = dictionary.getBoolean("performanceMonitoring")
     config.performanceMonitorIntervalMs = dictionary.getDouble("performanceMonitoringInterval").toLong()
     config.networkSampleRate = 1.0
-
+    config.isTrackNetworkStateEnabled = true
+    
     if (sessionID?.isNotEmpty() == true)
     {
       config.sessionId = sessionID

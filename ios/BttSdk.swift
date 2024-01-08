@@ -23,6 +23,7 @@ class BttSdk: NSObject {
             }
             
             if let performanceMonitoring = dictionary["performanceMonitoring"] as? Bool {
+                config.isPerformanceMonitorEnabled = performanceMonitoring
             }
             
             if let performanceMonitoringInterval = dictionary["performanceMonitoringInterval"] as? Double  {
@@ -55,7 +56,8 @@ class BttSdk: NSObject {
             }
             config.ANRWarningTimeInterval = 1
             config.enableScreenTracking = true
-            config.networkSampleRate = 0.05
+            config.enableTrackingNetworkState = true
+            config.networkSampleRate = 1
         }
         // Process the dictionary as needed
         // For example, log its contents
