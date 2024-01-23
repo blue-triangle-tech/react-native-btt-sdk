@@ -216,7 +216,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
     Tracker.instance?.configuration?.logger?.debug("Android :: networkTrackerID." + networkTrackerID.toString())
 
-    val capturedRequest: CapturedRequest? = networkTrackerMap?.get(networkTrackerID)
+    val capturedRequest: CapturedRequest = networkTrackerMap?.get(networkTrackerID)?:return
     Log.d("capturedRequest", capturedRequest.toString())
     Tracker.instance?.configuration?.logger?.debug("Android :: capturedRequest." + capturedRequest.toString())
 
