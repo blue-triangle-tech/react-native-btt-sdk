@@ -38,13 +38,13 @@ class BTTHTTPTracker {
 
     submitResponse(contentType, bodySize, statusCode) {
         // Submit Network request
-        console.log(`BTTHTTPTracker::submitResponse(${contentType}, ${bodySize}, ${statusCode})`)
         console.log(`BTTHTTPTracker::networkTrackerID(${this.networkTrackerID})`)
         if(this.networkTrackerID != undefined){
 
-          if(statusCode == 0){
-            statusCode == 600
+          if(statusCode == "0"){
+            statusCode == "600"
           }
+          console.log(`BTTHTTPTracker::submitResponse(${contentType}, ${bodySize}, ${statusCode})`)
 
           BttSdk.networkTrackerSubmit({
             "networkTrackerID": this.networkTrackerID,

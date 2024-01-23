@@ -4,8 +4,19 @@ let trackerName = "";
 let trackerID = "";
 
 class BTTNavigationContainerTracker{
+
+  static applicationDidEnterBackground(navigationRef){
+    console.log("BTTSDK::App::applicationDidEnterBackground")
+
+    let currentKey = navigationRef.getCurrentRoute().key
+    let currentName = navigationRef.getCurrentRoute().name
+    if(currentName != null){
+      BTTScreenTracker.viewingEnd(currentName, currentKey);
+    }
+  }
     
     static onContainerStateChange(navigationRef){
+      console.log("BTTSDK::App::onContainerStateChange")
 
       let currentKey = navigationRef.getCurrentRoute().key
       let currentName = navigationRef.getCurrentRoute().name

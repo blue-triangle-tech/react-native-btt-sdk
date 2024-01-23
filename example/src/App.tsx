@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Button,StyleSheet, View, ScrollView, TextInput, Text } from 'react-native';
+import { Button,StyleSheet, View, ScrollView, TextInput, Text, Image, ActivityIndicator } from 'react-native';
 import {BTTScreenTracker, BTTTimer} from 'react-native-btt-sdk';
 import DataManagement from './DataManagement'
 import {BTTConfiguration} from 'react-native-btt-sdk';
+import RNFetchBlob from 'rn-fetch-blob';
 
 function App() {
  
   var timer:BTTTimer
   var cartTimer:BTTTimer
   var manualscreenTracker:BTTScreenTracker
+  const [imageUrl, setImageUrl] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const [sessionId, setSessionId] = useState(null);
 
@@ -19,6 +22,8 @@ function App() {
      useEffect(() => {
       // Call the API function when the component mounts
       getSessionId()
+     // downloadImage();
+     downloadImages();
     }, []);
 
     const getSessionId = async () => {
@@ -30,6 +35,77 @@ function App() {
       catch{}
     }
 
+    const downloadImages = async () => {
+
+      for (let i = 0; i < 30; i++) {
+        const imageUrl = 'https://filesamples.com/samples/image/jpg/sample_640%C3%97426.jpg';
+        const response = await fetch(imageUrl);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const blob = await response.blob();
+        const uri = response.url;//URL.createObjectURL(blob);
+        console.log("BTT::downloadImageForURL", uri)
+      }      
+
+    }
+
+
+    const downloadImage = async () => {
+    //  try {
+        // URL of the image you want to download
+        const imageUrl = 'https://filesamples.com/samples/image/jpg/sample_640%C3%97426.jpg';
+        try {
+
+          const response = await fetch(imageUrl);
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          const blob = await response.blob();
+          const uri = URL.createObjectURL(blob);
+          console.log("BTT::downloadImageForURL", uri)
+          setImageUrl(uri);
+           setLoading(false);
+          return uri
+        }catch (error) {
+          console.error('Error downloading image:', error);
+          setLoading(false);
+      }
+
+    // Fetch the image
+   /* fetch(imageUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      console.log(response)
+      return response.url;
+    })
+    .then(url => {
+      
+      setImageUrl(url);
+      setLoading(false);
+    })
+    .catch(error => {
+      console.error('Error downloading image:', error);
+      setLoading(false);
+    });*/
+
+        // Download the image using RNFetchBlob
+       /* const response = await RNFetchBlob.config({
+          fileCache: true,
+          appendExt: 'jpg',
+        }).fetch('GET', imageUrl);
+
+        // Set the downloaded image path
+        setImageUrl(`file://${response.path()}`);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error downloading image:', error);
+        setLoading(false);
+      }*/
+    };
 
      const handleStartTimerPageChange = (text) => {
          setStartTimerPageValue(text);
@@ -104,6 +180,8 @@ const anrReport = () => {
   for (let i = 0; i < 1000000000; i++) {
     // Simulating a long-running synchronous operation
     const value = i * Math.random();
+    console.log('=========anrReport==============');
+    console.log(value)
   }
 }
 
@@ -279,6 +357,23 @@ const get400ApiCall = async () => {
   }
 }
 
+const getErrorApiCall = async () => {
+  console.log("Get Network Api Call")
+  const timer =  new BTTTimer("get400ApiCall")
+  timer.startTimer()
+  try {
+    const response = await fetch("https://dnsrequestwouldfailhere.com/", {
+      method: 'GET'})
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+    timer.stopTimer()
+  } catch(err) {
+    console.error("API Error: ", err);
+    timer.stopTimer()
+  }
+}
+
 const get302ApiCall = async () => {
   console.log("Get Network Api Call")
   const timer =  new BTTTimer("get400ApiCall")
@@ -331,7 +426,11 @@ const get302ApiCall = async () => {
             <Button title={'BTTScreenTracker'} onPress={screenTracker} />
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
-  </View>*/}
+  </View>
+              <Button title={'Manual Screen Tracker Start'} onPress={manualTrackerStart} />
+            <Button title={'Manual Screen Tracker Stop'} onPress={manualTrackerStop} />
+ 
+            
             <Button title={'Get XML API Call'} onPress={getXHRNetwork} />
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
@@ -364,8 +463,26 @@ const get302ApiCall = async () => {
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
             </View>
-            <Button title={'Manual Screen Tracker Start'} onPress={manualTrackerStart} />
-            <Button title={'Manual Screen Tracker Stop'} onPress={manualTrackerStop} />
+             
+    <View>
+      {loading ? (
+        <ActivityIndicator size="large" />
+      ) : (
+        <Image
+          style={{ width: 200, height: 200 }}
+          source={{ uri: imageUrl }}
+        />
+      )}
+    </View>*/}
+    <Button title={'Download Images'} onPress={downloadImages} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+
+            <Button title={'Error API Call'} onPress={getErrorApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
    </View>
    </ScrollView>
 

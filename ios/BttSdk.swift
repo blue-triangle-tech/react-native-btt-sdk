@@ -194,7 +194,7 @@ class BttSdk: NSObject {
     
     @objc
     func networkTrackerSubmit(_ dictionary: [String: Any]) {
-        print("networkTrackerSubmit")
+        print("networkTrackerSubmit dictionary: \(dictionary)")
         if let networkTrackerID = dictionary["networkTrackerID"] as? String{
             if let tracker = networkTrackerDict[networkTrackerID]{
                 
@@ -204,6 +204,10 @@ class BttSdk: NSObject {
                 
                 if let sCode = dictionary["responseStatusCode"] as? Int {
                     statusCode = sCode
+                }
+                
+                if statusCode == 0{
+                    statusCode = 600
                 }
                 
                 if let rBodyLength = dictionary["encodedBodySize"] as? String {

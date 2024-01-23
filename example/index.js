@@ -8,10 +8,10 @@ import Utility from './src/Utility';
 const sessionID = Utility.currentFormatDate()
 
 const bttOptions = new BTTOptions()
-bttOptions.trackAnr = true
-bttOptions.performanceMonitoring = false
+bttOptions.trackAnr = false
+bttOptions.performanceMonitoring = true
 bttOptions.performanceMonitoringInterval = 500
-bttOptions.memoryWarning = false
+bttOptions.memoryWarning = true
 bttOptions.trackCrash = true
 bttOptions.debug = true
 

@@ -64,8 +64,8 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     config.isPerformanceMonitorEnabled = dictionary.getBoolean("performanceMonitoring")
     config.performanceMonitorIntervalMs = dictionary.getDouble("performanceMonitoringInterval").toLong()
     config.networkSampleRate = 1.0
-    config.isTrackNetworkStateEnabled = true
-    
+    //config.isTrackNetworkStateEnabled = true
+
     if (sessionID?.isNotEmpty() == true)
     {
       config.sessionId = sessionID
@@ -209,7 +209,11 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     val networkTrackerID = dictionary.getString("networkTrackerID")
     val encodedBodySize = dictionary.getString("encodedBodySize")
     val requestType = dictionary.getString("requestType")
-    val responseStatusCode = dictionary.getInt("responseStatusCode")
+    var responseStatusCode = dictionary.getInt("responseStatusCode")
+    if (responseStatusCode == 0){
+      responseStatusCode = 600
+    }
+
     Tracker.instance?.configuration?.logger?.debug("Android :: networkTrackerID." + networkTrackerID.toString())
 
     val capturedRequest: CapturedRequest? = networkTrackerMap?.get(networkTrackerID)
