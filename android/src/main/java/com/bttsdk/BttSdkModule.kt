@@ -51,20 +51,21 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun bttConfigure(dictionary: ReadableMap) {
+    Log.d("bttConfigure", dictionary.toString())
 
     var sessionID = dictionary.getString("btt_session_id")
-   // var memoryWarning = dictionary.getBoolean("memoryWarning")
 
     val config = BlueTriangleConfiguration()
     config.siteId = dictionary.getString("btt_site_id")
     config.isDebug = dictionary.getBoolean("debug")
     config.isTrackCrashesEnabled = dictionary.getBoolean("trackCrash")
-    config.isScreenTrackingEnabled = true
+    config.isScreenTrackingEnabled = dictionary.getBoolean("screenTracking")
     config.isTrackAnrEnabled = dictionary.getBoolean("trackAnr")
     config.isPerformanceMonitorEnabled = dictionary.getBoolean("performanceMonitoring")
     config.performanceMonitorIntervalMs = dictionary.getDouble("performanceMonitoringInterval").toLong()
     config.networkSampleRate = 1.0
-    //config.isTrackNetworkStateEnabled = true
+    config.isMemoryWarningEnabled = dictionary.getBoolean("memoryWarning")
+    config.isTrackNetworkStateEnabled = dictionary.getBoolean("trackNetworkState")
 
     if (sessionID?.isNotEmpty() == true)
     {

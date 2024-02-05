@@ -22,7 +22,10 @@ class BTTConfiguration  {
                "performanceMonitoringInterval": bttOptions.performanceMonitoringInterval,
                "memoryWarning": bttOptions.memoryWarning,
                "trackCrash" : bttOptions.trackCrash,
-               "debug": bttOptions.debug           };
+               "debug": bttOptions.debug,
+               "screenTracking": bttOptions.screenTracking,
+               "trackNetworkState": bttOptions.trackNetworkState          
+               };
       console.log('BTTConfiguration.configure ::', dictionary); 
     
       setUpInterceptors();

@@ -48,15 +48,19 @@ class BttSdk: NSObject {
                 config.enableDebugLogging = debug
             }
             
-            
             if let sessionID = dictionary["btt_session_id"] as? String {
                 if let uintValue = UInt64(sessionID) {
                     config.sessionID = uintValue
                 }
             }
             config.ANRWarningTimeInterval = 1
-            config.enableScreenTracking = true
-            config.enableTrackingNetworkState = true
+            if let screenTracking = dictionary["screenTracking"] as? Bool {
+                config.enableScreenTracking = screenTracking
+            }
+            
+            if let networkState = dictionary["trackNetworkState"] as? Bool {
+                config.enableTrackingNetworkState = networkState
+            }
             config.networkSampleRate = 1
         }
         // Process the dictionary as needed

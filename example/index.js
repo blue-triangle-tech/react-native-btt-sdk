@@ -14,6 +14,8 @@ bttOptions.performanceMonitoringInterval = 500
 bttOptions.memoryWarning = true
 bttOptions.trackCrash = true
 bttOptions.debug = true
+bttOptions.screenTracking = true
+bttOptions.trackNetworkState = true
 
 BTTConfiguration.configure('sdkdemo26621z', bttOptions)
 
