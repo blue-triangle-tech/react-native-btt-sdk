@@ -4,7 +4,9 @@ class BTTOptions  {
      performanceMonitoringInterval = 500
      memoryWarning = false
      trackCrash = false
+     screenTracking = false
+     trackNetworkState = false
      debug = false
 }
 
-module.exports = BTTOptions;
+export default BTTOptions;

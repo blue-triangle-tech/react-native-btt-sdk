@@ -37,95 +37,127 @@ Add the SDK to the project using the following command:
 yarn add 'file:/<project-code-location>/react-native-btt-sdk'
 ```
 replace `<project-code-location>` with the local directory location where you have saved the SDK.
+
 ### Configuration
-To configure, in your `index.js` file, add the following snippet:
+Before using BTT SDK, It need to be configured.It is recommended to configure sdk in your `index.js` file. First import the `BTTConfiguration` and `BTTOptions` as showns in below code snippet. Then configure it using `BTTConfiguration.configure(<siteId>, <bttOptions>)` with `<siteId>` and `BTTOptions`.
+
 ```js
-import {AppRegistry} from 'react-native';
-import App from './App';
-import {name as appName} from './app.json';
+//First import the BTTConfiguration and BTTOptions
 import {BTTConfiguration, BTTOptions} from 'react-native-btt-sdk';
+
+//Add the code snippet to configure sdk
 const bttOptions = new BTTOptions()
 bttOptions.anr = true
 bttOptions.performanceMonitoring = true
 bttOptions.performanceMonitoringInterval = true
-bttOptions.memoryWarning = true
+bttOptions.trackCrash = true
 bttOptions.debug = false
-BTTConfiguration.configure(siteId, bttOptions)
-AppRegistry.registerComponent(appName, () => App);
+BTTConfiguration.configure(<siteId>, bttOptions)
 ```
-### Using Manual Timers
-To use a manual timer, you need to first import the `BTTTimer` object from `react-native-btt-sdk`. The `BTTTimer` object
-has the following functions:
-- `startTimer(timerOptions)`:
-  startTimer is used to start a manual timer. It takes a `timerOptions` object where you need to pass a `btt_page_name`
-  which will be
-  the page name which will be displayed in the portal. It returns a promise object which resolves in a result
-  object containing `btt_timer_id` which is an identifier for the started timer.
-- `stopTimer(timerOptions)`:
-  stopTimer is used to stop a running timer. It takes a `timerOptions` object in which you need to pass a `btt_timer_id`
-  which will be the identifier that you recieved from the promise that `startTimer` returned.
-The following code snippet shows the usage of `startTimer` and `stopTimer`:
-```javascript
+In the place of <siteId>, put your project's siteId.
+
+### Timer<br/>
+
+a) Using Manual Timers:<br/>
+
+To use a manual timer, you need to first import the `BTTTimer` object from `react-native-btt-sdk`. Create timer object with pageName.
+
+ The `BTTTimer` object
+has the following functions: 
+- `timer.startTimer()`:
+- `timer.stopTimer()`:
+
+ ```js
 import {BTTTimer} from 'react-native-btt-sdk';
-import React, {useRef} from 'react';
-import {View, Button} from 'react-native';
-function YourComponent() {
-  const timerId = useRef(0)
-  const startTimer = async () => {
-    const result = await BTTTimer.startTimer({
-      "btt_page_name":"<YourPageName>"
-    })
-    timerId.current = result.btt_timer_id
-  }
-  const stopTimer = () => {
-    BTTTimer.stopTimer({
-      "btt_timer_id": timerId.current
-    })
-  }
+
+const timer = new BTTTimer(pageName)
+timer.startTimer()
+timer.stopTimer()
+```
+
+b) Cart Value:
+
+We can set cart value to `BTTTimer` object using following function.
+
+- `timer.setCartValue(cartValue)`:
+
+ ```js
+import {BTTTimer} from 'react-native-btt-sdk';
+
+const timer = new BTTTimer(pageName)
+timer.startTimer()
+timer.setCartValue(cartValue)
+timer.stopTimer()
+ ```
+
+c) Performance Monitor:
+
+PerformanceMonitoring - enables or disables tracking of memory and CPU usage. To enable Performance Monitor we need set `performanceMonitoring` to `true` from `BTTOptions` at the time of configuration. Also you can set `performanceMonitoringInterval` which is in milliseconds. You can refer [Configuration](#configuration).
+
+### Screen Tracker <br/>
+
+a) Manual Tracker
+
+To use a manual tracker, you need to first import the `BTTScreenTracker` object from `react-native-btt-sdk`. Create timer object with pageName.
+
+ The `BTTScreenTracker` object has the following functions:
+- `manualTracker.startTracking()`:
+- `manualTracker.stopTracking()`:
+
+ ```js
+import React, { useEffect } from 'react';
+import {BTTScreenTracker} from 'react-native-btt-sdk';
+
+function App({ }) {
+var manualTracker:BTTScreenTracker
+
+  useEffect(() => {
+
+    const unsubscribeFocus = navigation.addListener('focus', () =>{
+
+      if(manualTracker == undefined){
+        manualTracker = new BTTScreenTracker("PageName")
+      }
+      manualTracker.startTracking()
+      
+    });
+    const unsubscribeBlur = navigation.addListener('blur', () =>{
+      manualTracker.stopTracking()
+    });
+
+    return () => {
+        unsubscribeFocus()
+        unsubscribeBlur()
+    };
+  }, []);
+
   return (
-    <View>
-        <Button title={'Start Timer'} onPress={startTimer} />
-        <Button title={'Stop Timer'} onPress={stopTimer} />
-    </View>
-  )
+     {/* ... */}
+  );
 }
-```
-### Screen Tracking
-At the time of this writing, Screen tracking is supported for [React Navigation](https://reactnavigation.org/) only. The following code snippet shows how to use `BTTScreenTracker` from `react-native-btt-sdk` to enable Screen tracking:
-```
-import React, {useRef} from 'react';
-import `BTTScreenTracker` from `react-native-btt-sdk`
-import 'NavigationContainer, {useNavigationContainerRef} from '@react-navigation/native';
+
+ ```
+
+b) Screen Tracking for [React Navigation](https://reactnavigation.org/):
+
+All screen can be tracked by adding two lines of code in container, as shown in below example.
+
+
+ ```js
+ import React from 'react';
+import BTTNavigationContainerTracker from 'react-native-btt-sdk';
+import NavigationContainer, {useNavigationContainerRef} from '@react-navigation/native';
+
 function App() {
   const navigationRef = useNavigationContainerRef();
-  const routeNameRef = useRef();
-  const routeIDRef = useRef();
   return (
     <NavigationContainer
-      ref={navigationRef}
-      onReady={() => {
-        routeNameRef.current = navigationRef.getCurrentRoute().name;
-        routeIDRef.current = navigationRef.getCurrentRoute().key;
-        // Notify BTTScreenTracker about Navigation ready state
-        BTTScreenTracker.viewStart(
-            navigationRef.getCurrentRoute().key,
-            navigationRef.getCurrentRoute().name
-        );
+      ref = { navigationRef }
+      onReady = {() => {
+          BTTNavigationContainerTracker.onContainerStateChange(navigationRef)
       }}
       onStateChange={async () => {
-        // Get the Route info for the page that the user just left
-        const previousRouteName = routeNameRef.current;
-        const previousRouteId = routeIDRef.current;
-        // Get the route info for the page that the user just navigated to
-        const currentRouteName = navigationRef.getCurrentRoute().name;
-        const currentRouteId = navigationRef.getCurrentRoute().key;
-        if (previousRouteName !== currentRouteName) {
-          BTTScreenTracker.viewingEnd(previousRouteId, previousRouteName);
-          BTTScreenTracker.viewStart(currentRouteId, currentRouteName);
-          // Save the current route data for later comparison
-          routeNameRef.current = currentRouteName;
-          routeIDRef.current = currentRouteId;
-        }
+          BTTNavigationContainerTracker.onContainerStateChange(navigationRef)
       }}
     >
       {/* ... */}
@@ -133,3 +165,9 @@ function App() {
   );
 }
 ```
+BTTNavigationContainerTracker has a single method for screen tracking which is called in onReady and onStateChange.This two line of code can track all the happening in the navigation controller, This solution is based on [React Navigation](https://reactnavigation.org/docs/screen-tracking/) reference for screen tracking analytics.
+
+
+### Track Crash<br/>
+
+TrackCrash - enable or disable collecting and sending crash reports to the server. To enable crash tracking we need to set `trackCrash` and `debug` to true  from `BTTOptions` at the time of configuration. You can refer [Configuration](#configuration).
