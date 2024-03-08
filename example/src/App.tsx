@@ -1,19 +1,111 @@
-import React, { useState, useRef } from 'react';
-import { Button,StyleSheet, View, Text, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Button,StyleSheet, View, ScrollView, TextInput, Text, Image, ActivityIndicator } from 'react-native';
 import {BTTScreenTracker, BTTTimer} from 'react-native-btt-sdk';
+import DataManagement from './DataManagement'
+import {BTTConfiguration} from 'react-native-btt-sdk';
+import RNFetchBlob from 'rn-fetch-blob';
 
 function App() {
  
   var timer:BTTTimer
   var cartTimer:BTTTimer
   var manualscreenTracker:BTTScreenTracker
+  const [imageUrl, setImageUrl] = useState('');
+  const [loading, setLoading] = useState(true);
 
-    const currentDate = new Date();
-    const sessionId = formatDate(currentDate);
+  const [sessionId, setSessionId] = useState(null);
+
      const [startTimerPageValue, setStartTimerPageValue] = useState('');
      const [startTimerCheckoutPageValue, setStartTimerCheckoutPageValue] = useState('');
      const [startTimerCheckoutValue, setStartTimerCheckoutValue] = useState('');
+   
+     useEffect(() => {
+      // Call the API function when the component mounts
+      getSessionId()
+     // downloadImage();
+     downloadImages();
+    }, []);
 
+    const getSessionId = async () => {
+      try{
+        const sID =  await BTTConfiguration.getSessionId();
+        console.log("sID", sID)
+        setSessionId(sID)
+      }
+      catch{}
+    }
+
+    const downloadImages = async () => {
+
+      for (let i = 0; i < 30; i++) {
+        const imageUrl = 'https://filesamples.com/samples/image/jpg/sample_640%C3%97426.jpg';
+        const response = await fetch(imageUrl);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const blob = await response.blob();
+        const uri = response.url;//URL.createObjectURL(blob);
+        console.log("BTT::downloadImageForURL", uri)
+      }      
+
+    }
+
+
+    const downloadImage = async () => {
+    //  try {
+        // URL of the image you want to download
+        const imageUrl = 'https://filesamples.com/samples/image/jpg/sample_640%C3%97426.jpg';
+        try {
+
+          const response = await fetch(imageUrl);
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          const blob = await response.blob();
+          const uri = URL.createObjectURL(blob);
+          console.log("BTT::downloadImageForURL", uri)
+          setImageUrl(uri);
+           setLoading(false);
+          return uri
+        }catch (error) {
+          console.error('Error downloading image:', error);
+          setLoading(false);
+      }
+
+    // Fetch the image
+   /* fetch(imageUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      console.log(response)
+      return response.url;
+    })
+    .then(url => {
+      
+      setImageUrl(url);
+      setLoading(false);
+    })
+    .catch(error => {
+      console.error('Error downloading image:', error);
+      setLoading(false);
+    });*/
+
+        // Download the image using RNFetchBlob
+       /* const response = await RNFetchBlob.config({
+          fileCache: true,
+          appendExt: 'jpg',
+        }).fetch('GET', imageUrl);
+
+        // Set the downloaded image path
+        setImageUrl(`file://${response.path()}`);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error downloading image:', error);
+        setLoading(false);
+      }*/
+    };
 
      const handleStartTimerPageChange = (text) => {
          setStartTimerPageValue(text);
@@ -35,12 +127,17 @@ function App() {
       }
     
     timer = new BTTTimer(startTimerPageValue)
-    timer.startTimer()
+    await timer.startTimer()
+
+    timer.stopTimer()
+    handleStartTimerPageChange("")
   }
 
   const stopTimer = () => {
-    timer.stopTimer()
-    handleStartTimerPageChange("")
+    if(timer != undefined){
+      timer.stopTimer()
+      handleStartTimerPageChange("")
+    }
   }
 
     const startCheckoutTimer = async () => {
@@ -83,6 +180,8 @@ const anrReport = () => {
   for (let i = 0; i < 1000000000; i++) {
     // Simulating a long-running synchronous operation
     const value = i * Math.random();
+    console.log('=========anrReport==============');
+    console.log(value)
   }
 }
 
@@ -102,14 +201,200 @@ const manualTrackerStop = () => {
   manualscreenTracker.stopTracking()
 }
 
+const getXHRNetwork = async () => {
+
+ const timer =  new BTTTimer("getXHRNetwork")
+ timer.startTimer()
+
+  const xhr = new XMLHttpRequest();
+xhr.open('GET', 'https://postman-echo.com/get?foo1=bar1&foo2=bar2', true);
+xhr.setRequestHeader('Content-Type', 'application/json');
+
+xhr.onreadystatechange = function () {
+  if (xhr.readyState === 4) {
+    if (xhr.status === 200) {
+      const data = JSON.parse(xhr.responseText);
+      console.log('Data:', data);
+    } else {
+      console.error('HTTP error! Status:', xhr.status);
+    }
+
+    timer.stopTimer()
+  }
+};
+
+xhr.send();
+}
+
+const getNetworkApiCall = async () => {
+  console.log("Get Network Api Call")
+  const timer =  new BTTTimer("getNetworkApiCall")
+  timer.startTimer()
+
+  try {
+    const response = await fetch("https://postman-echo.com/get?foo1=bar1&foo2=bar2", {
+      method: 'GET'})
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+    timer.stopTimer();
+  } catch(err) {
+    console.error("API Error: ", err);
+    timer.stopTimer();
+  }
+}
+
+const postNetworkApiCall = async () => {
+  console.log("Post Network Api Call")
+  const timer =  new BTTTimer("postNetworkApiCall")
+  timer.startTimer()
+  try {
+    const response = await fetch("https://postman-echo.com/post", {
+      method: 'POST',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          username: 'test',
+          password: 'test123',
+      })
+   })
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+    timer.stopTimer()
+  } catch(err) {
+    console.error("API Error: ", err);
+    timer.stopTimer()
+  }
+}
+
+const putNetworkApiCall = async () => {
+  console.log("Put Network Api Call")
+  const timer =  new BTTTimer("putNetworkApiCall")
+  timer.startTimer()
+  try {
+    const response = await fetch("https://postman-echo.com/put", {
+      method: 'PUT',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title: 'React PUT Request Example' })
+   })
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+    timer.stopTimer()
+  } catch(err) {
+    console.error("API Error: ", err);
+    timer.stopTimer()
+  }
+}
+
+const patchNetworkApiCall = async () => {
+  const timer =  new BTTTimer("patchNetworkApiCall")
+  timer.startTimer()
+  
+  console.log("Patch Network Api Call")
+  try {
+    const response = await fetch("https://postman-echo.com/patch", {
+      method: 'PATCH',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title: 'React PATCH Request Example' })
+   })
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+    timer.stopTimer()
+  } catch(err) {
+    console.error("API Error: ", err);
+    timer.stopTimer()
+  }
+}
+
+const deleteNetworkApiCall = async () => {
+  console.log("Delete Network Api Call")
+  const timer =  new BTTTimer("deleteNetworkApiCall")
+  timer.startTimer()
+  try {
+    const response = await fetch("https://postman-echo.com/delete", {
+      method: 'DELETE',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id: 'deleteId' })
+   })
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+    timer.stopTimer()
+  } catch(err) {
+    console.error("API Error: ", err);
+    timer.stopTimer()
+  }
+}
+
+const get400ApiCall = async () => {
+  console.log("Get Network Api Call")
+  const timer =  new BTTTimer("get400ApiCall")
+  timer.startTimer()
+  try {
+    const response = await fetch("https://postman-echo.com/status/404", {
+      method: 'GET'})
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+    timer.stopTimer()
+  } catch(err) {
+    console.error("API Error: ", err);
+    timer.stopTimer()
+  }
+}
+
+const getErrorApiCall = async () => {
+  console.log("Get Network Api Call")
+  const timer =  new BTTTimer("get400ApiCall")
+  timer.startTimer()
+  try {
+    const response = await fetch("https://dnsrequestwouldfailhere.com/", {
+      method: 'GET'})
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+    timer.stopTimer()
+  } catch(err) {
+    console.error("API Error: ", err);
+    timer.stopTimer()
+  }
+}
+
+const get302ApiCall = async () => {
+  console.log("Get Network Api Call")
+  const timer =  new BTTTimer("get400ApiCall")
+  timer.startTimer()
+  try {
+    const response = await fetch("https://postman-echo.com/redirect-to?url=https://postman-echo.com/get?foo1=bar1&foo2=bar2", {
+      method: 'GET'})
+    console.log("API Response Received: ", response);
+    const data = await response.json();
+    console.log('Data:', data);
+    timer.stopTimer()
+  } catch(err) {
+    console.error("API Error: ", err);
+    timer.stopTimer()
+  }
+}
 
   return (
-   <View style={styles.container}>
-
-        <View style={styles.lineWrapper}>
-      <View style={styles.line} />
-      </View>
-      <Text>Seesion ID: {sessionId}</Text>
+    <ScrollView>
+      <View style={styles.container}>
+      <Text style={styles.text}>Session Id: {sessionId}</Text>
       <View style={styles.lineWrapper}>
       <View style={styles.line} />
       </View>
@@ -121,7 +406,7 @@ const manualTrackerStop = () => {
         <View style={styles.line} />
       </View>
 
-            <TextInput style={styles.textInput} placeholder="Enter start checkout timer page name"
+            {/*<TextInput style={styles.textInput} placeholder="Enter start checkout timer page name"
             onChangeText={handleStartTimerCheckoutPageChange} value={startTimerCheckoutPageValue} />
             <Button title={'Start Checkout Timer'} onPress={startCheckoutTimer} />
             <TextInput style={styles.textInput} placeholder="Add cart value"
@@ -130,22 +415,77 @@ const manualTrackerStop = () => {
 
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
-            </View>
+  </View>
             
             <Button title={'JS ERROR'} onPress={errorReport} />
             <Button title={'ANR'} onPress={anrReport} />
 
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
-            </View>
+  </View>
             <Button title={'BTTScreenTracker'} onPress={screenTracker} />
             <View style={styles.lineWrapper}>
             <View style={styles.line} />
-            </View>
-            <Button title={'Manual Screen Tracker Start'} onPress={manualTrackerStart} />
+  </View>
+              <Button title={'Manual Screen Tracker Start'} onPress={manualTrackerStart} />
             <Button title={'Manual Screen Tracker Stop'} onPress={manualTrackerStop} />
+ 
+            
+            <Button title={'Get XML API Call'} onPress={getXHRNetwork} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'Get API Call'} onPress={getNetworkApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'Post API Call'} onPress={postNetworkApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'Put API Call'} onPress={putNetworkApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'Patch API Call'} onPress={patchNetworkApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'Delete API Call'} onPress={deleteNetworkApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'400 Error API Call'} onPress={get400ApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+            <Button title={'302 Error API Call'} onPress={get302ApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
+             
+    <View>
+      {loading ? (
+        <ActivityIndicator size="large" />
+      ) : (
+        <Image
+          style={{ width: 200, height: 200 }}
+          source={{ uri: imageUrl }}
+        />
+      )}
+    </View>*/}
+    <Button title={'Download Images'} onPress={downloadImages} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
 
+            <Button title={'Error API Call'} onPress={getErrorApiCall} />
+            <View style={styles.lineWrapper}>
+            <View style={styles.line} />
+            </View>
    </View>
+   </ScrollView>
+
   );
 }
 
@@ -174,15 +514,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: 'black', // You can change the color as needed
   },
+  text: {
+    fontSize: 20,
+  },
 });
-
-const formatDate = (date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
-
-  return `${year}${month}${day}${hours}${minutes}`;
-};

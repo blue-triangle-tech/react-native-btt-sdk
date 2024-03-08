@@ -4,8 +4,19 @@ let trackerName = "";
 let trackerID = "";
 
 class BTTNavigationContainerTracker{
+
+  static applicationDidEnterBackground(navigationRef){
+    console.log("BTTSDK::App::applicationDidEnterBackground")
+
+    let currentKey = navigationRef.getCurrentRoute().key
+    let currentName = navigationRef.getCurrentRoute().name
+    if(currentName != null){
+      BTTScreenTracker.viewingEnd(currentName, currentKey);
+    }
+  }
     
     static onContainerStateChange(navigationRef){
+      console.log("BTTSDK::App::onContainerStateChange")
 
       let currentKey = navigationRef.getCurrentRoute().key
       let currentName = navigationRef.getCurrentRoute().name
@@ -14,7 +25,7 @@ class BTTNavigationContainerTracker{
         const previousRouteId = trackerID;
         
         if(previousRouteId == null){
-            BTTScreenTracker.viewStart(currentKey, currentName);
+            BTTScreenTracker.viewStart(currentName, currentKey);
             trackerName = currentName;
             trackerID = currentKey;
           }
@@ -24,8 +35,8 @@ class BTTNavigationContainerTracker{
       
           if (previousRouteId !== currentRouteId) {
       
-            BTTScreenTracker.viewingEnd(previousRouteId, previousRouteName);
-            BTTScreenTracker.viewStart(currentRouteId, currentRouteName);
+            BTTScreenTracker.viewingEnd(previousRouteName, previousRouteId);
+            BTTScreenTracker.viewStart(currentRouteName, currentRouteId);
       
             trackerName = currentName;
             trackerID = currentKey;

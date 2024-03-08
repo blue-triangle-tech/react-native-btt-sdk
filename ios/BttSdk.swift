@@ -5,6 +5,8 @@ class BttSdk: NSObject {
     
     private var timer : BTTimer?
     private var timerDict = [String: BTTimer]()
+    private var screenTrackerDict = [String: BTTScreenTracker]()
+    private var networkTrackerDict = [String: NetworkCaptureTracker]()
 
     @objc
     func bttConfigure(_ dictionary: [String: Any]) {
@@ -21,6 +23,7 @@ class BttSdk: NSObject {
             }
             
             if let performanceMonitoring = dictionary["performanceMonitoring"] as? Bool {
+                config.isPerformanceMonitorEnabled = performanceMonitoring
             }
             
             if let performanceMonitoringInterval = dictionary["performanceMonitoringInterval"] as? Double  {
@@ -29,6 +32,7 @@ class BttSdk: NSObject {
             }
             
             if let memoryWarning = dictionary["memoryWarning"] as? Bool {
+                config.enableMemoryWarning = memoryWarning
             }
             
             if let trackCrash = dictionary["trackCrash"] as? Bool {
@@ -44,18 +48,30 @@ class BttSdk: NSObject {
                 config.enableDebugLogging = debug
             }
             
-            
             if let sessionID = dictionary["btt_session_id"] as? String {
                 if let uintValue = UInt64(sessionID) {
                     config.sessionID = uintValue
                 }
             }
             config.ANRWarningTimeInterval = 1
-            config.enableScreenTracking = true
+            if let screenTracking = dictionary["screenTracking"] as? Bool {
+                config.enableScreenTracking = screenTracking
+            }
+            
+            if let networkState = dictionary["trackNetworkState"] as? Bool {
+                config.enableTrackingNetworkState = networkState
+            }
+            config.networkSampleRate = 1
         }
         // Process the dictionary as needed
         // For example, log its contents
         print("Received dictionary: \(dictionary)")
+    }
+    
+    @objc(getSessionId:withRejecter:)
+    func getSessionId( resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+        let sessionID = BlueTriangle.sessionID
+        resolve(String(sessionID))
     }
     
     @objc func bttDefaultConfigure() {
@@ -112,23 +128,105 @@ class BttSdk: NSObject {
         }
     }
     
-    @objc
-    func loadStarted(_ id : String, name : String){
-        
+    private func getScreenTracker(_ page : String, pageId : String) -> BTTScreenTracker{
+        if let screenTracker:BTTScreenTracker = screenTrackerDict[pageId]{
+            return screenTracker
+        }
+        let screenTracker = BTTScreenTracker(page)
+        screenTrackerDict[pageId] = screenTracker
+        return screenTracker
     }
     
     @objc
-    func loadFinish(_ id : String, name : String){
-        
+    func loadStarted(_ page : String, pageId : String){
+        print("loadStarted")
+        let screenTracker:BTTScreenTracker = self.getScreenTracker(page, pageId: pageId)
+        screenTracker.loadStarted()
     }
     
     @objc
-    func viewStart(_ id : String, name : String){
-        
+    func loadFinish(_ page : String, pageId : String){
+        print("loadFinish")
+        let screenTracker:BTTScreenTracker = self.getScreenTracker(page, pageId: pageId)
+        screenTracker.loadEnded()
     }
     
     @objc
-    func viewingEnd(_ id : String, name : String){
+    func viewStart(_ page : String, pageId : String){
+        print("viewStart")
+
+        let screenTracker:BTTScreenTracker = self.getScreenTracker(page, pageId: pageId)
+        screenTracker.viewStart()
+    }
+    
+    @objc
+    func viewingEnd(_ page : String, pageId : String){
+        print("viewingEnd")
+
+        let screenTracker:BTTScreenTracker = self.getScreenTracker(page, pageId: pageId)
+        screenTracker.viewingEnd()
+        screenTrackerDict.removeValue(forKey: pageId)
+    }
+    
+    @objc(networkTrackerStart:withResolver:withRejecter:)
+    func networkTrackerStart(_ dictionary: [String: Any], resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+        print("networkTrackerStart: \(dictionary)")
+        var requestUrl = ""
+        var requestMethod = ""
+        var bodyLength = ""
         
+        if let rUrl = dictionary["networkUrl"] as? String {
+            requestUrl = rUrl
+        }
+        
+        if let rMethod = dictionary["requestMethod"] as? String {
+            requestMethod = rMethod
+        }
+        
+        if let bLength = dictionary["bodyLength"] as? String {
+            bodyLength = bLength
+        }
+        
+        let tracker = NetworkCaptureTracker.init(url: requestUrl, method: requestMethod, requestBodylength: Int64(bodyLength) ?? 0)
+        let networkTrackerID = UUID().uuidString
+        let ntDict: [String: Any] = [
+               "networkTrackerID": networkTrackerID
+           ]
+        networkTrackerDict[networkTrackerID] = tracker
+        resolve(ntDict)
+    }
+    
+    @objc
+    func networkTrackerSubmit(_ dictionary: [String: Any]) {
+        print("networkTrackerSubmit dictionary: \(dictionary)")
+        if let networkTrackerID = dictionary["networkTrackerID"] as? String{
+            if let tracker = networkTrackerDict[networkTrackerID]{
+                
+                var statusCode = 0
+                var bodyLength = ""
+                var requestType = ""
+                
+                if let sCode = dictionary["responseStatusCode"] as? Int {
+                    statusCode = sCode
+                }
+                
+                if statusCode == 0{
+                    statusCode = 600
+                }
+                
+                if let rBodyLength = dictionary["encodedBodySize"] as? String {
+                    bodyLength = rBodyLength
+                }
+                
+                if let rType = dictionary["requestType"] as? String {
+                    requestType = rType
+                }
+                
+                print("networkTrackerSubmit:statusCode: \(statusCode) bodyLength:\(bodyLength) requestType:\(requestType)")
+                
+                tracker.submit(Int64(statusCode), responseBodyLength: Int64(bodyLength) ?? 0, contentType: requestType)
+                networkTrackerDict.removeValue(forKey: networkTrackerID)
+            }
+        }
     }
 }

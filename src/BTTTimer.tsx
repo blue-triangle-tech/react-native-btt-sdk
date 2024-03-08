@@ -16,13 +16,16 @@ class BTTTimer {
     this.pageName = pageName
   }
     
-   startTimer() {
+  async startTimer() {
     
     const dictionary = {"btt_page_name": this.pageName};
         
-    const result =  BttSdk.bttStartTimer(dictionary).then(result => {
-            this.timerId = result.btt_timer_id
-    })
+    const result = await BttSdk.bttStartTimer(dictionary)
+
+    this.timerId = result.btt_timer_id
+    console.log("startTimer")
+    console.log(this.timerId)
+    console.log("startTimer")
   }
 
   setCartValue(cartValue){

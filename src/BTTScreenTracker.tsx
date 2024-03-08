@@ -20,25 +20,30 @@ class BTTScreenTracker  {
   }
 
   startTracking(){
-    BTTScreenTracker.viewStart(this.customPageID, this.pageName)
+    BTTScreenTracker.viewStart(this.pageName, this.customPageID )
   }
 
   stopTracking(){
-    BTTScreenTracker.viewingEnd(this.customPageID, this.pageName)
+    BTTScreenTracker.viewingEnd(this.pageName, this.customPageID )
   }
  
-     static loadStarted(id : String,  name : String){
-         BttSdk.loadStarted(id , name)
+     static loadStarted(name : String, pageId : String){
+      console.log("React loadStarted")
+
+         BttSdk.loadStarted(name, pageId)
       }
 
-      static viewStart(id : String,  name : String){
-        BttSdk.loadStarted(id , name) //TODO:: We should not be call load start and finished this should be handled in native. for screen if directly view start called then native sdk should implicitly do load start and load finish.
-        BttSdk.loadFinish(id , name)
-        BttSdk.viewStart(id , name)
+      static viewStart(name : String, pageId : String){
+        console.log("React viewStart")
+        BttSdk.loadStarted(name, pageId) //TODO:: We should not be call load start and finished this should be handled in native. for screen if directly view start called then native sdk should implicitly do load start and load finish.
+        BttSdk.loadFinish(name, pageId)
+        BttSdk.viewStart(name, pageId)
       }
       
-      static viewingEnd(id : String,  name : String){
-        BttSdk.viewingEnd(id , name)
+      static viewingEnd(name : String, pageId : String){
+        console.log("React viewingEnd")
+
+        BttSdk.viewingEnd(name, pageId)
       }
   }
   
