@@ -62,8 +62,8 @@ class BttSdk: NSObject {
                 config.enableTrackingNetworkState = networkState
             }
             config.networkSampleRate = 1
-            config.ignoreViewControllers = ["RNSScreen"]
-            
+            config.ignoreViewControllers = ["RNSScreen", "UIViewController"]
+
             config.cacheMemoryLimit = 20 * 1024
             config.cacheExpiryDuration = 5 * 60 * 1000
         }
