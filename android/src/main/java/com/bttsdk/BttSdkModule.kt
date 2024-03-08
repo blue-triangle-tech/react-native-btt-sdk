@@ -66,6 +66,8 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     config.networkSampleRate = 1.0
     config.isMemoryWarningEnabled = dictionary.getBoolean("memoryWarning")
     config.isTrackNetworkStateEnabled = dictionary.getBoolean("trackNetworkState")
+    config.cacheMemoryLimit = 10 * 1000L
+    config.cacheExpiryDuration = 120 * 1000L
 
     if (sessionID?.isNotEmpty() == true)
     {

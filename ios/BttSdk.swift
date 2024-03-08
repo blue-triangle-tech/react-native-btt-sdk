@@ -62,6 +62,10 @@ class BttSdk: NSObject {
                 config.enableTrackingNetworkState = networkState
             }
             config.networkSampleRate = 1
+            config.ignoreViewControllers = ["RNSScreen"]
+            
+            config.cacheMemoryLimit = 20 * 1024
+            config.cacheExpiryDuration = 5 * 60 * 1000
         }
         // Process the dictionary as needed
         // For example, log its contents
