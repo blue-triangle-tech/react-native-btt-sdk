@@ -31,6 +31,21 @@
 [//]: # ()
 [//]: # (Made with [create-react-native-library]&#40;https://github.com/callstack/react-native-builder-bob&#41;)
 # Blue Triangle React Native SDK
+
+### Download
+
+Download/clone react-native-btt-sdk(https://github.com/blue-triangle-tech/react-native-btt-sdk.git ) from following git url
+
+```
+https://github.com/blue-triangle-tech/react-native-btt-sdk.git 
+```
+
+Download/clone btt-swift-sdk(https://github.com/JP-aloha/btt-swift-sdk/tree/feature/cpu-memory-netstate-offline-hybrid) for iOS from following git url
+
+```
+https://github.com/JP-aloha/btt-swift-sdk/tree/feature/cpu-memory-netstate-offline-hybrid
+```
+
 ### Installation
 Add the SDK to the project using the following command:
 ```
@@ -38,6 +53,22 @@ yarn add 'file:/<project-code-location>/react-native-btt-sdk'
 ```
 replace `<project-code-location>` with the local directory location where you have saved the SDK.
 
+### Integrate iOS SDK
+
+ Go to ios folder via terminal and do pod install.
+ ```
+    cd '<project-location>/ios'
+    pod install
+ ```
+
+ Copy `Sources` folder from btt-swift-sdk and replace `Sources` folder from 'ios/Pods/BlueTriangleSDK-Swift/'
+
+ Again go to ios folder via terminal and do pod install.
+  ```
+    cd '<project-location>/ios'
+    pod install
+  ```
+  
 ### Configuration
 Before using BTT SDK, It need to be configured.It is recommended to configure sdk in your `index.js` file. First import the `BTTConfiguration` and `BTTOptions` as showns in below code snippet. Then configure it using `BTTConfiguration.configure(<siteId>, <bttOptions>)` with `<siteId>` and `BTTOptions`.
 
@@ -47,11 +78,15 @@ import {BTTConfiguration, BTTOptions} from 'react-native-btt-sdk';
 
 //Add the code snippet to configure sdk
 const bttOptions = new BTTOptions()
-bttOptions.anr = true
+bttOptions.trackAnr = false
 bttOptions.performanceMonitoring = true
-bttOptions.performanceMonitoringInterval = true
+bttOptions.performanceMonitoringInterval = 1000
+bttOptions.memoryWarning = true
 bttOptions.trackCrash = true
-bttOptions.debug = false
+bttOptions.debug = true
+bttOptions.screenTracking = true
+bttOptions.trackNetworkState = true
+
 BTTConfiguration.configure(<siteId>, bttOptions)
 ```
 In the place of <siteId>, put your project's siteId.
@@ -170,4 +205,4 @@ BTTNavigationContainerTracker has a single method for screen tracking which is c
 
 ### Track Crash<br/>
 
-TrackCrash - enable or disable collecting and sending crash reports to the server. To enable crash tracking we need to set `trackCrash` and `debug` to true  from `BTTOptions` at the time of configuration. You can refer [Configuration](#configuration).
+TrackCrash - enable or disable collecting and sending crash reports to the server. To enable crash tracking we need to set `trackCrash` from `BTTOptions` at the time of configuration. You can refer [Configuration](#configuration).
