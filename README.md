@@ -32,40 +32,36 @@
 [//]: # (Made with [create-react-native-library]&#40;https://github.com/callstack/react-native-builder-bob&#41;)
 # Blue Triangle React Native SDK
 
-### Download
+### Download SDK's
 
-Download/clone react-native-btt-sdk(https://github.com/blue-triangle-tech/react-native-btt-sdk.git ) from following git url
-
+Download/clone react-native-btt-sdk(this) from below url
 ```
 https://github.com/blue-triangle-tech/react-native-btt-sdk.git 
 ```
 
-Download/clone btt-swift-sdk(https://github.com/JP-aloha/btt-swift-sdk/tree/feature/cpu-memory-netstate-offline-hybrid) for iOS from following git url
-
+Download/clone btt-swift-sdk(fork feature branch) for iOS from below url
 ```
 https://github.com/JP-aloha/btt-swift-sdk/tree/feature/cpu-memory-netstate-offline-hybrid
 ```
-
 ### Installation
-Add the SDK to the project using the following command:
+Add the SDK to the your project using the following command:
 ```
-yarn add 'file:/<project-code-location>/react-native-btt-sdk'
+yarn add 'file:/<sdk-download-location>/react-native-btt-sdk'
 ```
-replace `<project-code-location>` with the local directory location where you have saved the SDK.
+replace `<sdk-download-location>` with the local directory location where you have saved the SDK.
 
-### Integrate iOS SDK
+### Replace iOS SDK with fork feature branch
 
  Go to ios folder via terminal and do pod install.
  ```
-    cd '<project-location>/ios'
+    cd '<Your-project-location>/ios'
     pod install
  ```
+ Copy `Sources` folder from downloaded btt-swift-sdk and then replace `Sources` folder in '<Your-project-location>/ios/Pods/BlueTriangleSDK-Swift/'
 
- Copy `Sources` folder from btt-swift-sdk and replace `Sources` folder from 'ios/Pods/BlueTriangleSDK-Swift/'
-
- Again go to ios folder via terminal and do pod install.
+ Install Pod again.
   ```
-    cd '<project-location>/ios'
+    cd 'Your-project-location/ios'
     pod install
   ```
   
