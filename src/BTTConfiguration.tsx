@@ -24,7 +24,11 @@ class BTTConfiguration  {
                "trackCrash" : bttOptions.trackCrash,
                "debug": bttOptions.debug,
                "screenTracking": bttOptions.screenTracking,
-               "trackNetworkState": bttOptions.trackNetworkState          
+               "trackNetworkState": bttOptions.trackNetworkState,
+               "trackAnrIntervalSec": bttOptions.trackAnrIntervalSec,
+               "networkSampleRate": bttOptions.networkSampleRate,
+               "cacheMemoryLimit": bttOptions.cacheMemoryLimit,
+               "cacheExpiryDuration": bttOptions.cacheExpiryDuration           
                };
       console.log('BTTConfiguration.configure ::', dictionary); 
     
