@@ -335,7 +335,7 @@ same session as the react app. To achieve this, follow the steps below to config
 
 
 ```js
-import BTTWebViewTracker from 'react-native-btt-sdk'
+import {BTTWebViewTracker} from 'react-native-btt-sdk'
 
 <WebView 
     domStorageEnabled={true}

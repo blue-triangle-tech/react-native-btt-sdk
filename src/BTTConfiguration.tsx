@@ -1,6 +1,7 @@
 import { NativeModules } from 'react-native';
 import BTTOptions from './BTTOptions';
 import setUpInterceptors from './networking/interceptors'
+import BTTDM from './BTTDM'
 
 const BttSdk = NativeModules.BttSdk
   ? NativeModules.BttSdk
@@ -30,18 +31,16 @@ class BTTConfiguration  {
                "cacheMemoryLimit": bttOptions.cacheMemoryLimit,
                "cacheExpiryDuration": bttOptions.cacheExpiryDuration           
                };
-      console.log('BTTConfiguration.configure ::', dictionary); 
-    
+      
+      BTTDM.setScreenTracking(bttOptions.screenTracking)
       setUpInterceptors();
       BttSdk.bttConfigure(dictionary);
     }
 
     static async getSessionId(){
-      console.log('SessionId:1');
 
       try {
       const sessionId = await BttSdk.getSessionId()
-      console.log('SessionId:', sessionId);
       return sessionId;
        } catch (error) {
            console.error('Error fetching SessionId:', error);

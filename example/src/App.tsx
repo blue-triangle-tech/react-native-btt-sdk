@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button,StyleSheet, View, ScrollView, TextInput, Text, Image, ActivityIndicator } from 'react-native';
-import {BTTScreenTracker, BTTTimer} from 'react-native-btt-sdk';
+import {BTTScreenTracker, BTTTimer, BTTWebViewTracker} from 'react-native-btt-sdk';
 import DataManagement from './DataManagement'
 import {BTTConfiguration} from 'react-native-btt-sdk';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -24,7 +24,16 @@ function App() {
       getSessionId()
      // downloadImage();
      downloadImages();
+     injectSession();
     }, []);
+
+    const injectSession = async () => {
+      try{
+        const injectSession =  await BTTWebViewTracker.injectSession()
+        console.log("injectSession:: ", injectSession)
+      }
+      catch{}
+    }
 
     const getSessionId = async () => {
       try{

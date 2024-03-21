@@ -23,9 +23,6 @@ class BTTTimer {
     const result = await BttSdk.bttStartTimer(dictionary)
 
     this.timerId = result.btt_timer_id
-    console.log("startTimer")
-    console.log(this.timerId)
-    console.log("startTimer")
   }
 
   setCartValue(cartValue){
