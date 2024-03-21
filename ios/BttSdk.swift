@@ -53,7 +53,6 @@ class BttSdk: NSObject {
                     config.sessionID = uintValue
                 }
             }
-            config.ANRWarningTimeInterval = 1
             if let screenTracking = dictionary["screenTracking"] as? Bool {
                 config.enableScreenTracking = screenTracking
             }
@@ -61,11 +60,23 @@ class BttSdk: NSObject {
             if let networkState = dictionary["trackNetworkState"] as? Bool {
                 config.enableTrackingNetworkState = networkState
             }
-            config.networkSampleRate = 1
-            config.ignoreViewControllers = ["RNSScreen"]
+            config.ignoreViewControllers = ["RNSScreen", "UIViewController"]
             
-            config.cacheMemoryLimit = 20 * 1024
-            config.cacheExpiryDuration = 5 * 60 * 1000
+            if let anrWarningTimeInterval = dictionary["trackAnrIntervalSec"] as? Double  {
+                config.ANRWarningTimeInterval = anrWarningTimeInterval //config.ANRWarningTimeInterval = 1
+            }
+            
+            if let networkSampleRate = dictionary["networkSampleRate"] as? Double  {
+                config.networkSampleRate = networkSampleRate //config.networkSampleRate = 1
+            }
+           
+            if let cacheMemoryLimit = dictionary["cacheMemoryLimit"] as? Double  {
+                config.cacheMemoryLimit = UInt(cacheMemoryLimit) //config.cacheMemoryLimit = 20 * 1024
+            }
+            
+            if let cacheExpiryDuration = dictionary["cacheExpiryDuration"] as? Double  {
+                config.cacheExpiryDuration = Millisecond(cacheExpiryDuration) //config.cacheExpiryDuration = 5 * 60 * 1000
+            }
         }
         // Process the dictionary as needed
         // For example, log its contents

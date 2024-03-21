@@ -16,6 +16,10 @@ bttOptions.trackCrash = true
 bttOptions.debug = true
 bttOptions.screenTracking = true
 bttOptions.trackNetworkState = true
+bttOptions.trackAnrIntervalSec = 1
+bttOptions.networkSampleRate = 1
+bttOptions.cacheMemoryLimit = 20 * 1024
+bttOptions.cacheExpiryDuration = 5 * 60 * 1000
 
 BTTConfiguration.configure('sdkdemo26621z', bttOptions)
 

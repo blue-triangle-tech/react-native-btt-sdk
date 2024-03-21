@@ -63,11 +63,12 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     config.isTrackAnrEnabled = dictionary.getBoolean("trackAnr")
     config.isPerformanceMonitorEnabled = dictionary.getBoolean("performanceMonitoring")
     config.performanceMonitorIntervalMs = dictionary.getDouble("performanceMonitoringInterval").toLong()
-    config.networkSampleRate = 1.0
     config.isMemoryWarningEnabled = dictionary.getBoolean("memoryWarning")
     config.isTrackNetworkStateEnabled = dictionary.getBoolean("trackNetworkState")
-    config.cacheMemoryLimit = 10 * 1000L
-    config.cacheExpiryDuration = 120 * 1000L
+    config.trackAnrIntervalSec = dictionary.getInt("trackAnrIntervalSec")
+    config.networkSampleRate = dictionary.getDouble("networkSampleRate")
+    config.cacheMemoryLimit = dictionary.getDouble("cacheMemoryLimit").toLong()
+    config.cacheExpiryDuration = dictionary.getDouble("cacheExpiryDuration").toLong()
 
     if (sessionID?.isNotEmpty() == true)
     {
