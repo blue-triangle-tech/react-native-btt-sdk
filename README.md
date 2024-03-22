@@ -32,16 +32,11 @@
 [//]: # (Made with [create-react-native-library]&#40;https://github.com/callstack/react-native-builder-bob&#41;)
 # Blue Triangle React Native SDK
 
-### Download SDK's
+### Download SDK
 
 Download/clone react-native-btt-sdk(this) from below url
 ```
 https://github.com/blue-triangle-tech/react-native-btt-sdk.git 
-```
-
-Download/clone btt-swift-sdk(fork feature branch) for iOS from below url
-```
-https://github.com/JP-aloha/btt-swift-sdk/tree/feature/cpu-memory-netstate-offline-hybrid
 ```
 ### Installation
 Add the SDK to the your project using the following command:
@@ -50,21 +45,6 @@ yarn add 'file:/<sdk-download-location>/react-native-btt-sdk'
 ```
 replace `<sdk-download-location>` with the local directory location where you have saved the SDK.
 
-### Replace iOS SDK with fork feature branch
-
- Go to ios folder via terminal and do pod install.
- ```
-    cd '<Your-project-location>/ios'
-    pod install
- ```
- Copy `Sources` folder from downloaded btt-swift-sdk and then replace `Sources` folder in '<Your-project-location>/ios/Pods/BlueTriangleSDK-Swift/'
-
- Install Pod again.
-  ```
-    cd 'Your-project-location/ios'
-    pod install
-  ```
-  
 ### Configuration
 Before using BTT SDK, It need to be configured. It is recommended to configure sdk in your `index.js` file. 
 
