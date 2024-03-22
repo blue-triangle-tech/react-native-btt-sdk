@@ -9,8 +9,8 @@ class BTTOptions  {
      debug = false
      trackAnrIntervalSec = 1
      networkSampleRate = 1
-     cacheMemoryLimit = 20 * 1024
-     cacheExpiryDuration = 5 * 60 * 1000
+     cacheMemoryLimit = 30 * 1024
+     cacheExpiryDuration = 48 * 60 * 1000
 }
 
 export default BTTOptions;

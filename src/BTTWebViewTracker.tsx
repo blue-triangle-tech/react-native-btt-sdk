@@ -18,12 +18,8 @@ const BttSdk = NativeModules.BttSdk
         static async injectSession(){
             
             const sessionId = await BttSdk.getSessionId()
-            console.log("BTTWebViewTracker::injectSession::sessionId " + sessionId)
-
             const version = packageJson.version;
-            console.log("BTTWebViewTracker::injectSession::version " + version)
             var isNetworkCapture =  "off"
-            
             if(BTTDM.getScreenTracking()){
                 isNetworkCapture =  "on"
             }

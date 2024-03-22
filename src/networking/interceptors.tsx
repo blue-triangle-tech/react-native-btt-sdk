@@ -14,7 +14,6 @@ const setUpXMLHTTPRequestInterceptor = () => {
     //      console.log("Send: ", data);
     //      xhrSend(data);
     //  }
-    console.log("::setUpXMLHTTPRequestInterceptor::")
 
     XHRInterceptor.enableInterception()
     var tracker
@@ -44,7 +43,6 @@ const setUpXMLHTTPRequestInterceptor = () => {
     var contentSize
     XHRInterceptor.setHeaderReceivedCallback(( responseContentType,
         responseSize) => {
-            console.log(`setHeaderReceivedCallback(${responseContentType}, ${responseSize}`)
         contentType = responseContentType
         if(responseSize != undefined){
             contentSize = responseSize.toString()
@@ -56,7 +54,6 @@ const setUpXMLHTTPRequestInterceptor = () => {
         response,
        responseURL,
         responseType)=>{
-            console.log(`setResponseCallback(${status}, ${contentSize}, ${contentType}`)
         tracker.submitResponse(contentType, contentSize, status);
     });
 }
@@ -66,8 +63,6 @@ const setUpFetchInterceptor = () => {
 
     window.fetch = async (...args) => {
         let [resource, config ] = args;
-
-        console.log("::setUpFetchInterceptor::")
 
         // request interceptor here
         const tracker = new BTTHTTPTracker(config.method || "GET", resource);
@@ -88,7 +83,6 @@ const setUpFetchInterceptor = () => {
 }
 
 export default setUpInterceptors = ()=> {
-    console.log("::setUpInterceptors::")
     setUpXMLHTTPRequestInterceptor();
     //setUpFetchInterceptor();
 }
