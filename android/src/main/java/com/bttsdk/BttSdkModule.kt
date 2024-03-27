@@ -50,7 +50,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun bttConfigure(dictionary: ReadableMap) {
+  fun bttConfigure(dictionary: ReadableMap, promise: Promise) {
     Log.d("bttConfigure", dictionary.toString())
 
     var sessionID = dictionary.getString("btt_session_id")
@@ -77,6 +77,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     Tracker.init(reactApplicationContext.applicationContext as Application, config)
     Log.d("BlueTriangle", "Logger" + config.logger)
     config.logger?.debug("configure")
+    promise.resolve(config.sessionId)
   }
 
   @ReactMethod

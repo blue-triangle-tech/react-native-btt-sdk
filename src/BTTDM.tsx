@@ -1,3 +1,5 @@
+import BTTOptions from './BTTOptions';
+
 class BTTDM {
  
     constructor() {
@@ -8,13 +10,21 @@ class BTTDM {
       return BTTDM.instance;
     }
 
-    setScreenTracking(screenTracking) {
-        this.screenTracking = screenTracking;
-      }
+    setBttOption(bttOption: BTTOptions) {
+        this.bttOption = bttOption;
+    }
   
-      getScreenTracking() {
-        return this.screenTracking;
-      }
+    getBttOption() {
+        return this.bttOption;
+    }
+
+    setSessionId(sessionID) {
+        this.sessionID = sessionID;
+    }
+
+    getSessionId() {
+        return this.sessionID;
+    }
 }
 
 const instance = new BTTDM();

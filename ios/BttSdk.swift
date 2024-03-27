@@ -8,8 +8,8 @@ class BttSdk: NSObject {
     private var screenTrackerDict = [String: BTTScreenTracker]()
     private var networkTrackerDict = [String: NetworkCaptureTracker]()
 
-    @objc
-    func bttConfigure(_ dictionary: [String: Any]) {
+    @objc(bttConfigure:withResolver:withRejecter:)
+    func bttConfigure(_ dictionary: [String: Any], resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) {
         
         debugPrint(" configure Dictionary Print Here")
         BlueTriangle.configure { config in
@@ -77,6 +77,8 @@ class BttSdk: NSObject {
             if let cacheExpiryDuration = dictionary["cacheExpiryDuration"] as? Double  {
                 config.cacheExpiryDuration = Millisecond(cacheExpiryDuration) //config.cacheExpiryDuration = 5 * 60 * 1000
             }
+            
+            resolve(config.sessionID)
         }
         // Process the dictionary as needed
         // For example, log its contents

@@ -29,7 +29,7 @@ function App() {
 
     const injectSession = async () => {
       try{
-        const injectSession =  await BTTWebViewTracker.injectSession()
+        const injectSession = BTTWebViewTracker.injectSession()
         console.log("injectSession:: ", injectSession)
       }
       catch{}

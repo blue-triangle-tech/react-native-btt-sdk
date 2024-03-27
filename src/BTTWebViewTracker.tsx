@@ -1,6 +1,7 @@
 import { NativeModules } from 'react-native';
 import packageJson from '../package.json';
 import BTTDM from './BTTDM'
+import BTTOptions from './BTTOptions';
 
 const BttSdk = NativeModules.BttSdk
   ? NativeModules.BttSdk
@@ -15,12 +16,13 @@ const BttSdk = NativeModules.BttSdk
 
     class BTTWebViewTracker {
 
-        static async injectSession(){
+        static injectSession(){
             
-            const sessionId = await BttSdk.getSessionId()
+            const sessionId = BTTDM.getSessionId()
             const version = packageJson.version;
             var isNetworkCapture =  "off"
-            if(BTTDM.getScreenTracking()){
+            const bttOption : BTTOptions = BTTDM.getBttOption()
+            if(bttOption.screenTracking){
                 isNetworkCapture =  "on"
             }
             
@@ -30,9 +32,11 @@ const BttSdk = NativeModules.BttSdk
             const sdkVersion =  "iOS_" + version + ""
             const bttVersionValues = "{\"value\":\"" + sdkVersion + "\",\"expires\":\"" + newTime.getTime() + "\"}"
             const bttWCDCollectValues = "{\"value\":\"" + isNetworkCapture + "\",\"expires\":\"" + newTime.getTime() + "\"}"
+            
             const injectedSessionJavaScript = "window.localStorage.setItem('BTT_X0siD', '" + setSession + "');true;"
             const injectedVersionJavaScript = "window.localStorage.setItem('BTT_SDK_VER', '" + bttVersionValues + "');true;"
             const injectedWCDJavaScript = "window.localStorage.setItem('BTT_WCD_Collect', '" + bttWCDCollectValues + "');true;"
+          
             const combinedScript = `${injectedSessionJavaScript} ${injectedVersionJavaScript} ${injectedWCDJavaScript}`;
             return combinedScript
           }

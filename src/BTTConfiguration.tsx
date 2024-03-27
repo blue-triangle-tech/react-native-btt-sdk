@@ -15,7 +15,7 @@ const BttSdk = NativeModules.BttSdk
     );
 
 class BTTConfiguration  {
-    static configure (siteId: String, bttOptions: BTTOptions) {
+    static async configure (siteId: String, bttOptions: BTTOptions) {
         const dictionary = {
                "btt_site_id": siteId,
                "trackAnr": bttOptions.trackAnr,
@@ -31,16 +31,17 @@ class BTTConfiguration  {
                "cacheMemoryLimit": bttOptions.cacheMemoryLimit,
                "cacheExpiryDuration": bttOptions.cacheExpiryDuration           
                };
-      
-      BTTDM.setScreenTracking(bttOptions.screenTracking)
       setUpInterceptors();
-      BttSdk.bttConfigure(dictionary);
+      BTTDM.setBttOption(bttOptions)
+      const sessionId = await BttSdk.bttConfigure(dictionary);
+      BTTDM.setSessionId(sessionId)
     }
 
     static async getSessionId(){
 
       try {
       const sessionId = await BttSdk.getSessionId()
+      BTTDM.setSessionId(sessionId)
       return sessionId;
        } catch (error) {
            console.error('Error fetching SessionId:', error);

@@ -317,21 +317,10 @@ same session as the react app. To achieve this, follow the steps below to config
 ```js
 import {BTTWebViewTracker} from 'react-native-btt-sdk'
 const MyWebView = ({navigation, route}) => {
-  const [injectSession, setInjectSession] = useState(null);
-
-  const getBttSessionPayload = async () => {
-    try{
-    const bttSessionPayload =  await BTTWebViewTracker.injectSession()
-
-    setInjectSession(bttSessionPayload)
-    }
-    catch{}
-  }
-
  return (<WebView 
     domStorageEnabled={true}
     javaScriptEnabled={true}
-    injectJavaScriptBeforeContentLoaded={injectSession}>
+    injectJavaScriptBeforeContentLoaded={BTTWebViewTracker.injectSession()}>
 
 </WebView> );
 };
@@ -344,6 +333,6 @@ Note:
 If you already have script injected in webview then you can simply concatinate with 'injectSession' script from th above.
 
 ```js
-        const bttSessionPayload =  await BTTWebViewTracker.injectSession()
+        const bttSessionPayload =  BTTWebViewTracker.injectSession()
         const finalScript = `${bttSessionPayload} ${YOUR SCRIPT}`;
 ```
