@@ -328,11 +328,18 @@ const MyWebView = ({navigation, route}) => {
 export default MyWebView;
 ```
 
-Note:
-
-If you already have script injected in webview then you can simply concatinate with 'injectSession' script from th above.
+If you are already using `injectJavaScriptBeforeContentLoaded` to inject any of your script. Append your script to `BTTWebViewTracker.injectSession()` like below.
 
 ```js
-        const bttSessionPayload =  BTTWebViewTracker.injectSession()
-        const finalScript = `${bttSessionPayload} ${YOUR SCRIPT}`;
+import {BTTWebViewTracker} from 'react-native-btt-sdk'
+const MyWebView = ({navigation, route}) => {
+ return (<WebView 
+    domStorageEnabled={true}
+    javaScriptEnabled={true}
+    injectJavaScriptBeforeContentLoaded={${BTTWebViewTracker.injectSession()} ${YOUR SCRIPT}}>
+
+</WebView> );
+};
+
+export default MyWebView;
 ```
