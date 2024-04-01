@@ -1,48 +1,18 @@
 
-[//]: # (# react-native-btt-sdk)
-[//]: # ()
-[//]: # (This is Btt SDK)
-[//]: # ()
-[//]: # (## Installation)
-[//]: # ()
-[//]: # (```sh)
-[//]: # (npm install react-native-btt-sdk)
-[//]: # (```)
-[//]: # ()
-[//]: # (## Usage)
-[//]: # ()
-[//]: # (```js)
-[//]: # (import { multiply } from 'react-native-btt-sdk';)
-[//]: # ()
-[//]: # (// ...)
-[//]: # ()
-[//]: # (const result = await multiply&#40;3, 7&#41;;)
-[//]: # (```)
-[//]: # ()
-[//]: # (## Contributing)
-[//]: # ()
-[//]: # (See the [contributing guide]&#40;CONTRIBUTING.md&#41; to learn how to contribute to the repository and the development workflow.)
-[//]: # ()
-[//]: # (## License)
-[//]: # ()
-[//]: # (MIT)
-[//]: # ()
-[//]: # (---)
-[//]: # ()
-[//]: # (Made with [create-react-native-library]&#40;https://github.com/callstack/react-native-builder-bob&#41;)
 # Blue Triangle React Native SDK
 
-### Installation
+## Installation
 
 Add the SDK to the your project using the following command:
 ```
 yarn add 'react-native-btt-sdk'
 ```
 
-### Configuration
-Before using BTT SDK, It need to be configured. It is recommended to configure sdk in your `index.js` file. 
+## Configuration
 
-Import the `BTTConfiguration` and `BTTOptions` as showns in below code snippet. Then configure it using `BTTConfiguration.configure(<siteId>, <bttOptions>)` with `<siteId>` and `BTTOptions`.
+Before using BTT SDK, It needs to be configured. It is recommended to configure sdk in your `index.js` file. 
+
+Import the `BTTConfiguration` and `BTTOptions` as shown in the below code snippet. Then configure it using `BTTConfiguration.configure(<siteId>, <bttOptions>)` with `<siteId>` and `BTTOptions`.
 
 ```js
 //First import the BTTConfiguration and BTTOptions
@@ -61,16 +31,15 @@ bttOptions.trackNetworkState = true
 
 BTTConfiguration.configure(<siteId>, bttOptions)
 ```
-In the place of \<siteId>, put your project's siteId.
+In place of \<siteId>, put your project's siteId.
 
-### Timer<br/>
+## Timer
 
 a) Using Manual Timers:<br/>
 
 To use a manual timer, you need to first import the `BTTTimer` object from `react-native-btt-sdk`. Create timer object with pageName.
 
- The `BTTTimer` object
-has the following functions: 
+The `BTTTimer` object has the following functions: 
 - `timer.startTimer()`:
 - `timer.stopTimer()`:
 
@@ -97,13 +66,13 @@ timer.setCartValue(cartValue)
 timer.stopTimer()
  ```
 
-###  Performance Monitor<br/>
+##  Performance Monitor
 
-Performance monitoring allows the tracking of CPU and Memory usage  of the app. This usage information is associated with all the currently running timers. 
+Performance monitoring allows the tracking of CPU and Memory usage of the app. This usage information is associated with all the currently running timers. 
 
-To enable Performance Monitoring, we need to set `performanceMonitoring` to `true` from `BTTOptions` at the time of configuration. Also you can set `performanceMonitoringInterval` which is in milliseconds. You can refer [Configuration](#configuration).
+To enable Performance Monitoring, we need to set `performanceMonitoring` to `true` from `BTTOptions` at the time of configuration. Also, you can set `performanceMonitoringInterval` which is in milliseconds. You can refer [Configuration](#configuration).
 
-### Screen Tracker <br/>
+### Screen Tracker
 
 Screen tracking captures screen views which can be seen on our dashboard. 
 
@@ -111,9 +80,8 @@ a) Screen Tracking for [React Navigation](https://reactnavigation.org/):
 
 If you are using react navigation library to perform screen navigation in your app, then all screen can be track by BTTSdk automatically by just adding two lines of code in the `NavigationContainer`, as shown in below example.
 
-
  ```js
- import React from 'react';
+import React from 'react';
 import BTTNavigationContainerTracker from 'react-native-btt-sdk';
 import NavigationContainer, {useNavigationContainerRef} from '@react-navigation/native';
 
@@ -199,11 +167,11 @@ var manualTracker:BTTScreenTracker
 
  ```
 
-### Track Crash<br/>
+## Track Crash
 
-The SDK provides automatic tracking and reporting of crashes. To enable this feature, just set the `trackCrash` property to true from `BTTOptions` at the time of configuration.You can refer [Configuration](#configuration).
+The SDK provides automatic tracking and reporting of crashes. To enable this feature, just set the `trackCrash` property to true from `BTTOptions` at the time of configuration. You can refer [Configuration](#configuration).
 
-### Caching<br/>
+## Caching
 
 To support offline usage tracking, timer and crash reports that cannot be sent immediately will be
 cached in the application's cache directory and retried after some time.
@@ -230,7 +198,7 @@ bttOptions.cacheExpiryDuration = 86400000L
 
 The data that is kept longer in cache than the expiry duration is automatically deleted. By default the expiry duration is 48 hours.
 
-### Network State Capture
+## Network State Capture
 
 BlueTriangle SDK allows capturing of network state data. Network state refers to the availability of any network interfaces on the device. Network interfaces include wifi, ethernet, cellular, etc. Once Network state capturing is enabled, the Network state is associated with all Timers, Errors and Network Requests captured by the SDK. 
 
@@ -293,7 +261,7 @@ The recommended setting is 1.0 to capture all network requests.
 #### Android
 Memory warning is an error that is reported when the code uses up more than 80% of the app's available memory (heap capacity).
 
-Currently Memory Warning is only captured for memory used by the native modules. Memory used in react code is not considered in memory warning.
+Currently, Memory Warning is only captured for memory used by the native modules. Memory used in react code is not considered in memory warning.
 
 #### iOS
 Track ios reported low memory worning. iOS reported memory warnings can be tracked by btt.
