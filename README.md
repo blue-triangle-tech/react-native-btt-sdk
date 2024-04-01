@@ -32,18 +32,12 @@
 [//]: # (Made with [create-react-native-library]&#40;https://github.com/callstack/react-native-builder-bob&#41;)
 # Blue Triangle React Native SDK
 
-### Download SDK
-
-Download/clone react-native-btt-sdk(this) from below url
-```
-https://github.com/blue-triangle-tech/react-native-btt-sdk.git 
-```
 ### Installation
+
 Add the SDK to the your project using the following command:
 ```
-yarn add 'file:/<sdk-download-location>/react-native-btt-sdk'
+yarn add 'react-native-btt-sdk'
 ```
-replace `<sdk-download-location>` with the local directory location where you have saved the SDK.
 
 ### Configuration
 Before using BTT SDK, It need to be configured. It is recommended to configure sdk in your `index.js` file. 
