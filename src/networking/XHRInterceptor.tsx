@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 
 //const XMLHttpRequest = require('XMLHttpRequest');
 const originalXHROpen = XMLHttpRequest.prototype.open;
@@ -150,4 +150,5 @@ const XHRInterceptor = {
   },
 };
 
-module.exports = XHRInterceptor;
+//module.exports = XHRInterceptor;
+export default XHRInterceptor;

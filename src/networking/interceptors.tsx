@@ -58,7 +58,7 @@ const setUpXMLHTTPRequestInterceptor = () => {
     });
 }
 
-const setUpFetchInterceptor = () => {
+/*const setUpFetchInterceptor = () => {
     const { fetch:originalFetch } = window;
 
     window.fetch = async (...args) => {
@@ -80,9 +80,9 @@ const setUpFetchInterceptor = () => {
             throw err
         }
     };
-}
+}*/
 
-export default setUpInterceptors = ()=> {
+export default ()=> {
     setUpXMLHTTPRequestInterceptor();
     //setUpFetchInterceptor();
 }
