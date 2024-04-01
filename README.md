@@ -5,7 +5,7 @@
 
 Add the SDK to the your project using the following command:
 ```
-yarn add 'react-native-btt-sdk'
+yarn add '@bluetriangle/react-native-btt-sdk'
 ```
 
 ## Configuration
@@ -16,7 +16,7 @@ Import the `BTTConfiguration` and `BTTOptions` as shown in the below code snippe
 
 ```js
 //First import the BTTConfiguration and BTTOptions
-import {BTTConfiguration, BTTOptions} from 'react-native-btt-sdk';
+import {BTTConfiguration, BTTOptions} from '@bluetriangle/react-native-btt-sdk';
 
 //Add the code snippet to configure sdk
 const bttOptions = new BTTOptions()
@@ -37,14 +37,14 @@ In place of \<siteId>, put your project's siteId.
 
 a) Using Manual Timers:<br/>
 
-To use a manual timer, you need to first import the `BTTTimer` object from `react-native-btt-sdk`. Create timer object with pageName.
+To use a manual timer, you need to first import the `BTTTimer` object from `@bluetriangle/react-native-btt-sdk`. Create timer object with pageName.
 
 The `BTTTimer` object has the following functions: 
 - `timer.startTimer()`:
 - `timer.stopTimer()`:
 
  ```js
-import {BTTTimer} from 'react-native-btt-sdk';
+import {BTTTimer} from '@bluetriangle/react-native-btt-sdk';
 
 const timer = new BTTTimer(pageName)
 timer.startTimer()
@@ -58,7 +58,7 @@ We can set cart value to `BTTTimer` object using following function.
 - `timer.setCartValue(cartValue)`:
 
  ```js
-import {BTTTimer} from 'react-native-btt-sdk';
+import {BTTTimer} from '@bluetriangle/react-native-btt-sdk';
 
 const timer = new BTTTimer(pageName)
 timer.startTimer()
@@ -82,7 +82,7 @@ If you are using react navigation library to perform screen navigation in your a
 
  ```js
 import React from 'react';
-import BTTNavigationContainerTracker from 'react-native-btt-sdk';
+import BTTNavigationContainerTracker from '@bluetriangle/react-native-btt-sdk';
 import NavigationContainer, {useNavigationContainerRef} from '@react-navigation/native';
 
 function App() {
@@ -125,7 +125,7 @@ b) Manual Tracker
 
 If you are using any other way to perform screen navigation in your app or you want to track only  a certain set of screen in your app, you can use manual tracking.
 
-To use a manual tracker, you need to first import the `BTTScreenTracker` object from `react-native-btt-sdk`. Create timer object with pageName.
+To use a manual tracker, you need to first import the `BTTScreenTracker` object from `'@bluetriangle/react-native-btt-sdk'`. Create timer object with pageName.
 
  The `BTTScreenTracker` object has the following functions:
 - `manualTracker.startTracking()`:
@@ -135,7 +135,7 @@ You need to call the function `startTracking` when the component that you want t
 
  ```js
 import React, { useEffect } from 'react';
-import {BTTScreenTracker} from 'react-native-btt-sdk';
+import {BTTScreenTracker} from '@bluetriangle/react-native-btt-sdk';
 
 function YourComponent({ }) {
 var manualTracker:BTTScreenTracker
@@ -277,7 +277,7 @@ same session as the react app. To achieve this, follow the steps below to config
 
 
 ```js
-import {BTTWebViewTracker} from 'react-native-btt-sdk'
+import {BTTWebViewTracker} from '@bluetriangle/react-native-btt-sdk'
 const MyWebView = ({navigation, route}) => {
  return (<WebView 
     domStorageEnabled={true}
@@ -292,7 +292,7 @@ export default MyWebView;
 If you are already using `injectedJavaScriptBeforeContentLoaded` to inject any of your script. Append your script to `BTTWebViewTracker.injectSession()` like below.
 
 ```js
-import {BTTWebViewTracker} from 'react-native-btt-sdk'
+import {BTTWebViewTracker} from '@bluetriangle/react-native-btt-sdk'
 const MyWebView = ({navigation, route}) => {
  return (<WebView 
     domStorageEnabled={true}

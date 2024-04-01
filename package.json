@@ -1,5 +1,5 @@
 {
-  "name": "react-native-btt-sdk",
+  "name": "@bluetriangle/react-native-btt-sdk",
   "version": "0.1.0",
   "description": "Blue Triangle analytics SDK for React Native supports iOS and Android.",
   "main": "lib/commonjs/index",
