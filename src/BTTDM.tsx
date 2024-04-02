@@ -2,30 +2,40 @@ import BTTOptions from './BTTOptions';
 
 class BTTDM {
  
-    constructor() {
-      if (!BTTDM.instance) {
-        BTTDM.instance = this;
-      }
-      
-      return BTTDM.instance;
+    private _bttOptions:BTTOptions
+    private _sessionID:string
+
+    public get sessionID() {
+        return this._sessionID
     }
 
-    setBttOption(bttOption: BTTOptions) {
-        this.bttOption = bttOption;
+    public get bttOptions() {
+        return this._bttOptions
+    }
+
+    private static _instance?:BTTDM = undefined
+    
+    public static readonly instance:BTTDM
+        get() {
+            return BTTDM._instance
+        }
+
+    public static init(bttOptions:BTTOptions, sessionID:string) {
+        BTTDM._instance = new BTTDM(bttOptions, sessionID)
+    }
+    
+    private constructor(bttOptions:BTTOptions, sessionID:string) {
+        this._bttOptions = bttOptions;
+        this._sessionID = sessionID;
     }
   
     getBttOption() {
-        return this.bttOption;
-    }
-
-    setSessionId(sessionID) {
-        this.sessionID = sessionID;
+        return this._bttOptions;
     }
 
     getSessionId() {
-        return this.sessionID;
+        return this._sessionID;
     }
 }
 
-const instance = new BTTDM();
-export default instance;
+export default BTTDM;

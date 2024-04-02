@@ -1,22 +1,13 @@
 // BTTScreenTracker.js
-import { NativeModules } from 'react-native';
-
-const BttSdk = NativeModules.BttSdk
-  ? NativeModules.BttSdk
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+import BttSdk from "./BttSdk";
 
 class BTTScreenTracker  {
+  private pageName:string
+  private customPageID:string
 
-  constructor(pageName){
+  constructor(pageName:string){
     this.pageName = pageName
-    this.customPageID =  Math.random().toString(36).substr(2, 9);
+    this.customPageID =  Math.random().toString(36).substring(2, 11);
   }
 
   startTracking(){

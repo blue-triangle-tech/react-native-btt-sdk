@@ -1,88 +1,46 @@
-import BTTHTTPTracker from "./BTTHTTPTracker";
-import XHRInterceptor from "./XHRInterceptor";
+import BTTHTTPTracker from './BTTHTTPTracker';
+import XHRInterceptor from './XHRInterceptor';
 
 const setUpXMLHTTPRequestInterceptor = () => {
-    //  const xhrOpen = XMLHttpRequest.prototype.open;
-    //  const xhrSend = XMLHttpRequest.prototype.send;
+  XHRInterceptor.enableInterception();
+  var tracker: BTTHTTPTracker;
+  var httpMethod: string;
+  var requestUrl: string;
+  XHRInterceptor.setOpenCallback((method: string, url: string) => {
+    console.log(`setOpenCallback(${method}, ${url}`);
+    httpMethod = method;
+    requestUrl = url;
+  });
 
-    //  XMLHttpRequest.prototype.open = (method, url, async) => {
-    //      console.log("Open: ", method, url, async);
-    //      xhrOpen(method, url, async);
-    //  }
+  XHRInterceptor.setSendCallback((data: any) => {
+    console.log(`setSendCallback ${data}`);
+    if (data != undefined) {
+      console.log(`setSendCallback ${data.length}`);
+      var dataLength = data.length.toString();
+      tracker = new BTTHTTPTracker(httpMethod || 'GET', requestUrl, dataLength);
+      tracker.start();
+    } else {
+      tracker = new BTTHTTPTracker(httpMethod || 'GET', requestUrl, '');
+      tracker.start();
+    }
+  });
 
-    //  XMLHttpRequest.prototype.send = (data) => {
-    //      console.log("Send: ", data);
-    //      xhrSend(data);
-    //  }
+  var contentType: string;
+  var contentSize: string;
+  XHRInterceptor.setHeaderReceivedCallback(
+    (responseContentType: string, responseSize: number) => {
+      contentType = responseContentType;
+      if (responseSize != undefined) {
+        contentSize = responseSize.toString();
+      }
+    }
+  );
 
-    XHRInterceptor.enableInterception()
-    var tracker
-    var httpMethod
-    var requestUrl
-    XHRInterceptor.setOpenCallback((method, url)=>{
-        console.log(`setOpenCallback(${method}, ${url}`)
-        httpMethod = method
-        requestUrl = url
-    });
+  XHRInterceptor.setResponseCallback((status: number) => {
+    tracker.submitResponse(contentType, contentSize, status.toString());
+  });
+};
 
-    XHRInterceptor.setSendCallback(( data) => {
-        console.log(`setSendCallback ${data}`)
-        if(data != undefined){
-            console.log(`setSendCallback ${data.length}`)
-        var dataLength = data.length.toString()
-         tracker = new BTTHTTPTracker(httpMethod || "GET", requestUrl, dataLength);
-         tracker.start()
-        }
-        else{
-            tracker = new BTTHTTPTracker(httpMethod || "GET", requestUrl, "");
-            tracker.start()
-        }
-    });
-
-    var contentType
-    var contentSize
-    XHRInterceptor.setHeaderReceivedCallback(( responseContentType,
-        responseSize) => {
-        contentType = responseContentType
-        if(responseSize != undefined){
-            contentSize = responseSize.toString()
-        }
-    });
-
-    XHRInterceptor.setResponseCallback((status,
-        timeout,
-        response,
-       responseURL,
-        responseType)=>{
-        tracker.submitResponse(contentType, contentSize, status);
-    });
-}
-
-/*const setUpFetchInterceptor = () => {
-    const { fetch:originalFetch } = window;
-
-    window.fetch = async (...args) => {
-        let [resource, config ] = args;
-
-        // request interceptor here
-        const tracker = new BTTHTTPTracker(config.method || "GET", resource);
-        tracker.start()
-        try {
-            const response = await originalFetch(resource, config);
-            const bodySize = response.headers.get("Content-Length");
-            const contentType = response.headers.get("Content-Type");
-            // response interceptor here
-            tracker.submitResponse(contentType, bodySize, response.status);
-            return response;
-        } catch(err) {
-            tracker.submitError(err)
-            // Forward error to the calling function
-            throw err
-        }
-    };
-}*/
-
-export default ()=> {
-    setUpXMLHTTPRequestInterceptor();
-    //setUpFetchInterceptor();
-}
+export default () => {
+  setUpXMLHTTPRequestInterceptor();
+};

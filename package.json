@@ -43,8 +43,11 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/blue-triangle-tech/react-native-btt-sdk.git",
-  "author":  "BlueTriangle <support@bluetriangle.com> (https://bluetriangle.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blue-triangle-tech/react-native-btt-sdk.git"
+  },
+  "author": "BlueTriangle <support@bluetriangle.com> (https://bluetriangle.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/blue-triangle-tech/react-native-btt-sdk.git/issues"
@@ -86,7 +89,7 @@
   "engines": {
     "node": ">= 18.0.0"
   },
-  "packageManager": "^yarn@1.22.15",
+  "packageManager": "yarn@1.22.15",
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [

@@ -1,15 +1,44 @@
-//'use strict';
-
-//const XMLHttpRequest = require('XMLHttpRequest');
 const originalXHROpen = XMLHttpRequest.prototype.open;
 const originalXHRSend = XMLHttpRequest.prototype.send;
 const originalXHRSetRequestHeader = XMLHttpRequest.prototype.setRequestHeader;
 
-var openCallback;
-var sendCallback;
-var requestHeaderCallback;
-var headerReceivedCallback;
-var responseCallback;
+interface OpenCallback {
+  call(method: string, url: string): any;
+}
+
+interface SendCallback {
+  call(data: any, request: XMLHttpRequest): any;
+}
+
+interface RequestHeaderCallback {
+  call(header: string, value: string): any;
+}
+
+interface HeaderReceivedCallback {
+  call(
+    responseContentType: string | undefined,
+    responseSize: number | undefined,
+    responseHeader: string,
+    request: XMLHttpRequest
+  ): any;
+}
+
+interface ResponseCallback {
+  call(
+    status:number,
+    timeout:number,
+    response:any,
+    responseURL:string,
+    responseType:XMLHttpRequestResponseType,
+    request:XMLHttpRequest
+  ):any
+}
+
+var openCallback: OpenCallback | undefined;
+var sendCallback: SendCallback | undefined;
+var requestHeaderCallback: RequestHeaderCallback | undefined;
+var headerReceivedCallback:HeaderReceivedCallback | undefined;
+var responseCallback:ResponseCallback | undefined;
 
 var isInterceptorEnabled = false;
 
@@ -24,35 +53,35 @@ const XHRInterceptor = {
   /**
    * Invoked before XMLHttpRequest.open(...) is called.
    */
-  setOpenCallback(callback) {
+  setOpenCallback(callback: OpenCallback) {
     openCallback = callback;
   },
 
   /**
    * Invoked before XMLHttpRequest.send(...) is called.
    */
-  setSendCallback(callback) {
+  setSendCallback(callback: SendCallback) {
     sendCallback = callback;
   },
 
   /**
    * Invoked after xhr's readyState becomes xhr.HEADERS_RECEIVED.
    */
-  setHeaderReceivedCallback(callback) {
+  setHeaderReceivedCallback(callback:HeaderReceivedCallback) {
     headerReceivedCallback = callback;
   },
 
   /**
    * Invoked after xhr's readyState becomes xhr.DONE.
    */
-  setResponseCallback(callback) {
+  setResponseCallback(callback:ResponseCallback) {
     responseCallback = callback;
   },
 
   /**
    * Invoked before XMLHttpRequest.setRequestHeader(...) is called.
    */
-  setRequestHeaderCallback(callback) {
+  setRequestHeaderCallback(callback: RequestHeaderCallback) {
     requestHeaderCallback = callback;
   },
 
@@ -66,69 +95,73 @@ const XHRInterceptor = {
     }
     // Override `open` method for all XHR requests to intercept the request
     // method and url, then pass them through the `openCallback`.
-    XMLHttpRequest.prototype.open = function(method, url) {
+    XMLHttpRequest.prototype.open = function (...args) {
+      const method = args[0];
+      const url = args[1];
       if (openCallback) {
-        
-        openCallback(method, url, this);
+        openCallback.call(method, url);
       }
-      originalXHROpen.apply(this, arguments);
+      originalXHROpen.apply(this, args);
     };
 
     // Override `setRequestHeader` method for all XHR requests to intercept
     // the request headers, then pass them through the `requestHeaderCallback`.
-    XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
+    XMLHttpRequest.prototype.setRequestHeader = function (header, value) {
       if (requestHeaderCallback) {
-        requestHeaderCallback(header, value, this);
+        requestHeaderCallback.call(header, value);
       }
-      originalXHRSetRequestHeader.apply(this, arguments);
+      originalXHRSetRequestHeader.apply(this, [header, value]);
     };
 
     // Override `send` method of all XHR requests to intercept the data sent,
     // register listeners to intercept the response, and invoke the callbacks.
-    XMLHttpRequest.prototype.send = function(data) {
+    XMLHttpRequest.prototype.send = function (data) {
       if (sendCallback) {
-        sendCallback(data, this);
+        sendCallback.call(data, this);
       }
       if (this.addEventListener) {
-        this.addEventListener('readystatechange', () => {
-          if (!isInterceptorEnabled) {
-            return;
+        this.addEventListener(
+          'readystatechange',
+          () => {
+            if (!isInterceptorEnabled) {
+              return;
+            }
+            if (this.readyState === this.HEADERS_RECEIVED) {
+              const contentTypeString = this.getResponseHeader('Content-Type');
+              const contentLengthString =
+                this.getResponseHeader('Content-Length');
+              let responseContentType, responseSize;
+              if (contentTypeString) {
+                responseContentType = contentTypeString.split(';')[0];
+              }
+              if (contentLengthString) {
+                responseSize = parseInt(contentLengthString, 10);
+              }
+              if (headerReceivedCallback) {
+                headerReceivedCallback.call(
+                  responseContentType,
+                  responseSize,
+                  this.getAllResponseHeaders(),
+                  this
+                );
+              }
+            }
+            if (this.readyState === this.DONE) {
+              if (responseCallback) {
+                responseCallback.call(
+                  this.status,
+                  this.timeout,
+                  this.response,
+                  this.responseURL,
+                  this.responseType,
+                  this
+                );
+              }
+            }
           }
-          if (this.readyState === this.HEADERS_RECEIVED) {
-            const contentTypeString = this.getResponseHeader('Content-Type');
-            const contentLengthString =
-              this.getResponseHeader('Content-Length');
-            let responseContentType, responseSize;
-            if (contentTypeString) {
-              responseContentType = contentTypeString.split(';')[0];
-            }
-            if (contentLengthString) {
-              responseSize = parseInt(contentLengthString, 10);
-            }
-            if (headerReceivedCallback) {
-              headerReceivedCallback(
-                responseContentType,
-                responseSize,
-                this.getAllResponseHeaders(),
-                this,
-              );
-            }
-          }
-          if (this.readyState === this.DONE) {
-            if (responseCallback) {
-              responseCallback(
-                this.status,
-                this.timeout,
-                this.response,
-                this.responseURL,
-                this.responseType,
-                this,
-              );
-            }
-          }
-        }, false);
+        );
       }
-      originalXHRSend.apply(this, arguments);
+      originalXHRSend.apply(this, [data]);
     };
     isInterceptorEnabled = true;
   },
@@ -142,13 +175,12 @@ const XHRInterceptor = {
     XMLHttpRequest.prototype.send = originalXHRSend;
     XMLHttpRequest.prototype.open = originalXHROpen;
     XMLHttpRequest.prototype.setRequestHeader = originalXHRSetRequestHeader;
-    responseCallback = null;
-    openCallback = null;
-    sendCallback = null;
-    headerReceivedCallback = null;
-    requestHeaderCallback = null;
+    responseCallback = undefined;
+    openCallback = undefined;
+    sendCallback = undefined;
+    headerReceivedCallback = undefined;
+    requestHeaderCallback = undefined;
   },
 };
 
-//module.exports = XHRInterceptor;
 export default XHRInterceptor;
