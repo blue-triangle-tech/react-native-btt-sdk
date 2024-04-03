@@ -6,6 +6,7 @@ const setUpXMLHTTPRequestInterceptor = () => {
   var tracker: BTTHTTPTracker;
   var httpMethod: string;
   var requestUrl: string;
+
   XHRInterceptor.setOpenCallback((method: string, url: string) => {
     console.log(`setOpenCallback(${method}, ${url}`);
     httpMethod = method;
@@ -14,7 +15,7 @@ const setUpXMLHTTPRequestInterceptor = () => {
 
   XHRInterceptor.setSendCallback((data: any) => {
     console.log(`setSendCallback ${data}`);
-    if (data != undefined) {
+    if (data !== undefined) {
       console.log(`setSendCallback ${data.length}`);
       var dataLength = data.length.toString();
       tracker = new BTTHTTPTracker(httpMethod || 'GET', requestUrl, dataLength);
@@ -25,22 +26,28 @@ const setUpXMLHTTPRequestInterceptor = () => {
     }
   });
 
-  var contentType: string;
+  var contentType: string | undefined;
   var contentSize: string;
+
   XHRInterceptor.setHeaderReceivedCallback(
-    (responseContentType: string, responseSize: number) => {
+    (
+      responseContentType: string | undefined,
+      responseSize: number | undefined
+    ) => {
       contentType = responseContentType;
-      if (responseSize != undefined) {
+      if (responseSize !== undefined) {
         contentSize = responseSize.toString();
       }
     }
   );
-
   XHRInterceptor.setResponseCallback((status: number) => {
-    tracker.submitResponse(contentType, contentSize, status.toString());
+    tracker.submitResponse(
+      contentType ? contentType : '',
+      contentSize,
+      status.toString()
+    );
   });
 };
-
 export default () => {
   setUpXMLHTTPRequestInterceptor();
 };

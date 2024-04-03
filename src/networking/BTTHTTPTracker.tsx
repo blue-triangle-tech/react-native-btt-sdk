@@ -33,11 +33,15 @@ class BTTHTTPTracker {
     }
   }
 
-  submitResponse(contentType: string, bodySize: string, statusCode: string) {
+  submitResponse(
+    contentType: string | undefined,
+    bodySize: string,
+    statusCode: string
+  ) {
     // Submit Network request
     console.log(`BTTHTTPTracker::networkTrackerID(${this.networkTrackerID})`);
-    if (this.networkTrackerID != undefined) {
-      if (statusCode == '0') {
+    if (this.networkTrackerID !== undefined) {
+      if (statusCode === '0') {
         statusCode = '600';
       }
       console.log(
@@ -48,7 +52,7 @@ class BTTHTTPTracker {
         networkTrackerID: this.networkTrackerID,
         encodedBodySize: bodySize,
         requestType: contentType,
-        responseStatusCode: statusCode,
+        responseStatusCode: parseInt(statusCode, 10),
       });
     }
   }
