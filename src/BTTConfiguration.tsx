@@ -22,7 +22,8 @@ class BTTConfiguration {
     };
     setUpInterceptors();
     const sessionId = await BttSdk.bttConfigure(dictionary);
-    BTTDM.init(bttOptions, sessionId);
+    BTTDM.instance.bttOptions = bttOptions;
+    BTTDM.instance.sessionID = sessionId
   }
 
   static getSessionId() {
