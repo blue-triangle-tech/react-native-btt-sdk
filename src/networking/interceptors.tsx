@@ -13,16 +13,20 @@ const setUpXMLHTTPRequestInterceptor = () => {
     requestUrl = url;
   });
 
-  XHRInterceptor.setSendCallback((data: any) => {
+  XHRInterceptor.setSendCallback((data?: any) => {
     console.log(`setSendCallback ${data}`);
-    if (data !== undefined) {
-      console.log(`setSendCallback ${data.length}`);
-      var dataLength = data.length.toString();
-      tracker = new BTTHTTPTracker(httpMethod || 'GET', requestUrl, dataLength);
-      tracker.start();
-    } else {
-      tracker = new BTTHTTPTracker(httpMethod || 'GET', requestUrl, '');
-      tracker.start();
+    try {
+      if (data) {
+        console.log(`setSendCallback ${data.length}`);
+        var dataLength = data.length.toString();
+        tracker = new BTTHTTPTracker(httpMethod || 'GET', requestUrl, dataLength);
+        tracker.start();
+      } else {
+        tracker = new BTTHTTPTracker(httpMethod || 'GET', requestUrl, '');
+        tracker.start();
+      }
+    } catch(e) {
+      console.error(e);
     }
   });
 

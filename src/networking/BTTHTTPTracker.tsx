@@ -4,7 +4,7 @@ class BTTHTTPTracker {
   private method: string;
   private url: string;
   private requestBodyLength: string;
-  private networkTrackerID!: string;
+  private networkTrackerID: string | undefined;
 
   constructor(method: string, url: string, requestBodyLength: string) {
     this.method = method;
