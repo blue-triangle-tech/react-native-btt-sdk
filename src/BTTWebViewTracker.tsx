@@ -5,10 +5,11 @@ import BTTOptions from './BTTOptions';
 class BTTWebViewTracker {
   static injectSession() {
     const sessionId = BTTDM.instance.sessionID;
+
     const version = packageJson.version;
     var isNetworkCapture = 'off';
-    const bttOption: BTTOptions = BTTDM.instance.bttOptions;
-    if (bttOption.screenTracking) {
+    const bttOption: BTTOptions | undefined = BTTDM.instance.bttOptions;
+    if (bttOption?.screenTracking) {
       isNetworkCapture = 'on';
     }
 
