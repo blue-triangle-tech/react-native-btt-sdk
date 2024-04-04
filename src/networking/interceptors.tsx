@@ -8,24 +8,25 @@ const setUpXMLHTTPRequestInterceptor = () => {
   var requestUrl: string;
 
   XHRInterceptor.setOpenCallback((method: string, url: string) => {
-    console.log(`setOpenCallback(${method}, ${url}`);
     httpMethod = method;
     requestUrl = url;
   });
 
   XHRInterceptor.setSendCallback((data?: any) => {
-    console.log(`setSendCallback ${data}`);
     try {
       if (data) {
-        console.log(`setSendCallback ${data.length}`);
         var dataLength = data.length.toString();
-        tracker = new BTTHTTPTracker(httpMethod || 'GET', requestUrl, dataLength);
+        tracker = new BTTHTTPTracker(
+          httpMethod || 'GET',
+          requestUrl,
+          dataLength
+        );
         tracker.start();
       } else {
         tracker = new BTTHTTPTracker(httpMethod || 'GET', requestUrl, '');
         tracker.start();
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
   });

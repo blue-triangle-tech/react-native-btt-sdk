@@ -9,7 +9,7 @@ class BTTWebViewTracker {
     const version = packageJson.version;
     var isNetworkCapture = 'off';
     const bttOption: BTTOptions | undefined = BTTDM.instance.bttOptions;
-    if (bttOption?.screenTracking) {
+    if (bttOption?.networkSampleRate !== 0) {
       isNetworkCapture = 'on';
     }
 

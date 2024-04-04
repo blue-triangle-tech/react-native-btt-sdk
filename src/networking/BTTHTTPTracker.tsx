@@ -14,7 +14,6 @@ class BTTHTTPTracker {
 
   async start() {
     // create captured request for android
-    console.log('BTTHTTPTracker::start');
     try {
       const dictionary = {
         networkUrl: this.url,
@@ -24,12 +23,9 @@ class BTTHTTPTracker {
 
       const result = await BttSdk.networkTrackerStart(dictionary);
       this.networkTrackerID = result.networkTrackerID;
-      console.log(
-        `BTTHTTPTracker::start::networkTrackerID(${this.networkTrackerID})`
-      );
     } catch (error) {
       // Handle error
-      console.log(`BTTHTTPTracker::error(${error})`);
+      console.error(error);
     }
   }
 
@@ -39,14 +35,10 @@ class BTTHTTPTracker {
     statusCode: string
   ) {
     // Submit Network request
-    console.log(`BTTHTTPTracker::networkTrackerID(${this.networkTrackerID})`);
     if (this.networkTrackerID !== undefined) {
       if (statusCode === '0') {
         statusCode = '600';
       }
-      console.log(
-        `BTTHTTPTracker::submitResponse(${contentType}, ${bodySize}, ${statusCode})`
-      );
 
       BttSdk.networkTrackerSubmit({
         networkTrackerID: this.networkTrackerID,
@@ -58,7 +50,7 @@ class BTTHTTPTracker {
   }
 
   submitError(err: Error) {
-    console.log(`BTTHTTPTracker::submitError(${err})`);
+    console.error(err);
   }
 
   /**
