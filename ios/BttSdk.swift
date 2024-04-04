@@ -77,12 +77,12 @@ class BttSdk: NSObject {
             if let cacheExpiryDuration = dictionary["cacheExpiryDuration"] as? Double  {
                 config.cacheExpiryDuration = Millisecond(cacheExpiryDuration) //config.cacheExpiryDuration = 5 * 60 * 1000
             }
-            
-            resolve(config.sessionID)
         }
         // Process the dictionary as needed
         // For example, log its contents
         print("Received dictionary: \(dictionary)")
+        let sessionID = BlueTriangle.sessionID
+        resolve(String(sessionID))
     }
     
     @objc(getSessionId:withRejecter:)
