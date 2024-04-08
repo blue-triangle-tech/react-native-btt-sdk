@@ -1,15 +1,40 @@
-//'use strict';
-
-//const XMLHttpRequest = require('XMLHttpRequest');
 const originalXHROpen = XMLHttpRequest.prototype.open;
 const originalXHRSend = XMLHttpRequest.prototype.send;
 const originalXHRSetRequestHeader = XMLHttpRequest.prototype.setRequestHeader;
 
-var openCallback;
-var sendCallback;
-var requestHeaderCallback;
-var headerReceivedCallback;
-var responseCallback;
+type OpenCallback =
+  | ((method: string, url: string, request: XMLHttpRequest) => void)
+  | undefined;
+type RequestHeaderCallback =
+  | ((header: string, value: string, request: XMLHttpRequest) => void)
+  | undefined;
+type SendCallback =
+  | ((data?: any, request?: XMLHttpRequest) => void)
+  | undefined;
+type HeaderReceivedCallback =
+  | ((
+      responseContentType: string | undefined,
+      responseSize: number | undefined,
+      responseHeader: string,
+      request?: XMLHttpRequest
+    ) => void)
+  | undefined;
+type ResponseCallback =
+  | ((
+      status: number,
+      timeout: number,
+      response: any,
+      responseURL: string,
+      responseType: XMLHttpRequestResponseType,
+      request: XMLHttpRequest
+    ) => void)
+  | undefined;
+
+var openCallback: OpenCallback;
+var sendCallback: SendCallback;
+var requestHeaderCallback: RequestHeaderCallback;
+var headerReceivedCallback: HeaderReceivedCallback;
+var responseCallback: ResponseCallback;
 
 var isInterceptorEnabled = false;
 
@@ -24,35 +49,35 @@ const XHRInterceptor = {
   /**
    * Invoked before XMLHttpRequest.open(...) is called.
    */
-  setOpenCallback(callback) {
+  setOpenCallback(callback: OpenCallback) {
     openCallback = callback;
   },
 
   /**
    * Invoked before XMLHttpRequest.send(...) is called.
    */
-  setSendCallback(callback) {
+  setSendCallback(callback: SendCallback) {
     sendCallback = callback;
   },
 
   /**
    * Invoked after xhr's readyState becomes xhr.HEADERS_RECEIVED.
    */
-  setHeaderReceivedCallback(callback) {
+  setHeaderReceivedCallback(callback: HeaderReceivedCallback) {
     headerReceivedCallback = callback;
   },
 
   /**
    * Invoked after xhr's readyState becomes xhr.DONE.
    */
-  setResponseCallback(callback) {
+  setResponseCallback(callback: ResponseCallback) {
     responseCallback = callback;
   },
 
   /**
    * Invoked before XMLHttpRequest.setRequestHeader(...) is called.
    */
-  setRequestHeaderCallback(callback) {
+  setRequestHeaderCallback(callback: RequestHeaderCallback) {
     requestHeaderCallback = callback;
   },
 
@@ -66,26 +91,25 @@ const XHRInterceptor = {
     }
     // Override `open` method for all XHR requests to intercept the request
     // method and url, then pass them through the `openCallback`.
-    XMLHttpRequest.prototype.open = function(method, url) {
+    XMLHttpRequest.prototype.open = function (...args) {
       if (openCallback) {
-        
-        openCallback(method, url, this);
+        openCallback(args[0], args[1], this);
       }
-      originalXHROpen.apply(this, arguments);
+      originalXHROpen.apply(this, args);
     };
 
     // Override `setRequestHeader` method for all XHR requests to intercept
     // the request headers, then pass them through the `requestHeaderCallback`.
-    XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
+    XMLHttpRequest.prototype.setRequestHeader = function (header, value) {
       if (requestHeaderCallback) {
         requestHeaderCallback(header, value, this);
       }
-      originalXHRSetRequestHeader.apply(this, arguments);
+      originalXHRSetRequestHeader.apply(this, [header, value]);
     };
 
     // Override `send` method of all XHR requests to intercept the data sent,
     // register listeners to intercept the response, and invoke the callbacks.
-    XMLHttpRequest.prototype.send = function(data) {
+    XMLHttpRequest.prototype.send = function (data) {
       if (sendCallback) {
         sendCallback(data, this);
       }
@@ -110,7 +134,7 @@ const XHRInterceptor = {
                 responseContentType,
                 responseSize,
                 this.getAllResponseHeaders(),
-                this,
+                this
               );
             }
           }
@@ -122,13 +146,13 @@ const XHRInterceptor = {
                 this.response,
                 this.responseURL,
                 this.responseType,
-                this,
+                this
               );
             }
           }
-        }, false);
+        });
       }
-      originalXHRSend.apply(this, arguments);
+      originalXHRSend.apply(this, [data]);
     };
     isInterceptorEnabled = true;
   },
@@ -142,13 +166,12 @@ const XHRInterceptor = {
     XMLHttpRequest.prototype.send = originalXHRSend;
     XMLHttpRequest.prototype.open = originalXHROpen;
     XMLHttpRequest.prototype.setRequestHeader = originalXHRSetRequestHeader;
-    responseCallback = null;
-    openCallback = null;
-    sendCallback = null;
-    headerReceivedCallback = null;
-    requestHeaderCallback = null;
+    responseCallback = undefined;
+    openCallback = undefined;
+    sendCallback = undefined;
+    headerReceivedCallback = undefined;
+    requestHeaderCallback = undefined;
   },
 };
 
-//module.exports = XHRInterceptor;
 export default XHRInterceptor;

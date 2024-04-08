@@ -2,10 +2,7 @@ import { AppRegistry } from 'react-native';
 import App from './src/App';
 import { name as appName } from './app.json';
 
-import {BTTConfiguration, BTTOptions} from 'react-native-btt-sdk';
-import Utility from './src/Utility';
-
-const sessionID = Utility.currentFormatDate()
+import {BTTConfiguration, BTTOptions} from '@bluetriangle/react-native-btt-sdk';
 
 const bttOptions = new BTTOptions()
 bttOptions.trackAnr = true
