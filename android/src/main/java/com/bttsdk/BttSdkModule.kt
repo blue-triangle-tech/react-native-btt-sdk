@@ -48,7 +48,8 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         config.networkSampleRate = dictionary.getDouble("networkSampleRate")
         config.cacheMemoryLimit = dictionary.getDouble("cacheMemoryLimit").toLong()
         config.cacheExpiryDuration = dictionary.getDouble("cacheExpiryDuration").toLong()
-
+        config.isLaunchTimeEnabled = dictionary.getBoolean("launchTime")
+        
         if (sessionID?.isNotEmpty() == true) {
             config.sessionId = sessionID
         }

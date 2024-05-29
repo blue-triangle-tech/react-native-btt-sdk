@@ -1,11 +1,12 @@
 class BTTOptions  {
-     trackAnr = false
-     performanceMonitoring = false
+     trackAnr = true
+     performanceMonitoring = true
      performanceMonitoringInterval = 500
-     memoryWarning = false
-     trackCrash = false
-     screenTracking = false
-     trackNetworkState = false
+     memoryWarning = true
+     trackCrash = true
+     screenTracking = true
+     trackNetworkState = true
+     launchTime = true
      debug = false
      trackAnrIntervalSec = 1
      networkSampleRate = 1
