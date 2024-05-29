@@ -98,13 +98,8 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
- // implementation 'com.github.blue-triangle-tech:btt-android-sdk:2.8.1'
-  //implementation 'com.github.IsmailAloha:btt-android-sdk:btt-screen-tracking-SNAPSHOT'
-  //implementation 'com.github.IsmailAloha:btt-android-sdk:b78aa29103'
-  //implementation 'com.github.IsmailAloha:btt-android-sdk:9d940b32a9'
-  //implementation 'com.github.IsmailAloha:btt-android-sdk:7e9bc2a012'
-  //implementation 'com.github.IsmailAloha.btt-android-sdk:btt-android-sdk:feature~cpu_memory_netstate_offline_support_hybrid-SNAPSHOT'
-  implementation 'com.github.blue-triangle-tech:btt-android-sdk:2.9.0'
+
+  implementation 'com.github.blue-triangle-tech:btt-android-sdk:2.11.0'
 }
 
 if (isNewArchitectureEnabled()) {

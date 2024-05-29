@@ -1,45 +1,40 @@
 import packageJson from '../package.json';
 import BTTDM from './BTTDM';
-import BTTOptions from './BTTOptions';
+import Logger from './Logger';
 
 class BTTWebViewTracker {
   static injectSession() {
-    const sessionId = BTTDM.instance.sessionID;
-
-    const version = packageJson.version;
-    var isNetworkCapture = 'off';
-    const bttOption: BTTOptions | undefined = BTTDM.instance.bttOptions;
-    if (bttOption?.networkSampleRate !== 0) {
-      isNetworkCapture = 'on';
-    }
-
-    const currentTime = new Date();
-    const newTime = new Date(currentTime.getTime() + 1800000);
-    const setSession =
-      '{"value":"' + sessionId + '","expires":"' + newTime.getTime() + '"}';
+    const sessionId: string | undefined = BTTDM.instance.sessionID;
+    const version: string = packageJson.version;
+    const networkSampleRate = BTTDM.instance.bttOptions?.networkSampleRate;
+    const networkCaptureEnabled = networkSampleRate === 0 ? 'on' : 'off';
     const sdkVersion = 'iOS_' + version + '';
-    const bttVersionValues =
-      '{"value":"' + sdkVersion + '","expires":"' + newTime.getTime() + '"}';
-    const bttWCDCollectValues =
-      '{"value":"' +
-      isNetworkCapture +
-      '","expires":"' +
-      newTime.getTime() +
-      '"}';
 
-    const injectedSessionJavaScript =
-      "window.localStorage.setItem('BTT_X0siD', '" + setSession + "');true;";
-    const injectedVersionJavaScript =
-      "window.localStorage.setItem('BTT_SDK_VER', '" +
-      bttVersionValues +
-      "');true;";
-    const injectedWCDJavaScript =
-      "window.localStorage.setItem('BTT_WCD_Collect', '" +
-      bttWCDCollectValues +
-      "');true;";
+    const expirationTime = new Date(new Date().getTime() + 1800000);
+    const expires = expirationTime.getTime().toString();
 
-    const combinedScript = `${injectedSessionJavaScript} ${injectedVersionJavaScript} ${injectedWCDJavaScript}`;
-    return combinedScript;
+    const injectScript =
+      this.localStorageItem('BTT_X0siD', sessionId, expires) +
+      this.localStorageItem('BTT_SDK_VER', sdkVersion, expires) +
+      this.localStorageItem('BTT_WCD_Collect', networkCaptureEnabled, expires);
+
+    Logger.instance.log(
+      `Generated inject script For WebView Tracking: ${injectScript}`
+    );
+
+    return injectScript;
+  }
+
+  private static localStorageItem(
+    key: string,
+    value: string | undefined,
+    expires: string
+  ) {
+    const data = JSON.stringify({
+      value,
+      expires,
+    });
+    return `window.localStorage.setItem('${key}', '${data}');true;`;
   }
 }
 

@@ -2,6 +2,7 @@ import BTTOptions from './BTTOptions';
 import setUpInterceptors from './networking/interceptors';
 import BTTDM from './BTTDM';
 import BttSdk from './BttSdk';
+import Logger from './Logger';
 
 class BTTConfiguration {
   static async configure(siteId: String, bttOptions: BTTOptions) {
@@ -24,6 +25,7 @@ class BTTConfiguration {
     const sessionId = await BttSdk.bttConfigure(dictionary);
     BTTDM.instance.bttOptions = bttOptions;
     BTTDM.instance.sessionID = sessionId;
+    Logger.instance.log(`Configuration Done. Options: ${bttOptions}, Session ID: ${sessionId}`)
   }
 
   static getSessionId() {
