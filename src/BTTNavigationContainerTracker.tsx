@@ -4,18 +4,16 @@ let trackerName = '';
 let trackerID = '';
 
 interface NavigationRef {
-  getCurrentRoute():Route
+  getCurrentRoute(): Route;
 }
 
 interface Route {
-  key:string
-  name:string
+  key: string;
+  name: string;
 }
 
 class BTTNavigationContainerTracker {
-
-
-  static applicationDidEnterBackground(navigationRef:NavigationRef) {
+  static applicationDidEnterBackground(navigationRef: NavigationRef) {
     let currentKey = navigationRef.getCurrentRoute().key;
     let currentName = navigationRef.getCurrentRoute().name;
     if (currentName != null) {
@@ -23,7 +21,7 @@ class BTTNavigationContainerTracker {
     }
   }
 
-  static onContainerStateChange(navigationRef:NavigationRef) {
+  static onContainerStateChange(navigationRef: NavigationRef) {
     let currentKey = navigationRef.getCurrentRoute().key;
     let currentName = navigationRef.getCurrentRoute().name;
 
