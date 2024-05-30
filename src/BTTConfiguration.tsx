@@ -14,6 +14,7 @@ class BTTConfiguration {
       memoryWarning: bttOptions.memoryWarning,
       trackCrash: bttOptions.trackCrash,
       debug: bttOptions.debug,
+      launchTime: bttOptions.launchTime,
       screenTracking: bttOptions.screenTracking,
       trackNetworkState: bttOptions.trackNetworkState,
       trackAnrIntervalSec: bttOptions.trackAnrIntervalSec,
@@ -25,7 +26,9 @@ class BTTConfiguration {
     const sessionId = await BttSdk.bttConfigure(dictionary);
     BTTDM.instance.bttOptions = bttOptions;
     BTTDM.instance.sessionID = sessionId;
-    Logger.instance.log(`Configuration Done. Options: ${bttOptions}, Session ID: ${sessionId}`)
+    Logger.instance.log(
+      `Configuration Done. Options: ${bttOptions}, Session ID: ${sessionId}`
+    );
   }
 
   static getSessionId() {
