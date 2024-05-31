@@ -10,7 +10,7 @@ yarn add '@bluetriangle/react-native-btt-sdk'
 
 ## Configuration
 
-Before using BTT SDK, It needs to be configured. It is recommended to configure sdk in your `index.js` file. 
+Before using BTT SDK, It needs to be configured. It is recommended to configure sdk in your `index.js` file.
 
 Import the `BTTConfiguration` and `BTTOptions` as shown in the below code snippet. Then configure it using `BTTConfiguration.configure(<siteId>, <bttOptions>)` with `<siteId>` and `BTTOptions`.
 
@@ -39,7 +39,7 @@ a) Using Manual Timers:<br/>
 
 To use a manual timer, you need to first import the `BTTTimer` object from `@bluetriangle/react-native-btt-sdk`. Create timer object with pageName.
 
-The `BTTTimer` object has the following functions: 
+The `BTTTimer` object has the following functions:
 - `timer.startTimer()`:
 - `timer.stopTimer()`:
 
@@ -68,13 +68,13 @@ timer.stopTimer()
 
 ##  Performance Monitor
 
-Performance monitoring allows the tracking of CPU and Memory usage of the app. This usage information is associated with all the currently running timers. 
+Performance monitoring allows the tracking of CPU and Memory usage of the app. This usage information is associated with all the currently running timers.
 
 To enable Performance Monitoring, we need to set `performanceMonitoring` to `true` from `BTTOptions` at the time of configuration. Also, you can set `performanceMonitoringInterval` which is in milliseconds. You can refer [Configuration](#configuration).
 
 ### Screen Tracker
 
-Screen tracking captures screen views which can be seen on our dashboard. 
+Screen tracking captures screen views which can be seen on our dashboard.
 
 a) Screen Tracking for [React Navigation](https://reactnavigation.org/):
 
@@ -113,11 +113,11 @@ AppState.addEventListener('change', state => {
     if (state === 'active') {
       // do this
       BTTNavigationContainerTracker.onContainerStateChange(navigationRef)
-    } 
+    }
     else if (state === 'background') {
       // do that
       BTTNavigationContainerTracker.applicationDidEnterBackground(navigationRef)
-    } 
+    }
   });
   ```
 
@@ -148,7 +148,7 @@ var manualTracker:BTTScreenTracker
         manualTracker = new BTTScreenTracker("PageName")
       }
       manualTracker.startTracking()
-      
+
     });
     const unsubscribeBlur = navigation.addListener('blur', () =>{
       manualTracker.stopTracking()
@@ -200,7 +200,7 @@ The data that is kept longer in cache than the expiry duration is automatically 
 
 ## Network State Capture
 
-BlueTriangle SDK allows capturing of network state data. Network state refers to the availability of any network interfaces on the device. Network interfaces include wifi, ethernet, cellular, etc. Once Network state capturing is enabled, the Network state is associated with all Timers, Errors and Network Requests captured by the SDK. 
+BlueTriangle SDK allows capturing of network state data. Network state refers to the availability of any network interfaces on the device. Network interfaces include wifi, ethernet, cellular, etc. Once Network state capturing is enabled, the Network state is associated with all Timers, Errors and Network Requests captured by the SDK.
 
 To enable Network state capture, use the `trackNetworkState` property on the BTTOptions object as follows:
 
@@ -209,7 +209,7 @@ const bttOptions = new BTTOptions()
 bttOptions.trackNetworkState = true
 ```
 
-#### Permission on Android 
+#### Permission on Android
 
 In Android, Network state capturing requires android.permission.ACCESS_NETWORK_STATE permission. So, include the permission into your AndroidManifest.xml file as follows:
 
@@ -279,7 +279,7 @@ same session as the react app. To achieve this, follow the steps below to config
 ```js
 import {BTTWebViewTracker} from '@bluetriangle/react-native-btt-sdk'
 const MyWebView = ({navigation, route}) => {
- return (<WebView 
+ return (<WebView
     domStorageEnabled={true}
     javaScriptEnabled={true}
     injectedJavaScriptBeforeContentLoaded={BTTWebViewTracker.injectSession()} >
@@ -294,7 +294,7 @@ If you are already using `injectedJavaScriptBeforeContentLoaded` to inject any o
 ```js
 import {BTTWebViewTracker} from '@bluetriangle/react-native-btt-sdk'
 const MyWebView = ({navigation, route}) => {
- return (<WebView 
+ return (<WebView
     domStorageEnabled={true}
     javaScriptEnabled={true}
     injectedJavaScriptBeforeContentLoaded={BTTWebViewTracker.injectSession() + "YOUR SCRIPT"}>
