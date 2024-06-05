@@ -1,22 +1,19 @@
-import BTTDM from "./BTTDM"
+import BTTDM from './BTTDM';
 
 class Logger {
+  private static _instance?: Logger;
 
-    private static _instance?:Logger
+  public static get instance() {
+    return this._instance || (this._instance = new Logger());
+  }
 
-    public static get instance() {
-        return this._instance || (this._instance = new Logger())
+  private constructor() {}
+
+  log(message?: any) {
+    if (BTTDM.instance.bttOptions?.debug) {
+      console.log(message);
     }
-
-    private constructor() {
-
-    }
-
-    log(message?:any) {
-        if(BTTDM.instance.bttOptions?.debug) {
-            console.log(message)
-        }
-    }
+  }
 }
 
-export default Logger
+export default Logger;

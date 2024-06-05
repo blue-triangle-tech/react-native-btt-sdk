@@ -35,7 +35,6 @@ class BTTTimer {
       `Timer stopped: pageName: ${this.pageName}, timerId: ${this.timerId}`
     );
   }
-  
 }
 
 export default BTTTimer;

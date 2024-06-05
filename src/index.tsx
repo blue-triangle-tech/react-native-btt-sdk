@@ -5,9 +5,9 @@ import BTTOptions from './BTTOptions';
 import BTTNavigationContainerTracker from './BTTNavigationContainerTracker';
 import BTTWebViewTracker from './BTTWebViewTracker';
 
-export {BTTScreenTracker};
-export {BTTConfiguration};
-export {BTTTimer};
-export {BTTOptions};
-export {BTTNavigationContainerTracker};
-export {BTTWebViewTracker};
+export { BTTScreenTracker };
+export { BTTConfiguration };
+export { BTTTimer };
+export { BTTOptions };
+export { BTTNavigationContainerTracker };
+export { BTTWebViewTracker };

@@ -1,6 +1,6 @@
-import { NativeModules } from "react-native";
+import { NativeModules } from 'react-native';
 
-const BTT_SDK_LINKING_ERROR:string = "Unable to Link BttSdk Native Module"
+const BTT_SDK_LINKING_ERROR: string = 'Unable to Link BttSdk Native Module';
 
 const BttSdk = NativeModules.BttSdk
   ? NativeModules.BttSdk
