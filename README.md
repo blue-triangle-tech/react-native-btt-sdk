@@ -1,7 +1,7 @@
 
 # Blue Triangle React Native SDK
 
-The Blue Triangle SDK for Android enables application owners to track their users’ experience so they can focus on user experience issues that impact their business outcomes.
+The Blue Triangle SDK for React Native enables application owners to track their users’ experience so they can focus on user experience issues that impact their business outcomes.
 
 ## Supported metrics
 
