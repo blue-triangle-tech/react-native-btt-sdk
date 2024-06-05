@@ -9,7 +9,7 @@ class BTTOptions {
   launchTime = true;
   debug = false;
   trackAnrIntervalSec = 5;
-  networkSampleRate = 1;
+  networkSampleRate = 0.05;
   cacheMemoryLimit = 30 * 1024;
   cacheExpiryDuration = 48 * 60 * 1000;
 }
