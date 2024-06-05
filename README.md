@@ -1,6 +1,8 @@
 
 # Blue Triangle React Native SDK
 
+Latest version available on NPM https://www.npmjs.com/package/@bluetriangle/react-native-btt-sdk/v/0.2.1
+
 The Blue Triangle SDK for React Native enables application owners to track their users’ experience so they can focus on user experience issues that impact their business outcomes.
 
 ## Supported metrics
