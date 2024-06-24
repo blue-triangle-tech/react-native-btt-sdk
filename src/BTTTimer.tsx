@@ -1,10 +1,10 @@
 import BttSdk from './BttSdk';
 import Logger from './Logger';
+import PurchaseConfirmation from './PurchaseConfirmation';
 
 class BTTTimer {
   private pageName: string;
   private timerId: string = '';
-  private cartValue: number = 0.0;
 
   constructor(pageName: string) {
     this.pageName = pageName;
@@ -21,14 +21,12 @@ class BTTTimer {
     );
   }
 
-  setCartValue(cartValue: number) {
-    this.cartValue = cartValue;
-  }
-
-  stopTimer() {
+  stopTimer(
+    purchaseConfirmation: PurchaseConfirmation | undefined = undefined
+  ) {
     const dictionary = {
       btt_timer_id: this.timerId,
-      ...(this.cartValue ? { btt_cartValue: this.cartValue } : {}),
+      ...(purchaseConfirmation ? purchaseConfirmation.values() : {}),
     };
     BttSdk.bttStopTimer(dictionary);
     Logger.instance.log(

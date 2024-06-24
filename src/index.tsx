@@ -4,6 +4,7 @@ import BTTTimer from './BTTTimer';
 import BTTOptions from './BTTOptions';
 import BTTNavigationContainerTracker from './BTTNavigationContainerTracker';
 import BTTWebViewTracker from './BTTWebViewTracker';
+import PurchaseConfirmation from './PurchaseConfirmation';
 
 export { BTTScreenTracker };
 export { BTTConfiguration };
@@ -11,3 +12,4 @@ export { BTTTimer };
 export { BTTOptions };
 export { BTTNavigationContainerTracker };
 export { BTTWebViewTracker };
+export { PurchaseConfirmation };

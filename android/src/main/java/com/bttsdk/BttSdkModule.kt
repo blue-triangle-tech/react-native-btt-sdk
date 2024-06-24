@@ -5,18 +5,17 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import com.bluetriangle.analytics.BlueTriangleConfiguration
 import com.bluetriangle.analytics.Timer
 import com.bluetriangle.analytics.Tracker
 import com.bluetriangle.analytics.screenTracking.BTTScreenTracker
-import com.bluetriangle.analytics.model.ScreenType
 import com.bluetriangle.analytics.networkcapture.CapturedRequest
 import com.bluetriangle.analytics.networkcapture.RequestType
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
+import java.lang.Long.parseLong
 
 class BttSdkModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
@@ -49,7 +48,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         config.cacheMemoryLimit = dictionary.getDouble("cacheMemoryLimit").toLong()
         config.cacheExpiryDuration = dictionary.getDouble("cacheExpiryDuration").toLong()
         config.isLaunchTimeEnabled = dictionary.getBoolean("launchTime")
-        
+
         if (sessionID?.isNotEmpty() == true) {
             config.sessionId = sessionID
         }
@@ -98,19 +97,34 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun bttStopTimer(dictionary: ReadableMap) {
-        Tracker.instance?.configuration?.logger?.debug("bttStopTimer.")
+        Tracker.instance?.configuration?.logger?.debug("bttStopTimer. ${dictionary.toHashMap()}")
 
         val timerID = dictionary.getString("btt_timer_id")
-        val cartValue = dictionary.getString("btt_cartValue")
 
-        val timer: Timer? = timerMap.get(timerID)
+        val timer: Timer? = timerMap[timerID]
         Tracker.instance?.configuration?.logger?.debug("bttStopTimer.$timer")
 
-        if (!cartValue.isNullOrEmpty()) {
-            cartValue.toDoubleOrNull()?.let { timer?.setCartValue(it) }
+        timer?.apply {
+            dictionary.runIfHasValue("cartValue", dictionary::getDouble, this::setCartValue)
+            dictionary.runIfHasValue("orderTime", dictionary::getString) { setOrderTime(parseLong(it))}
+            dictionary.runIfHasValue("orderNumber", dictionary::getString, this::setOrderNumber)
+            dictionary.runIfHasValue("brandValue", dictionary::getDouble, this::setBrandValue)
+            dictionary.runIfHasValue("cartCount", dictionary::getInt, this::setCartCount)
+            dictionary.runIfHasValue("cartCountCheckout", dictionary::getInt, timer::setCartCountCheckout)
         }
         timer?.submit()
         timerMap.remove(timerID)
+    }
+
+    /**
+     * If the corresponding key is present in the ReadableMap and it's @param retrieve function call's result not null it forwards it to the @param forward function
+     */
+    private fun <T, U> ReadableMap.runIfHasValue(key:String, retrieve:(String)->T?, forward: (T)-> U) {
+        if(hasKey(key)) {
+            val result = retrieve(key)
+            if(result != null)
+                forward(result)
+        }
     }
 
     private fun getScreenTracker(page: String, pageId: String): BTTScreenTracker {
