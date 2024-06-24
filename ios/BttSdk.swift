@@ -134,15 +134,17 @@ class BttSdk: NSObject {
             if let t = timerDict[timerID]{
                 print("Stop timer DONE")
                 
-                if let cValue = dictionary["btt_cartValue"] as? String{
-                    let purchaseConfirmation = PurchaseConfirmation.init(cartValue:  Decimal(string: cValue) ?? 0.0)
-                    
-                    
+                if let orderTime = = dictionary["orderTime"] as? Int64{
+                    let cartValue =  dictionary["cartValue"] as? Decimal ?? 0.0
+                    let cartCount =  dictionary["cartCount"] as? Int ?? 0
+                    let cartCountCheckout =  dictionary["cartCountCheckout"] as? Int ?? 0
+                    let orderNumber =  dictionary["orderNumber"] as? String ?? ""
+                    let purchaseConfirmation = PurchaseConfirmation.init(cartValue: cartValue, cartCount: cartCount, cartCountCheckout:cartCountCheckout, orderNumber: orderNumber)
                     BlueTriangle.endTimer(t, purchaseConfirmation:purchaseConfirmation)
+                }else{
+                   BlueTriangle.endTimer(t) 
                 }
-                else{
-                    BlueTriangle.endTimer(t)
-                }
+                
                 timer = nil
                 timerDict.removeValue(forKey: timerID)
             }
