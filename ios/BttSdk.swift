@@ -134,7 +134,7 @@ class BttSdk: NSObject {
             if let t = timerDict[timerID]{
                 print("Stop timer DONE")
                 
-                if let orderTime = = dictionary["orderTime"] as? Int64{
+                if let orderTime = dictionary["orderTime"] as? Int64{
                     let cartValue =  dictionary["cartValue"] as? Decimal ?? 0.0
                     let cartCount =  dictionary["cartCount"] as? Int ?? 0
                     let cartCountCheckout =  dictionary["cartCountCheckout"] as? Int ?? 0
