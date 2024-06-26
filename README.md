@@ -1,7 +1,8 @@
 
 # Blue Triangle React Native SDK
+![NPM Version](https://img.shields.io/npm/v/%40bluetriangle%2Freact-native-btt-sdk?logo=npm&logoColor=white&label=NPM+version&labelColor=%23333&color=%230a0)
+![NPM Downloads](https://img.shields.io/npm/d18m/%40bluetriangle%2Freact-native-btt-sdk?labelColor=333&color=blue)
 
-Latest version available on NPM https://www.npmjs.com/package/@bluetriangle/react-native-btt-sdk/v/0.2.1
 
 The Blue Triangle SDK for React Native enables application owners to track their users’ experience so they can focus on user experience issues that impact their business outcomes.
 
@@ -31,7 +32,7 @@ The Blue Triangle SDK for React Native enables application owners to track their
 
 ### SDK Installation
 
-<!-- SDK Version 0.2.0 -->
+<!-- SDK Version 0.3.0 -->
 
 Add the SDK to the your project using the following command:
 ```shell
@@ -260,16 +261,54 @@ timer.stopTimer()
 ```
 
 b) Cart Value:
-We can set cart value to `BTTTimer` object using following function.
-- `timer.setCartValue(cartValue)`:
+We can set cart value to `BTTTimer` object using the `PurchaseConfirmation` object as follows.
 
  ```js
-import {BTTTimer} from '@bluetriangle/react-native-btt-sdk';
+import {BTTTimer, PurchaseConfirmation} from '@bluetriangle/react-native-btt-sdk';
 
 const timer = new BTTTimer(pageName)
 timer.startTimer()
-timer.setCartValue(cartValue)
-timer.stopTimer()
+
+const purchaseConfirmation = new PurchaseConfirmation.Builder()
+  .setCartValue(99.99)
+  .build()
+timer.stopTimer(purchaseConfirmation)
+ ```
+
+### Checkout Event Data
+
+Checkout Event Data
+Upon a customer checkout, it is possible to configure the following data parameters for the event.
+
+Brand Value
+
+ ```js
+import {BTTTimer, PurchaseConfirmation} from '@bluetriangle/react-native-btt-sdk';
+
+const timer = new BTTTimer("Confirmation")
+timer.startTimer()
+
+const purchaseConfirmation = new PurchaseConfirmation.Builder()
+  .setBrandValue(100.0)
+  .build()
+timer.stopTimer(purchaseConfirmation)
+ ```
+
+Cart Value, Cart Count, Cart Count Checkout, Order Number, Order Time
+
+ ```js
+import {BTTTimer, PurchaseConfirmation} from '@bluetriangle/react-native-btt-sdk';
+
+const timer = new BTTTimer("Confirmation")
+timer.startTimer()
+
+const purchaseConfirmation = new PurchaseConfirmation.Builder()
+  .setCartValue(99.0)
+  .setCartCount(2)
+  .setCartCountCheckout(2)
+  .setOrderNumber("ORD-123345")
+  .build()  
+timer.stopTimer(purchaseConfirmation)
  ```
 
 ## Optional Configuration Steps
@@ -393,11 +432,15 @@ The latency for hot launch is calculated differently based on the platform. It's
 ##### Android
 It is the time between the onStart and onResume of the first Activity after the app is brought into foreground.
 
-#### iOS
+##### iOS
 It is the time between the end of 'applicationWillEnterForeground(:)' and end of 'applicationDidBecomeActive(:)'. So that hot launch time taken by 'applicationDidBecomeActive(:)'.
 
 In both the platforms, Locking and Unlocking the device is considered as a Hot Launch.
 
+#### Warm Launch (Only applicable to Android)
+
+A Warm Launch occurs when the app is evicted from memory by the system when it's in the background and the user re-launches it bringing it back to foreground. This type of launch has less overhead than the cold start but since the activity needs to be recreated, it takes somewhat longer than a hot start.<br/>
+The BlueTriangle SDK measures the warm launch latency, which is the time between the onCreate and onResume of the first Activity after the app is brought into foreground.
 
 You can disable Launch Time feature by setting the following field in `BTTOptions`:
 ```js
