@@ -21,6 +21,7 @@ class BTTConfiguration {
       networkSampleRate: bttOptions.networkSampleRate,
       cacheMemoryLimit: bttOptions.cacheMemoryLimit,
       cacheExpiryDuration: bttOptions.cacheExpiryDuration,
+      crashLevel : bttOptions.crashLevel.toString()
     };
     setUpInterceptors();
     const sessionId = await BttSdk.bttConfigure(dictionary);

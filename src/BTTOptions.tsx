@@ -3,7 +3,7 @@ class BTTOptions {
   performanceMonitoring = true;
   performanceMonitoringInterval = 500;
   memoryWarning = true;
-  trackCrash = true;
+  crashLevel = CrashLevel.All;
   screenTracking = true;
   trackNetworkState = true;
   launchTime = true;
@@ -15,3 +15,8 @@ class BTTOptions {
 }
 
 export default BTTOptions;
+
+enum CrashLevel{
+  None,
+  All //JS + Native Exceptional handler + Signal Handler
+}

@@ -17,6 +17,14 @@ class BttSdk: NSObject {
             if let siteID = dictionary["btt_site_id"] as? String {
                 config.siteID = siteID
             }
+
+             if let crashLevel = dictionary["crashLevel"] as? String {
+                if crashLevel == "None"{
+                     config.crashTracking = .none
+                }else{
+                     config.crashTracking  = .nsException
+                }
+            }
             
             if let trackAnr = dictionary["trackAnr"] as? Bool {
                 config.ANRMonitoring = trackAnr
@@ -33,15 +41,6 @@ class BttSdk: NSObject {
             
             if let memoryWarning = dictionary["memoryWarning"] as? Bool {
                 config.enableMemoryWarning = memoryWarning
-            }
-            
-            if let trackCrash = dictionary["trackCrash"] as? Bool {
-                if(trackCrash){
-                    config.crashTracking  = .nsException
-                }
-                else{
-                    config.crashTracking = .none
-                }
             }
             
             if let debug = dictionary["debug"] as? Bool {
