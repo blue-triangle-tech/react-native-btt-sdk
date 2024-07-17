@@ -380,7 +380,7 @@ bttOptions.performanceMonitoring = false
 
 ### Track Crash
 
-The SDK automatic tracks and reports crashes. To disable this feature, just set the `trackCrash` property to false from `BTTOptions` at the time of configuration. You can refer [Configuration](#configuration).
+The SDK automatic tracks and reports crashes. To disable this feature, just set the `crashLevel` property to `All` from `BTTOptions` at the time of configuration. You can refer [Configuration](#configuration).
 
 ### Caching
 

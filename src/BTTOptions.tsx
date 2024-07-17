@@ -20,3 +20,5 @@ enum CrashLevel{
   None,
   All //JS + Native Exceptional handler + Signal Handler
 }
+
+export {CrashLevel};

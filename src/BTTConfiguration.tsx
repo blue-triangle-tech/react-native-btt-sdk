@@ -12,7 +12,6 @@ class BTTConfiguration {
       performanceMonitoring: bttOptions.performanceMonitoring,
       performanceMonitoringInterval: bttOptions.performanceMonitoringInterval,
       memoryWarning: bttOptions.memoryWarning,
-      trackCrash: bttOptions.trackCrash,
       debug: bttOptions.debug,
       launchTime: bttOptions.launchTime,
       screenTracking: bttOptions.screenTracking,
