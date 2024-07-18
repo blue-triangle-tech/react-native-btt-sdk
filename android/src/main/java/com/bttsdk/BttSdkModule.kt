@@ -35,7 +35,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         val config = BlueTriangleConfiguration()
         config.siteId = dictionary.getString("btt_site_id")
         config.isDebug = dictionary.getBoolean("debug")
-        config.isTrackCrashesEnabled = dictionary.getBoolean("trackCrash")
+        config.isTrackCrashesEnabled = dictionary.getString("crashLevel").let { !it.isNullOrEmpty() && it == "All" }
         config.isScreenTrackingEnabled = dictionary.getBoolean("screenTracking")
         config.isTrackAnrEnabled = dictionary.getBoolean("trackAnr")
         config.isPerformanceMonitorEnabled = dictionary.getBoolean("performanceMonitoring")
