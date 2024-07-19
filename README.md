@@ -1,8 +1,12 @@
 
 # Blue Triangle React Native SDK
-![NPM Version](https://img.shields.io/npm/v/%40bluetriangle%2Freact-native-btt-sdk?logo=npm&logoColor=white&label=NPM+version&labelColor=%23333&color=%230a0)
-![NPM Downloads](https://img.shields.io/npm/d18m/%40bluetriangle%2Freact-native-btt-sdk?labelColor=333&color=blue)
 
+<a href="https://npmjs.com/package/@bluetriangle/react-native-btt-sdk">
+  <img src="https://img.shields.io/npm/v/%40bluetriangle%2Freact-native-btt-sdk?logo=npm&logoColor=white&label=NPM+version&labelColor=%23333&color=%230a0" alt="NPM Version">
+</a>
+<a href="https://npmjs.com/package/@bluetriangle/react-native-btt-sdk">
+  <img src="https://img.shields.io/npm/d18m/%40bluetriangle%2Freact-native-btt-sdk?labelColor=333&color=blue" alt="NPM Downloads">
+</a>
 
 The Blue Triangle SDK for React Native enables application owners to track their users’ experience so they can focus on user experience issues that impact their business outcomes.
 
@@ -380,7 +384,11 @@ bttOptions.performanceMonitoring = false
 
 ### Track Crash
 
-The SDK automatic tracks and reports crashes. To disable this feature, just set the `crashLevel` property to `All` from `BTTOptions` at the time of configuration. You can refer [Configuration](#configuration).
+The SDK automatic tracks and reports crashes. 
+
+In iOS, It is recommended to configure blue triangle sdk before any other crash tracking tool to not get conflict with other crash reporting tool. We advise to test your crash reporting before production to make sure crashes are reported to both blue triangle and your other crash tracking tool. Crash tracking tools may conflict each other, not configuring blue triangle sdk before other crash tracking tool may result in conflict which leads bluetriangle is not able to track crashes. Try changing order of configuration and disabling one another.
+
+To disable crash tracking, just set the `crashLevel` property to `None` from `BTTOptions` at the time of configuration. You can refer [Configuration](#configuration).
 
 ### Caching
 
