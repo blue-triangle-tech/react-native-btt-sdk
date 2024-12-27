@@ -16,9 +16,9 @@ class BTTOptions {
 
 export default BTTOptions;
 
-enum CrashLevel{
+enum CrashLevel {
   None,
-  All //JS + Native Exceptional handler + Signal Handler
+  All, //JS + Native Exceptional handler + Signal Handler
 }
 
-export {CrashLevel};
+export { CrashLevel };

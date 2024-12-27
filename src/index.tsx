@@ -1,7 +1,7 @@
 import BTTScreenTracker from './BTTScreenTracker';
 import BTTConfiguration from './BTTConfiguration';
 import BTTTimer from './BTTTimer';
-import BTTOptions ,{CrashLevel} from './BTTOptions';
+import BTTOptions, { CrashLevel } from './BTTOptions';
 import BTTNavigationContainerTracker from './BTTNavigationContainerTracker';
 import BTTWebViewTracker from './BTTWebViewTracker';
 import PurchaseConfirmation from './PurchaseConfirmation';
