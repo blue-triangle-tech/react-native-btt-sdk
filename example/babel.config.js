@@ -13,5 +13,10 @@ module.exports = {
         },
       },
     ],
+
+    ['@babel/plugin-transform-runtime', { helpers: true }],
+    ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
+
+    'react-native-reanimated/plugin',
   ],
 };

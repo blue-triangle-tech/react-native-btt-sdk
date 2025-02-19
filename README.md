@@ -1,4 +1,3 @@
-
 # Blue Triangle React Native SDK
 
 <a href="https://npmjs.com/package/@bluetriangle/react-native-btt-sdk">
@@ -31,7 +30,6 @@ The Blue Triangle SDK for React Native enables application owners to track their
 - Hot/Cold Launch
 - Network Type
 
-
 ## Mandatory Installation Steps
 
 ### SDK Installation
@@ -39,11 +37,12 @@ The Blue Triangle SDK for React Native enables application owners to track their
 <!-- SDK Version 0.3.0 -->
 
 Add the SDK to the your project using the following command:
+
 ```shell
 yarn add '@bluetriangle/react-native-btt-sdk'
 ```
 
-###  Site ID Configuration
+### Site ID Configuration
 
 Before using BTT SDK, It needs to be configured. It is recommended to configure the SDK in your `index.js` file.
 
@@ -69,21 +68,23 @@ a) Screen Tracking for [React Navigation](https://reactnavigation.org/):
 
 If you are using react navigation library to perform screen navigation in your app, then all screen can be track by BTTSdk automatically by just adding two lines of code in the `NavigationContainer`, as shown in below example.
 
- ```js
+```js
 import React from 'react';
 import BTTNavigationContainerTracker from '@bluetriangle/react-native-btt-sdk';
-import NavigationContainer, {useNavigationContainerRef} from '@react-navigation/native';
+import NavigationContainer, {
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 
 function App() {
   const navigationRef = useNavigationContainerRef();
   return (
     <NavigationContainer
-      ref = { navigationRef }
-      onReady = {() => {
-          BTTNavigationContainerTracker.onContainerStateChange(navigationRef)
+      ref={navigationRef}
+      onReady={() => {
+        BTTNavigationContainerTracker.onContainerStateChange(navigationRef);
       }}
       onStateChange={async () => {
-          BTTNavigationContainerTracker.onContainerStateChange(navigationRef)
+        BTTNavigationContainerTracker.onContainerStateChange(navigationRef);
       }}
     >
       {/* ... */}
@@ -92,69 +93,66 @@ function App() {
 }
 ```
 
-
 BTTNavigationContainerTracker has a single method for screen tracking which is called in onReady and onStateChange. These two lines of code can track all the happening in the navigation container.
 
 This solution is based on [React Navigation](https://reactnavigation.org/docs/screen-tracking/) reference for screen tracking analytics.
 
 With the above setup, all screens can be track except when the app put in background. In that case, we don't get onStateChange callback. Hence, to overcome this we need to add another listener to track when app is put in background and when it comes back to foreground. To do that add the following code snippet in your app component.
 
- ```js
-AppState.addEventListener('change', state => {
-    if (state === 'active') {
-      // do this
-      BTTNavigationContainerTracker.onContainerStateChange(navigationRef)
-    }
-    else if (state === 'background') {
-      // do that
-      BTTNavigationContainerTracker.applicationDidEnterBackground(navigationRef)
-    }
-  });
-  ```
+```js
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') {
+    // do this
+    BTTNavigationContainerTracker.onContainerStateChange(navigationRef);
+  } else if (state === 'background') {
+    // do that
+    BTTNavigationContainerTracker.applicationDidEnterBackground(navigationRef);
+  }
+});
+```
 
 b) Manual Tracker
 
-If you are using any other way to perform screen navigation in your app or you want to track only  a certain set of screen in your app, you can use manual tracking.
+If you are using any other way to perform screen navigation in your app or you want to track only a certain set of screen in your app, you can use manual tracking.
 
 To use a manual tracker, you need to first import the `BTTScreenTracker` object from `'@bluetriangle/react-native-btt-sdk'`. Create timer object with pageName.
 
 The `BTTScreenTracker` object has the following functions:
+
 - `manualTracker.startTracking()`:
 - `manualTracker.stopTracking()`:
 
 You need to call the function `startTracking` when the component that you want track is rendered for the first time, and you need to call `stopTracking` when the component is about to disappear. You can refer to following code snippet.
 
- ```js
+```js
 import React, { useEffect } from 'react';
-import {BTTScreenTracker} from '@bluetriangle/react-native-btt-sdk';
+import { BTTScreenTracker } from '@bluetriangle/react-native-btt-sdk';
 
-function YourComponent({ }) {
-    var manualTracker:BTTScreenTracker
+function YourComponent({}) {
+  var manualTracker: BTTScreenTracker;
 
-    useEffect(() => {
-        const unsubscribeFocus = navigation.addListener('focus', () =>{
-
-        if(manualTracker == undefined){
-            manualTracker = new BTTScreenTracker("PageName")
-        }
-        manualTracker.startTracking()
+  useEffect(() => {
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      if (manualTracker == undefined) {
+        manualTracker = new BTTScreenTracker('PageName');
+      }
+      manualTracker.startTracking();
     });
-    const unsubscribeBlur = navigation.addListener('blur', () =>{
-        manualTracker.stopTracking()
+    const unsubscribeBlur = navigation.addListener('blur', () => {
+      manualTracker.stopTracking();
     });
 
     return () => {
-        unsubscribeFocus()
-        unsubscribeBlur()
+      unsubscribeFocus();
+      unsubscribeBlur();
     };
   }, []);
 
-  return (
-    {/* ... */}
-  );
+  return {
+    /* ... */
+  };
 }
-
- ```
+```
 
 ### Native View/Webview Tracking/Session Stitching- Mandatory
 
@@ -162,16 +160,16 @@ Websites shown in webview that are tracked by BlueTriangle can be tracked in the
 same session as the react app. To achieve this, follow the steps below to configure the WebView:
 
 ```js
-import {BTTWebViewTracker} from '@bluetriangle/react-native-btt-sdk'
+import { BTTWebViewTracker } from '@bluetriangle/react-native-btt-sdk';
 
-const MyWebView = ({navigation, route}) => {
-    return (
-        <WebView
-                domStorageEnabled={true}
-                javaScriptEnabled={true}
-                injectedJavaScriptBeforeContentLoaded={BTTWebViewTracker.injectSession()} >
-        </WebView>
-    );
+const MyWebView = ({ navigation, route }) => {
+  return (
+    <WebView
+      domStorageEnabled={true}
+      javaScriptEnabled={true}
+      injectedJavaScriptBeforeContentLoaded={BTTWebViewTracker.injectSession()}
+    ></WebView>
+  );
 };
 
 export default MyWebView;
@@ -180,22 +178,22 @@ export default MyWebView;
 If you are already using `injectedJavaScriptBeforeContentLoaded` to inject any of your script. Append your script to `BTTWebViewTracker.injectSession()` like below.
 
 ```js
-import {BTTWebViewTracker} from '@bluetriangle/react-native-btt-sdk'
+import { BTTWebViewTracker } from '@bluetriangle/react-native-btt-sdk';
 
-const MyWebView = ({navigation, route}) => {
-    return (
-        <WebView
-            domStorageEnabled={true}
-            javaScriptEnabled={true}
-            injectedJavaScriptBeforeContentLoaded={BTTWebViewTracker.injectSession() + "YOUR SCRIPT"}>
-
-        </WebView>
-    );
+const MyWebView = ({ navigation, route }) => {
+  return (
+    <WebView
+      domStorageEnabled={true}
+      javaScriptEnabled={true}
+      injectedJavaScriptBeforeContentLoaded={
+        BTTWebViewTracker.injectSession() + 'YOUR SCRIPT'
+      }
+    ></WebView>
+  );
 };
 
 export default MyWebView;
 ```
-
 
 ### Network State Capture
 
@@ -214,14 +212,12 @@ In Android, Network state capturing requires android.permission.ACCESS_NETWORK_S
 > - If Network state capture is enabled and `ACCESS_NETWORK_STATE` permission is not granted, then the SDK won't track network state as it won't be able to.
 > - This feature is only available on API Level 21 and above.
 
-
 To disable Network state capture, use the `trackNetworkState` property on the BTTOptions object as follows:
 
 ```js
-const bttOptions = new BTTOptions()
-bttOptions.trackNetworkState = false
+const bttOptions = new BTTOptions();
+bttOptions.trackNetworkState = false;
 ```
-
 
 ## Recommended (Optional) Configurations
 
@@ -237,8 +233,8 @@ You can configure the sample rate by setting the `networkSampleRate` property in
 below:
 
 ```js
-const bttOptions = new BTTOptions()
-bttOptions.networkSampleRate = 0.025
+const bttOptions = new BTTOptions();
+bttOptions.networkSampleRate = 0.025;
 ```
 
 To disable network capture set 0.0 to 'bttOptions.networkSampleRate' during configuration.
@@ -253,31 +249,35 @@ a) Using Custom Timer:
 To use a custom timer, you need to first import the `BTTTimer` object from `@bluetriangle/react-native-btt-sdk`. Create timer object with pageName.
 
 The `BTTTimer` object has the following functions:
+
 - `timer.startTimer()`:
 - `timer.stopTimer()`:
 
- ```js
-import {BTTTimer} from '@bluetriangle/react-native-btt-sdk';
+```js
+import { BTTTimer } from '@bluetriangle/react-native-btt-sdk';
 
-const timer = new BTTTimer(pageName)
-timer.startTimer()
-timer.stopTimer()
+const timer = new BTTTimer(pageName);
+timer.startTimer();
+timer.stopTimer();
 ```
 
 b) Cart Value:
 We can set cart value to `BTTTimer` object using the `PurchaseConfirmation` object as follows.
 
- ```js
-import {BTTTimer, PurchaseConfirmation} from '@bluetriangle/react-native-btt-sdk';
+```js
+import {
+  BTTTimer,
+  PurchaseConfirmation,
+} from '@bluetriangle/react-native-btt-sdk';
 
-const timer = new BTTTimer(pageName)
-timer.startTimer()
+const timer = new BTTTimer(pageName);
+timer.startTimer();
 
 const purchaseConfirmation = new PurchaseConfirmation.Builder()
   .setCartValue(99.99)
-  .build()
-timer.stopTimer(purchaseConfirmation)
- ```
+  .build();
+timer.stopTimer(purchaseConfirmation);
+```
 
 ### Checkout Event Data
 
@@ -286,34 +286,40 @@ Upon a customer checkout, it is possible to configure the following data paramet
 
 Brand Value
 
- ```js
-import {BTTTimer, PurchaseConfirmation} from '@bluetriangle/react-native-btt-sdk';
+```js
+import {
+  BTTTimer,
+  PurchaseConfirmation,
+} from '@bluetriangle/react-native-btt-sdk';
 
-const timer = new BTTTimer("Confirmation")
-timer.startTimer()
+const timer = new BTTTimer('Confirmation');
+timer.startTimer();
 
 const purchaseConfirmation = new PurchaseConfirmation.Builder()
   .setBrandValue(100.0)
-  .build()
-timer.stopTimer(purchaseConfirmation)
- ```
+  .build();
+timer.stopTimer(purchaseConfirmation);
+```
 
 Cart Value, Cart Count, Cart Count Checkout, Order Number, Order Time
 
- ```js
-import {BTTTimer, PurchaseConfirmation} from '@bluetriangle/react-native-btt-sdk';
+```js
+import {
+  BTTTimer,
+  PurchaseConfirmation,
+} from '@bluetriangle/react-native-btt-sdk';
 
-const timer = new BTTTimer("Confirmation")
-timer.startTimer()
+const timer = new BTTTimer('Confirmation');
+timer.startTimer();
 
 const purchaseConfirmation = new PurchaseConfirmation.Builder()
   .setCartValue(99.0)
   .setCartCount(2)
   .setCartCountCheckout(2)
-  .setOrderNumber("ORD-123345")
-  .build()  
-timer.stopTimer(purchaseConfirmation)
- ```
+  .setOrderNumber('ORD-123345')
+  .build();
+timer.stopTimer(purchaseConfirmation);
+```
 
 ## Optional Configuration Steps
 
@@ -333,19 +339,21 @@ To disable ANR detection, set the `trackAnr` property to false from `BTTOptions`
 The SDK automatically tracks and reports memory warnings based on the memory usage of the app. Depending on the platform, the definition of memory warning defers. They are explained below:
 
 #### Android
+
 Memory warning is an error that is reported when the code uses up more than 80% of the app's available memory (heap capacity).
 
 Currently, Memory Warning is only captured for memory used by the native modules. Memory used in react code is not considered in memory warning.
 
 #### iOS
+
 Track ios reported low memory worning. iOS reported memory warnings can be tracked by btt.
 
 #### How to disable
 
 To disable memory warning, set the `memoryWarning` property to false from `BTTOptions` at the time of configuration.You can refer [Configuration](#configuration).
 
-
 ### Memory Usage
+
 Memory usage is the amount of memory used by the code during the Timer interval. This is measured in number of bytes.
 
 Against each timer, 3 Memory measurements are being sent, minimum, maximum and average.
@@ -353,14 +361,15 @@ Against each timer, 3 Memory measurements are being sent, minimum, maximum and a
 To set the interval (in ms) at which the Memory usage is being captured, set the following field:
 
 ```js
-const bttOptions = new BTTOptions()
-bttOptions.performanceMonitoringInterval = 1000
+const bttOptions = new BTTOptions();
+bttOptions.performanceMonitoringInterval = 1000;
 ```
+
 To disable Memory usage set the following field:
 
 ```js
-const bttOptions = new BTTOptions()
-bttOptions.performanceMonitoring = false
+const bttOptions = new BTTOptions();
+bttOptions.performanceMonitoring = false;
 ```
 
 ### CPU Usage
@@ -372,19 +381,20 @@ Against each timer, 3 CPU measurements are being sent, minimum, maximum and aver
 To set the interval (in ms) at which the CPU usage is being captured, set the following field in BlueTriangleConfiguration:
 
 ```js
-const bttOptions = new BTTOptions()
-bttOptions.performanceMonitoringInterval = 1000
+const bttOptions = new BTTOptions();
+bttOptions.performanceMonitoringInterval = 1000;
 ```
+
 To disable CPU usage set the following field in `BTTOptions`:
 
 ```js
-const bttOptions = new BTTOptions()
-bttOptions.performanceMonitoring = false
+const bttOptions = new BTTOptions();
+bttOptions.performanceMonitoring = false;
 ```
 
 ### Track Crash
 
-The SDK automatic tracks and reports crashes. 
+The SDK automatic tracks and reports crashes.
 
 In iOS, It is recommended to configure blue triangle sdk before any other crash tracking tool to not get conflict with other crash reporting tool. We advise to test your crash reporting before production to make sure crashes are reported to both blue triangle and your other crash tracking tool. Crash tracking tools may conflict each other, not configuring blue triangle sdk before other crash tracking tool may result in conflict which leads bluetriangle is not able to track crashes. Try changing order of configuration and disabling one another.
 
@@ -399,6 +409,7 @@ cached in the application's cache directory and retried after some time.
 
 The amount of memory the cache uses (in bytes) can be configured using the `cacheMemoryLimit` property of the
 BTTOptions object:
+
 ```js
 const bttOptions = new BTTOptions()
 bttOptions.cacheMemoryLimit = 200000L
@@ -410,6 +421,7 @@ and then adds the new data. So, only the most recently captured user data is tra
 **Expiry Duration**
 
 The amount of time (in milliseconds) the data is kept in the cache before it expires can be configured using the `cacheExpiryDuration` property of the BTTOptions object:
+
 ```
 const bttOptions = new BTTOptions()
 bttOptions.cacheExpiryDuration = 86400000L
@@ -417,19 +429,22 @@ bttOptions.cacheExpiryDuration = 86400000L
 
 The data that is kept longer in cache than the expiry duration is automatically deleted. By default the expiry duration is 48 hours.
 
-
 ### Launch Time
 
 BlueTriangle tracks app launch performance. Launch time refers to the duration it takes for an app to become ready for user interaction after it has been started. BlueTriangle automatically tracks both hot launch and cold launch.
 
 #### Cold Launch
+
 A cold launch is a launch wherein the app process was not already in main memory. This can happen if the System or user terminated your apps process or the app is launching for the first time since it's installed/updated or since the device was booted.
 
 The latency for cold launch is calculated differently based on the platform. It's as follows:&nbsp;&nbsp;
+
 ##### Android
+
 It is the time between the `onCreate` of the BlueTriangle SDK's ContentProvider and onResume call for the first Activity.
 
 ##### iOS
+
 It is the time between the process start time and end of 'applicationDidBecomeActive(:)'
 
 #### Hot Launch
@@ -437,10 +452,13 @@ It is the time between the process start time and end of 'applicationDidBecomeAc
 A hot launch is launch when app process was already in main memory. This can happen when user launches the app from the background.
 
 The latency for hot launch is calculated differently based on the platform. It's as follows:&nbsp;&nbsp;
+
 ##### Android
+
 It is the time between the onStart and onResume of the first Activity after the app is brought into foreground.
 
 ##### iOS
+
 It is the time between the end of 'applicationWillEnterForeground(:)' and end of 'applicationDidBecomeActive(:)'. So that hot launch time taken by 'applicationDidBecomeActive(:)'.
 
 In both the platforms, Locking and Unlocking the device is considered as a Hot Launch.
@@ -451,7 +469,8 @@ A Warm Launch occurs when the app is evicted from memory by the system when it's
 The BlueTriangle SDK measures the warm launch latency, which is the time between the onCreate and onResume of the first Activity after the app is brought into foreground.
 
 You can disable Launch Time feature by setting the following field in `BTTOptions`:
+
 ```js
-const bttOptions = new BTTOptions()
-bttOptions.launchTime = false
+const bttOptions = new BTTOptions();
+bttOptions.launchTime = false;
 ```
