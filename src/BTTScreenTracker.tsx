@@ -14,10 +14,12 @@ class BTTScreenTracker {
   startTracking() {
     Logger.instance.log(`Started tracking ${this.pageName}`);
     BTTScreenTracker.viewStart(this.pageName, this.customPageID);
+    console.log("Started Tracking Page : ", this.pageName);
   }
 
   stopTracking() {
     Logger.instance.log(`Stopped tracking ${this.pageName}`);
+    console.log("Stopped Tracking Page :", this.pageName);
     BTTScreenTracker.viewingEnd(this.pageName, this.customPageID);
   }
 
