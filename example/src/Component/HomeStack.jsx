@@ -1,5 +1,4 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './Home';
 import ScreenTracking from './ScreenTracking';
 
@@ -7,17 +6,15 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import TabNavigationDemo from './TabNavigationDemo/TabNavigationDemo';
 import StackNavigationDemo from './StackNavigationDemo/StackNavigationDemo';
-import BTTNavigationContainerTracker from '@bluetriangle/react-native-btt-sdk';
 
 import DrawerNavigationDemo from './DrawerNavigationDemo/DrawerNavigationDemo';
 import { useNavigationContainerRef } from '@react-navigation/native';
-import NetworkCallsAxios from './NetworkCallsAxios/NetworkCallsAxios';
 
 const Stack = createStackNavigator();
 const HomeStack = () => {
   const navigationRef = useNavigationContainerRef();
   return (
-    <Stack.Navigator>
+    <Stack.Navigator detachInactiveScreens={false}>
       <Stack.Screen name={'Home'} component={Home} />
       <Stack.Screen name={'ScreenTracking'} component={ScreenTracking} />
       <Stack.Screen

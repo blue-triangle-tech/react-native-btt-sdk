@@ -1,3 +1,11 @@
+import { Platform } from 'react-native';
+import { enableScreens } from 'react-native-screens';
+
+// Disable native screens only on iOS
+if (Platform.OS === 'ios') {
+  enableScreens(false);
+}
+
 import React from 'react';
 import Home from './Component/Home';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -14,8 +22,6 @@ import DrawerNavigationDemo from './Component/DrawerNavigationDemo/DrawerNavigat
 import CrashTracking from './Component/CrashTracking';
 import NetworkCallsAxios from './Component/NetworkCallsAxios/NetworkCallsAxios';
 
-//importing the navigation container tracker for automatic navigation
-
 const Stack = createStackNavigator();
 const App = () => {
   const navigationRef = useNavigationContainerRef();
@@ -30,7 +36,7 @@ const App = () => {
         BTTNavigationContainerTracker.onContainerStateChange(navigationRef);
       }}
     >
-      <Stack.Navigator>
+      <Stack.Navigator detachInactiveScreens={false}>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name={'ScreenTracking'} component={ScreenTracking} />
         <Stack.Screen

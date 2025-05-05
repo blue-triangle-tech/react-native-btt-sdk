@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Screen1 from './Screen1';
 import Screen2 from './Screen2';
 import Screen3 from './Screen3';
-import Iconicons from 'react-native-vector-icons/Ionicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
@@ -50,7 +49,7 @@ const TabNavigationDemo = () => {
         options={{
           tabBarLabel: 'Screen 1',
           tabBarIcon: ({ focused }) => (
-            <Ionicons name="logo-npm" size={24} color="blue" />
+            <Ionicons name="chatbubbles" size={24} color="blue" />
           ),
         }}
         name={'Screen-1 Tab Navigation'}
@@ -60,7 +59,7 @@ const TabNavigationDemo = () => {
         options={{
           tabBarLabel: 'Screen 2',
           tabBarIcon: ({ focused }) => (
-            <Ionicons name="square" size={24} color="blue" />
+            <Ionicons name="bar-chart" size={24} color="blue" />
           ),
         }}
         name={'Screen-2 Tab Navigation'}
@@ -70,7 +69,7 @@ const TabNavigationDemo = () => {
         options={{
           tabBarLabel: 'Screen 3',
           tabBarIcon: ({ focused }) => (
-            <Ionicons name="cube" size={24} color="blue" />
+            <Ionicons name="cart" size={24} color="blue" />
           ),
         }}
         name={'Screen-3 Tab Navigation'}

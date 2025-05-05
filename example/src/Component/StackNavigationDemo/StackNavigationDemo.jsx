@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 
 const StackNavigation = ({ navigation }) => {
   return (
-    <Stack.Navigator
+    <Stack.Navigator detachInactiveScreens={false}
       screenOptions={{
         headerShown: false,
       }}
