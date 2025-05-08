@@ -26,6 +26,15 @@ RCT_EXTERN_METHOD(networkTrackerStart:(NSDictionary *)dictionary
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(setCustomVariable:(NSString *)name
+                  value:(NSString *)value)
+RCT_EXTERN_METHOD(setCustomVariables:(NSDictionary *)variables)
+RCT_EXTERN_METHOD(getCustomVariable:(NSString *)name)
+RCT_EXTERN_METHOD(getCustomVariables)
+RCT_EXTERN_METHOD(clearCustomVariable:(NSString *)name)
+RCT_EXTERN_METHOD(clearAllCustomVariables)
+
+
 + (BOOL)requiresMainQueueSetup
 {
   return NO;

@@ -228,4 +228,34 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
     }
 
+    @ReactMethod
+    fun setCustomVariable(name: String, value: String) {
+        Tracker.instance?.setCustomVariable(name,value)
+    }
+
+    @ReactMethod
+    fun getCustomVariable(name: String): String {
+       return Tracker.instance?.getCustomVariable(name)
+    }
+
+    @ReactMethod
+    fun getCustomVariables(): ReadableMap {
+       return Tracker.instance?.getCustomVariables()
+    }
+
+    @ReactMethod
+    fun setCustomVariables(variables: ReadableMap) {
+        Tracker.instance?.setCustomVariables(variables)
+    }
+
+    @ReactMethod
+    fun clearCustomVariable(name: String){
+        Tracker.instance?.clearCustomVariable(name)
+    }
+
+    @ReactMethod
+    fun clearAllCustomVariables(){
+        Tracker.instance?.clearAllCustomVariables()
+    }
+
 }
