@@ -256,4 +256,34 @@ class BttSdk: NSObject {
         BlueTriangle.logError(error)
     }
 
+
+    @objc
+    func setCustomVariable(_ name: String, value: String) {
+        BlueTriangle.setCustomVariable(name, value: value)
+    }
+    
+    @objc
+    func getCustomVariable(_ name: String) -> String?{
+        return BlueTriangle.getCustomVariable(name)
+    }
+    
+    @objc
+    func setCustomVariables(_ variables : [String: String] ) {
+        BlueTriangle.setCustomVariables(variables)
+    }
+
+    @objc
+    func getCustomVariables() -> [String: String] {
+        return BlueTriangle.getCustomVariables()
+    }
+    
+    @objc
+    func clearCustomVariable(_ name : String){
+        BlueTriangle.clearCustomVariable(name)
+    }
+    
+    @objc
+    func clearAllCustomVariables() {
+        BlueTriangle.clearAllCustomVariables()
+    }
 }

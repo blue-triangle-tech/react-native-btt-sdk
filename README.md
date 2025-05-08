@@ -29,6 +29,7 @@ The Blue Triangle SDK for React Native enables application owners to track their
 - Memory/Out of Memory
 - Hot/Cold Launch
 - Network Type
+- Custom Variables
 
 ## Mandatory Installation Steps
 
@@ -278,6 +279,47 @@ const purchaseConfirmation = new PurchaseConfirmation.Builder()
   .build();
 timer.stopTimer(purchaseConfirmation);
 ```
+
+### Custom Variables
+It is a developer-defined property introduced into the BTT SDK payload that developers can include to collect and track extra information specific to their application needs.
+
+To introduce a custom variable, the developer first needs to create it on the BlueTriangle portal by following the instructions on the [**Custom Variables Page.**](https://help.bluetriangle.com/hc/en-us/articles/15629245281171-RUM-Custom-Variables-Page)
+
+To use a custom variables, you need to first import the `BTTCustomVariable` object from `@bluetriangle/react-native-btt-sdk`.
+
+Then developer need to use custom variable function as below:
+
+```js
+import {
+  BTTCustomVariable,
+} from '@bluetriangle/react-native-btt-sdk';
+
+//In order to set custom variable using the below function:
+BTTCustomVariable.setCustomVariable('CV1','value')
+
+const customVariables = {
+    'CV1': 'Value1',
+    'CV2': 'Value1',
+  };
+BTTCustomVariable.setCustomVariables(customVariables)
+
+// In order to get the custom variable value, call the following with the variable name
+const customVariable = BTTCustomVariable.getCustomVariable('CV1')
+
+const customVariables = BTTCustomVariable.getCustomVariables()
+
+// In order to clear the custom variable value, call the following with the variable name
+BTTCustomVariable.clearCustomVariable('CV1')
+
+BTTCustomVariable.clearAllCustomVariables()
+
+```
+where &lt;VARIABLE NAME&gt; is the variable name of the custom variable that the user added to the portal while creating the custom variable e.g. CV1, CV2, etc, and <VALUE> is whatever the developer wants to set in these fields.
+
+Once the value is set, it will be sent with each page view until it is cleared by calling any of the above clear methods.
+
+To view one of the values on the portal, navigate to the path 'Menu > Native App Monitoring > Native App Performance Detail' or go to the Session Lookup Page. Then, search by session ID and see the Performance Measurement Details for the specific page.
+[**for more detail**](https://help.bluetriangle.com/hc/en-us/articles/12299711775635-Where-can-I-see-Custom-Variables)
 
 ### Checkout Event Data
 

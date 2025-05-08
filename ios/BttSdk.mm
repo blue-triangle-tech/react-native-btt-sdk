@@ -28,6 +28,15 @@ RCT_EXTERN_METHOD(networkTrackerStart:(NSDictionary *)dictionary
 // method exposed for getting the js stack
 RCT_EXTERN_METHOD(trackJsError:(NSString *)stack)
 
+RCT_EXTERN_METHOD(setCustomVariable:(NSString *)name
+                  value:(NSString *)value)
+RCT_EXTERN_METHOD(setCustomVariables:(NSDictionary *)variables)
+RCT_EXTERN_METHOD(getCustomVariable:(NSString *)name)
+RCT_EXTERN_METHOD(getCustomVariables)
+RCT_EXTERN_METHOD(clearCustomVariable:(NSString *)name)
+RCT_EXTERN_METHOD(clearAllCustomVariables)
+
+
 + (BOOL)requiresMainQueueSetup
 {
   return NO;
