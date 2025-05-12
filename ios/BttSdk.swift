@@ -47,11 +47,11 @@ class BttSdk: NSObject {
                 config.enableDebugLogging = debug
             }
             
-            if let sessionID = dictionary["btt_session_id"] as? String {
+            /*if let sessionID = dictionary["btt_session_id"] as? String {
                 if let uintValue = UInt64(sessionID) {
                     config.sessionID = uintValue
                 }
-            }
+            }*/
             if let screenTracking = dictionary["screenTracking"] as? Bool {
                 config.enableScreenTracking = screenTracking
             }
