@@ -1,5 +1,5 @@
 PODS:
-  - BlueTriangleSDK-Swift (3.9.0)
+  - BlueTriangleSDK-Swift (3.14.0)
   - boost (1.84.0)
   - DoubleConversion (1.1.6)
   - fast_float (6.1.4)
@@ -1240,7 +1240,7 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
   - react-native-btt-sdk (0.3.0):
-    - BlueTriangleSDK-Swift (= 3.9.0)
+    - BlueTriangleSDK-Swift (= 3.14.0)
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2052,7 +2052,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  BlueTriangleSDK-Swift: 742cef51e35f7362b468f775695c647a00233b9e
+  BlueTriangleSDK-Swift: 7282737cf5f26beba0a3771bf989411c4343a0b1
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
