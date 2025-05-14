@@ -2,10 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] Blue Triangle - Latest
+
+### New Features
+- Added support for Blutriange and Microsoft clarity session mapping. Added ability to detect clarity sdk present in host app, if present associate clarity session url with timers
+- Added ability to disabling or enabling the SDK through the remote configuration system, providing full control over its functionality in real-time. When the SDK is disabled, all features, including data collection, processing, and network operations, are suspended.
+- Ability to remotely ignore automatically tracked screen names. Developers can configure a list of page names from the BlueTriangle portal, which will be ignored from tracking.
+- Ability to remotely overwrite Network Sample Rate.
+- Added support for Custom Variables
+- Adding support for collecting Cellular Network Type
+- Adding support for collecting Device Model
+
+## [0.2.1] Blue Triangle - June 5 2024
+
+### New Features
+- Automatic Hot and Cold Launch Time Tracking
+### Feature Improvements
+- SDK can now be configured with only the Site ID, with all stat tracking enabled by default
+
+## [0.1.0] Blue Triangle - April 10 2024
+
+## New Features
+- Manual Timers
+- CPU and Memory usage monitoring
+- Memory Warning
+- ANR wornning
+- Screen Tracking with React Navigation and Manual
+- Crash Tracking
+- Offline Caching
+- Network state capture
+- HTTP Requests tracking
+- WebView tracking
+
 ## [0.0.1] - 2023-10-17
 
 ### Added
-
 - Steps to install local sdk to project.
 - Configuration used to configure BTT SDK.
 - Manual Timer used to track the time between start and end timer.
