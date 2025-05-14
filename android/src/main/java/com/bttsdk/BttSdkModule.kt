@@ -234,18 +234,30 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun getCustomVariable(name: String): String {
-       return Tracker.instance?.getCustomVariable(name)
+    fun getCustomVariable(name: String, promise: Promise) {
+        promise.resolve(Tracker.instance?.getCustomVariable(name))
     }
 
     @ReactMethod
-    fun getCustomVariables(): ReadableMap {
-       return Tracker.instance?.getCustomVariables()
+    fun getCustomVariables(promise: Promise) {
+        val writableMap = Arguments.createMap()
+
+        Tracker.instance?.getCustomVariables().apply {
+            this?.forEach {
+                writableMap.putString(it.key, it.value)
+            }
+            promise.resolve(writableMap)
+        }
     }
 
     @ReactMethod
     fun setCustomVariables(variables: ReadableMap) {
-        Tracker.instance?.setCustomVariables(variables)
+        val cv = hashMapOf<String, String>()
+
+        variables.toHashMap().forEach {
+            cv[it.key] = it.value.toString()
+        }
+        Tracker.instance?.setCustomVariables(cv)
     }
 
     @ReactMethod
