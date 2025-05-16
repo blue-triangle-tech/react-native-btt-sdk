@@ -321,6 +321,13 @@ Once the value is set, it will be sent with each page view until it is cleared b
 To view one of the values on the portal, navigate to the path 'Menu > Native App Monitoring > Native App Performance Detail' or go to the Session Lookup Page. Then, search by session ID and see the Performance Measurement Details for the specific page.
 [**for more detail**](https://help.bluetriangle.com/hc/en-us/articles/12299711775635-Where-can-I-see-Custom-Variables)
 
+### Microsoft Clarity Integration
+Blue Triangle offers session playback via Microsoft Clarity integration. For help with this process, please reach out to your Blue Triangle representative.
+
+To get started, integrate and configure Microsoft Clarity as shown in the official [Microsoft Clarity Documentation](https://learn.microsoft.com/en-us/clarity/mobile-sdk/react-native-sdk) using your Clarity project ID.
+
+Blue Triangle automatically detects Clarity in your app and based on that it automatically does the session mapping between Blue Triangle and Microsoft Clarity.
+
 ### Checkout Event Data
 
 Checkout Event Data
