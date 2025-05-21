@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.3.0] Blue Triangle - Latest
+## [0.4.0] Blue Triangle - Latest
 
 ### New Features
 - Added support for Blutriange and Microsoft clarity session mapping. Added ability to detect clarity sdk present in host app, if present associate clarity session url with timers
@@ -12,6 +12,11 @@ All notable changes to this project will be documented in this file.
 - Added support for Custom Variables
 - Adding support for collecting Cellular Network Type
 - Adding support for collecting Device Model
+
+## [0.3.0] Blue Triangle - June 15 2024
+
+### New Features
+- Added PurchaseConfirmation class to collect revenue data
 
 ## [0.2.1] Blue Triangle - June 5 2024
 
