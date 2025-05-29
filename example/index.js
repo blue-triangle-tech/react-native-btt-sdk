@@ -5,6 +5,7 @@ import { name as appName } from './app.json';
 import {
   BTTConfiguration,
   BTTOptions,
+  CrashLevel
 } from '@bluetriangle/react-native-btt-sdk';
 
 const bttOptions = new BTTOptions();
@@ -12,7 +13,7 @@ bttOptions.trackAnr = true;
 bttOptions.performanceMonitoring = true;
 bttOptions.performanceMonitoringInterval = 500;
 bttOptions.memoryWarning = true;
-bttOptions.trackCrash = true;
+bttOptions.crashLevel = CrashLevel.All;
 bttOptions.debug = true;
 bttOptions.screenTracking = true;
 bttOptions.trackNetworkState = true;

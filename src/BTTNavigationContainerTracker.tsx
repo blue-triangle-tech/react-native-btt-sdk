@@ -1,4 +1,5 @@
 import BTTScreenTracker from './BTTScreenTracker';
+import Logger from './Logger';
 
 let trackerName = '';
 let trackerID = '';
@@ -22,6 +23,12 @@ class BTTNavigationContainerTracker {
   }
 
   static onContainerStateChange(navigationRef: NavigationRef) {
+    const currentRoute = navigationRef?.getCurrentRoute?.();
+    if (!currentRoute) {
+      Logger.instance.log(
+       `NavigationRef or current route is null or invalid`
+      );
+    }
     let currentKey = navigationRef.getCurrentRoute().key;
     let currentName = navigationRef.getCurrentRoute().name;
 

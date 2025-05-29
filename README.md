@@ -224,8 +224,8 @@ bttOptions.trackNetworkState = false;
 
 ### Network Capture Sample Rate
 
-Network Sample rate defines the percentage of user sessions for which network calls will be captured. A value of 0.025 means
-that 2.5% of user session's network requests will be tracked.
+Network Sample rate defines the percentage of user sessions for which network calls will be captured. A value of 0.05 means
+that 5% of user session's network requests will be tracked.
 A value of 0.0 means that no network requests will be captured for any user sessions, and a value of 1.0 will track all
 network requests for all user sessions. Whether network requests will be
 tracked is determined on application start, and will either be set to on or off for the entirety of the user session.
@@ -240,7 +240,7 @@ bttOptions.networkSampleRate = 0.025;
 
 To disable network capture set 0.0 to 'bttOptions.networkSampleRate' during configuration.
 
-It is recommended to have 100% sample rate while developing/debugging. By setting 'bttOptions.networkSampleRate' to 1.0 during configuration.
+It is recommended to have 100% sample rate while developing/debugging. By setting 'bttOptions.networkSampleRate' to 1.0 during configuration. By default, network sample rate is 5%.
 
 ### Custom Timer
 
@@ -523,3 +523,57 @@ You can disable Launch Time feature by setting the following field in `BTTOption
 const bttOptions = new BTTOptions();
 bttOptions.launchTime = false;
 ```
+
+## How to Test the React Native SDK Integration
+
+### Site ID
+
+Log onto your account on the [Blue Triangle Portal](https://portal.bluetriangle.com), head over to "Native App -> Performance overview" and see that you can observe some data.
+
+### Memory Warning
+
+You can call the following function to generate a memory warning:
+
+```typescript
+import {BTTTestsEmulator} from "@bluetriangle/react-native-btt-sdk"
+
+function testMemoryWarning() {
+  BTTTestsEmulator.emulateMemoryWarning()
+}
+```
+
+### ANR Tracking
+
+You can call the following function to generate an ANR. This function will block the native main thread for the duration of ANR:
+
+```typescript
+import {BTTTestsEmulator} from "@bluetriangle/react-native-btt-sdk"
+
+function testANRTracking() {
+  BTTTestsEmulator.emulateANR()
+}
+```
+
+### Crash Tracking
+
+
+You can call the following function to emulate a Crash:
+
+```typescript
+import {BTTTestsEmulator} from "@bluetriangle/react-native-btt-sdk"
+
+function testCrashTracking() {
+  BTTTestsEmulator.emulateCrash()
+}
+```
+
+### Limitations/Known Issues
+
+#### Common
+- If app is using Navigation framework other than React Navigation, each screen need to be instrumented manually to track. In case of React Navigation, easy to use code snippets at one place instruments the whole app.
+
+#### Android
+- Crash happened due to JS errors are not tracked.
+
+#### iOS
+- Few crashes happened due to JS errors are not tracked.

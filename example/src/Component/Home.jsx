@@ -1,10 +1,23 @@
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
+import { BTTTestsEmulator } from '@bluetriangle/react-native-btt-sdk'
 
 const handleCrash = () => {
   throw new Error('This is a simulated crash');
 };
+const bttTestsEmulator = new BTTTestsEmulator()
+
 const Home = ({ navigation }) => {
+  const emulateCrash = ()=> {
+    bttTestsEmulator.emulateCrash()
+  }
+  const emulateANR = ()=> {
+    bttTestsEmulator.emulateANR()
+  }
+  const emulateMemoryWarning = ()=> {
+    bttTestsEmulator.emulateMemoryWarning()
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Home</Text>
@@ -16,6 +29,18 @@ const Home = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleCrash}>
         <Text style={styles.buttonText}>Track Crash</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={emulateANR}>
+        <Text style={styles.buttonText}>Emulate ANR</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={emulateCrash}>
+        <Text style={styles.buttonText}>Emulate Crash</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={emulateMemoryWarning}>
+        <Text style={styles.buttonText}>Emulate Memory Warning</Text>
       </TouchableOpacity>
 
       <TouchableOpacity

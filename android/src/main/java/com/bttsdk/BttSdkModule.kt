@@ -5,13 +5,17 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 import android.app.Application
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import androidx.core.os.HandlerCompat.postDelayed
 import com.bluetriangle.analytics.BlueTriangleConfiguration
 import com.bluetriangle.analytics.Timer
 import com.bluetriangle.analytics.Tracker
 import com.bluetriangle.analytics.screenTracking.BTTScreenTracker
 import com.bluetriangle.analytics.networkcapture.CapturedRequest
 import com.bluetriangle.analytics.networkcapture.RequestType
+import com.bttsdk.testsemulator.MemoryHolder
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
@@ -32,22 +36,22 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
         val sessionID = dictionary.getString("btt_session_id")
 
-        val config = BlueTriangleConfiguration()
-        config.siteId = dictionary.getString("btt_site_id")
-        config.isDebug = dictionary.getBoolean("debug")
-        config.isTrackCrashesEnabled = dictionary.getString("crashLevel").let { !it.isNullOrEmpty() && it == "All" }
-        config.isScreenTrackingEnabled = dictionary.getBoolean("screenTracking")
-        config.isTrackAnrEnabled = dictionary.getBoolean("trackAnr")
-        config.isPerformanceMonitorEnabled = dictionary.getBoolean("performanceMonitoring")
-        config.performanceMonitorIntervalMs =
-            dictionary.getDouble("performanceMonitoringInterval").toLong()
-        config.isMemoryWarningEnabled = dictionary.getBoolean("memoryWarning")
-        config.isTrackNetworkStateEnabled = dictionary.getBoolean("trackNetworkState")
-        config.trackAnrIntervalSec = dictionary.getInt("trackAnrIntervalSec")
-        config.networkSampleRate = dictionary.getDouble("networkSampleRate")
-        config.cacheMemoryLimit = dictionary.getDouble("cacheMemoryLimit").toLong()
-        config.cacheExpiryDuration = dictionary.getDouble("cacheExpiryDuration").toLong()
-        config.isLaunchTimeEnabled = dictionary.getBoolean("launchTime")
+        val config = BlueTriangleConfiguration().apply {
+            siteId = dictionary.getString("btt_site_id")
+            isDebug = dictionary.getBoolean("debug")
+            isTrackCrashesEnabled = dictionary.getString("crashLevel").let { !it.isNullOrEmpty() && it == "1" }
+            isScreenTrackingEnabled = dictionary.getBoolean("screenTracking")
+            isTrackAnrEnabled = dictionary.getBoolean("trackAnr")
+            isPerformanceMonitorEnabled = dictionary.getBoolean("performanceMonitoring")
+            performanceMonitorIntervalMs = dictionary.getDouble("performanceMonitoringInterval").toLong()
+            isMemoryWarningEnabled = dictionary.getBoolean("memoryWarning")
+            isTrackNetworkStateEnabled = dictionary.getBoolean("trackNetworkState")
+            trackAnrIntervalSec = dictionary.getInt("trackAnrIntervalSec")
+            networkSampleRate = dictionary.getDouble("networkSampleRate")
+            cacheMemoryLimit = dictionary.getDouble("cacheMemoryLimit").toLong()
+            cacheExpiryDuration = dictionary.getDouble("cacheExpiryDuration").toLong()
+            isLaunchTimeEnabled = dictionary.getBoolean("launchTime")
+        }
 
         if (sessionID?.isNotEmpty() == true) {
             config.sessionId = sessionID
@@ -68,7 +72,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     private var networkTrackerMap: MutableMap<String, CapturedRequest> = mutableMapOf()
     private var screenTrackerMap: MutableMap<String, BTTScreenTracker> = mutableMapOf()
 
-    fun generateRandomString(length: Int): String {
+    private fun generateRandomString(length: Int): String {
         val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
         return (1..length)
             .map { allowedChars.random() }
@@ -268,6 +272,52 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun clearAllCustomVariables(){
         Tracker.instance?.clearAllCustomVariables()
+    }
+
+    private val memoryHolder = MemoryHolder()
+
+    @ReactMethod
+    fun emulateMemoryWarning() {
+        val usedMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
+        val threshold = Runtime.getRuntime().maxMemory() * 0.8
+
+        val required = threshold - usedMemory + 10
+
+        val timer = Timer("Memory Warning Test", "EmulatedTests")
+        timer.start()
+
+        1000L.postDelayed {
+            memoryHolder.allocateMemory(required.toInt())
+        }
+        2000L.postDelayed {
+            timer.submit()
+            memoryHolder.clearMemory()
+        }
+    }
+
+    @ReactMethod
+    fun emulateANR() {
+        0L.postDelayed {
+            val timer = Timer("ANR Test", "EmulatedTests")
+            timer.start()
+            val start = System.currentTimeMillis()
+            val anrDuration = (Tracker.instance?.configuration?.trackAnrIntervalSec?.times(1000L)?:5000L) + 1000L
+
+            Thread.sleep(anrDuration)
+            Log.d("BlueTriangle", "emulateANR Ended: ${System.currentTimeMillis() - start}")
+            timer.submit()
+        }
+    }
+
+    @ReactMethod
+    fun emulateCrash() {
+        0L.postDelayed {
+            throw java.lang.Exception("Emulated Crash")
+        }
+    }
+
+    private fun Long.postDelayed(runner:()-> Unit) {
+        Handler(Looper.getMainLooper()).postDelayed(runner, this)
     }
 
 }
