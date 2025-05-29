@@ -282,4 +282,30 @@ class BttSdk: NSObject {
     func clearAllCustomVariables() {
         BlueTriangle.clearAllCustomVariables()
     }
+    
+    @objc
+    func emulateANR(){
+        DispatchQueue.main.async {
+            let startTime = Date()
+            while true {
+                if (Date().timeIntervalSince1970 - startTime.timeIntervalSince1970) > 30 {  break  }
+            }
+        }
+    }
+    
+    @objc
+    func emulateMemoryWarning(){
+        // 1. Launch Simulator
+        // 2. Go to XCode 'Debug' menu
+        // 3. Select 'Simulate Memory Warning' to generate memory warning
+    }
+    
+    @objc
+    func emulateCrash(){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            let array = NSArray()
+            array.object(at: 99)
+        }
+    }
+
 }

@@ -532,6 +532,8 @@ Log onto your account on the [Blue Triangle Portal](https://portal.bluetriangle.
 
 ### Memory Warning
 
+#### Android
+
 You can call the following function to generate a memory warning:
 
 ```typescript
@@ -541,6 +543,14 @@ function testMemoryWarning() {
   BTTTestsEmulator.emulateMemoryWarning()
 }
 ```
+
+#### iOS
+
+To test Memory Warning, In the iOS Simulator, you can generate a memory warning using the following steps:
+
+1. Launch Simulator
+2. Go to XCode 'Debug' menu
+3. Select 'Simulate Memory Warning' to generate memory warning
 
 ### ANR Tracking
 

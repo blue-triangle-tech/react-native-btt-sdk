@@ -33,7 +33,9 @@ RCT_EXTERN_METHOD(getCustomVariable:(NSString *)name)
 RCT_EXTERN_METHOD(getCustomVariables)
 RCT_EXTERN_METHOD(clearCustomVariable:(NSString *)name)
 RCT_EXTERN_METHOD(clearAllCustomVariables)
-
+RCT_EXTERN_METHOD(emulateANR)
+RCT_EXTERN_METHOD(emulateMemoryWarning)
+RCT_EXTERN_METHOD(emulateCrash)
 
 + (BOOL)requiresMainQueueSetup
 {
