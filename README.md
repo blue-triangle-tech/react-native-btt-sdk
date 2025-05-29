@@ -524,15 +524,15 @@ const bttOptions = new BTTOptions();
 bttOptions.launchTime = false;
 ```
 
-## How to Test the React Native SDK Integration
+### How to Test the React Native SDK Integration
 
-### Site ID
+#### Site ID
 
 Log onto your account on the [Blue Triangle Portal](https://portal.bluetriangle.com), head over to "Native App -> Performance overview" and see that you can observe some data.
 
-### Memory Warning
+#### Memory Warning
 
-#### Android
+##### Android
 
 You can call the following function to generate a memory warning:
 
@@ -544,7 +544,7 @@ function testMemoryWarning() {
 }
 ```
 
-#### iOS
+##### iOS
 
 To test Memory Warning, In the iOS Simulator, you can generate a memory warning using the following steps:
 
@@ -552,7 +552,7 @@ To test Memory Warning, In the iOS Simulator, you can generate a memory warning 
 2. Go to XCode 'Debug' menu
 3. Select 'Simulate Memory Warning' to generate memory warning
 
-### ANR Tracking
+#### ANR Tracking
 
 You can call the following function to generate an ANR. This function will block the native main thread for the duration of ANR:
 
@@ -564,7 +564,7 @@ function testANRTracking() {
 }
 ```
 
-### Crash Tracking
+#### Crash Tracking
 
 
 You can call the following function to emulate a Crash:
