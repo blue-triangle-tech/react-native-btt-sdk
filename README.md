@@ -235,7 +235,7 @@ below:
 
 ```js
 const bttOptions = new BTTOptions();
-bttOptions.networkSampleRate = 0.025;
+bttOptions.networkSampleRate = 0.05;
 ```
 
 To disable network capture set 0.0 to 'bttOptions.networkSampleRate' during configuration.
