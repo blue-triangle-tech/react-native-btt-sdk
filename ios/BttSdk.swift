@@ -17,6 +17,14 @@ class BttSdk: NSObject {
             if let siteID = dictionary["btt_site_id"] as? String {
                 config.siteID = siteID
             }
+
+             if let crashLevel = dictionary["crashLevel"] as? String {
+                if crashLevel == "None"{
+                     config.crashTracking = .none
+                }else{
+                     config.crashTracking  = .nsException
+                }
+            }
             
             if let trackAnr = dictionary["trackAnr"] as? Bool {
                 config.ANRMonitoring = trackAnr
@@ -35,24 +43,15 @@ class BttSdk: NSObject {
                 config.enableMemoryWarning = memoryWarning
             }
             
-            if let trackCrash = dictionary["trackCrash"] as? Bool {
-                if(trackCrash){
-                    config.crashTracking  = .nsException
-                }
-                else{
-                    config.crashTracking = .none
-                }
-            }
-            
             if let debug = dictionary["debug"] as? Bool {
                 config.enableDebugLogging = debug
             }
             
-            if let sessionID = dictionary["btt_session_id"] as? String {
+            /*if let sessionID = dictionary["btt_session_id"] as? String {
                 if let uintValue = UInt64(sessionID) {
                     config.sessionID = uintValue
                 }
-            }
+            }*/
             if let screenTracking = dictionary["screenTracking"] as? Bool {
                 config.enableScreenTracking = screenTracking
             }
@@ -251,5 +250,36 @@ class BttSdk: NSObject {
                 networkTrackerDict.removeValue(forKey: networkTrackerID)
             }
         }
+    }
+
+
+    @objc
+    func setCustomVariable(_ name: String, value: String) {
+        BlueTriangle.setCustomVariable(name, value: value)
+    }
+    
+    @objc
+    func getCustomVariable(_ name: String) -> String?{
+        return BlueTriangle.getCustomVariable(name)
+    }
+    
+    @objc
+    func setCustomVariables(_ variables : [String: String] ) {
+        BlueTriangle.setCustomVariables(variables)
+    }
+
+    @objc
+    func getCustomVariables() -> [String: String] {
+        return BlueTriangle.getCustomVariables()
+    }
+    
+    @objc
+    func clearCustomVariable(_ name : String){
+        BlueTriangle.clearCustomVariable(name)
+    }
+    
+    @objc
+    func clearAllCustomVariables() {
+        BlueTriangle.clearAllCustomVariables()
     }
 }

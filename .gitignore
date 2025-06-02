@@ -5,6 +5,7 @@
 # XDE
 .expo/
 
+*.tgz
 # VSCode
 .vscode/
 jsconfig.json
@@ -28,6 +29,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
+**/.xcode.env.local
 
 # Android/IJ
 #

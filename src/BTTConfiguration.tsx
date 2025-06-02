@@ -12,7 +12,6 @@ class BTTConfiguration {
       performanceMonitoring: bttOptions.performanceMonitoring,
       performanceMonitoringInterval: bttOptions.performanceMonitoringInterval,
       memoryWarning: bttOptions.memoryWarning,
-      trackCrash: bttOptions.trackCrash,
       debug: bttOptions.debug,
       launchTime: bttOptions.launchTime,
       screenTracking: bttOptions.screenTracking,
@@ -21,6 +20,7 @@ class BTTConfiguration {
       networkSampleRate: bttOptions.networkSampleRate,
       cacheMemoryLimit: bttOptions.cacheMemoryLimit,
       cacheExpiryDuration: bttOptions.cacheExpiryDuration,
+      crashLevel: bttOptions.crashLevel.toString(),
     };
     setUpInterceptors();
     const sessionId = await BttSdk.bttConfigure(dictionary);

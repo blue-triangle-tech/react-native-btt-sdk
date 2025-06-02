@@ -35,7 +35,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         val config = BlueTriangleConfiguration()
         config.siteId = dictionary.getString("btt_site_id")
         config.isDebug = dictionary.getBoolean("debug")
-        config.isTrackCrashesEnabled = dictionary.getBoolean("trackCrash")
+        config.isTrackCrashesEnabled = dictionary.getString("crashLevel").let { !it.isNullOrEmpty() && it == "All" }
         config.isScreenTrackingEnabled = dictionary.getBoolean("screenTracking")
         config.isTrackAnrEnabled = dictionary.getBoolean("trackAnr")
         config.isPerformanceMonitorEnabled = dictionary.getBoolean("performanceMonitoring")
@@ -226,6 +226,48 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         Tracker.instance?.configuration?.logger?.debug("Android :: submitCapturedRequest.")
         networkTrackerMap.remove(networkTrackerID)
 
+    }
+
+    @ReactMethod
+    fun setCustomVariable(name: String, value: String) {
+        Tracker.instance?.setCustomVariable(name,value)
+    }
+
+    @ReactMethod
+    fun getCustomVariable(name: String, promise: Promise) {
+        promise.resolve(Tracker.instance?.getCustomVariable(name))
+    }
+
+    @ReactMethod
+    fun getCustomVariables(promise: Promise) {
+        val writableMap = Arguments.createMap()
+
+        Tracker.instance?.getCustomVariables().apply {
+            this?.forEach {
+                writableMap.putString(it.key, it.value)
+            }
+            promise.resolve(writableMap)
+        }
+    }
+
+    @ReactMethod
+    fun setCustomVariables(variables: ReadableMap) {
+        val cv = hashMapOf<String, String>()
+
+        variables.toHashMap().forEach {
+            cv[it.key] = it.value.toString()
+        }
+        Tracker.instance?.setCustomVariables(cv)
+    }
+
+    @ReactMethod
+    fun clearCustomVariable(name: String){
+        Tracker.instance?.clearCustomVariable(name)
+    }
+
+    @ReactMethod
+    fun clearAllCustomVariables(){
+        Tracker.instance?.clearAllCustomVariables()
     }
 
 }
