@@ -9,6 +9,7 @@ import StackNavigationDemo from './StackNavigationDemo/StackNavigationDemo';
 
 import DrawerNavigationDemo from './DrawerNavigationDemo/DrawerNavigationDemo';
 import { useNavigationContainerRef } from '@react-navigation/native';
+import CrashScreen from './CrashTracking';
 
 const Stack = createStackNavigator();
 const HomeStack = () => {
@@ -20,7 +21,6 @@ const HomeStack = () => {
       <Stack.Screen
         name={'Tab Navigation Demo'}
         component={TabNavigationDemo}
-        options={{ tabBarStyle: { display: 'none' } }}
       />
       <Stack.Screen
         name={'Stack Navigation Demo'}

@@ -1,8 +1,9 @@
-import BTTOptions from './BTTOptions';
+import BTTOptions, { CrashLevel } from './BTTOptions';
 import setUpInterceptors from './networking/interceptors';
 import BTTDM from './BTTDM';
 import BttSdk from './BttSdk';
 import Logger from './Logger';
+import BTTCrashTracker from './BTTCrashTracker';
 
 class BTTConfiguration {
   static async configure(siteId: String, bttOptions: BTTOptions) {
@@ -29,6 +30,8 @@ class BTTConfiguration {
     Logger.instance.log(
       `Configuration Done. Options: ${bttOptions}, Session ID: ${sessionId}`
     );
+
+    BTTCrashTracker.init(bttOptions.crashTrack, bttOptions.crashLevel);
   }
 
   static getSessionId() {

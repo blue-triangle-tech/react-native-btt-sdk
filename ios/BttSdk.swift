@@ -251,4 +251,19 @@ class BttSdk: NSObject {
             }
         }
     }
+
+   @objc
+    
+        func trackJsError(_ stack: String) {
+            struct JsStackError: Error, CustomStringConvertible {
+                let description: String
+            }
+            let error = JsStackError(description: stack)
+            BlueTriangle.logError(error)
+        }
+
+
+
+
+
 }

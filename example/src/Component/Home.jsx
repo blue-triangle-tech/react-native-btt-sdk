@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 const handleCrash = () => {
   throw new Error('This is a simulated crash');
 };
+
 const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
@@ -14,7 +15,10 @@ const Home = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Screen Tracking</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleCrash}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('Crash Tracking')}
+      >
         <Text style={styles.buttonText}>Track Crash</Text>
       </TouchableOpacity>
 
@@ -31,6 +35,7 @@ const Home = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Network Calls Fetch</Text>
       </TouchableOpacity>
+      
     </View>
   );
 };

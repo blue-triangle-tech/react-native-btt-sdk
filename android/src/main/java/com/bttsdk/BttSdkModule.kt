@@ -1,24 +1,24 @@
 package com.bttsdk
 
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.Promise
 import android.app.Application
 import android.util.Log
 import com.bluetriangle.analytics.BlueTriangleConfiguration
 import com.bluetriangle.analytics.Timer
 import com.bluetriangle.analytics.Tracker
-import com.bluetriangle.analytics.screenTracking.BTTScreenTracker
 import com.bluetriangle.analytics.networkcapture.CapturedRequest
 import com.bluetriangle.analytics.networkcapture.RequestType
+import com.bluetriangle.analytics.screenTracking.BTTScreenTracker
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReactContextBaseJavaModule
+import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import java.lang.Long.parseLong
 
 class BttSdkModule(reactContext: ReactApplicationContext) :
-    ReactContextBaseJavaModule(reactContext) {
+        ReactContextBaseJavaModule(reactContext) {
 
     override fun getName() = NAME
 
@@ -35,12 +35,13 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         val config = BlueTriangleConfiguration()
         config.siteId = dictionary.getString("btt_site_id")
         config.isDebug = dictionary.getBoolean("debug")
-        config.isTrackCrashesEnabled = dictionary.getString("crashLevel").let { !it.isNullOrEmpty() && it == "All" }
+        config.isTrackCrashesEnabled =
+                dictionary.getString("crashLevel").let { !it.isNullOrEmpty() && it == "All" }
         config.isScreenTrackingEnabled = dictionary.getBoolean("screenTracking")
         config.isTrackAnrEnabled = dictionary.getBoolean("trackAnr")
         config.isPerformanceMonitorEnabled = dictionary.getBoolean("performanceMonitoring")
         config.performanceMonitorIntervalMs =
-            dictionary.getDouble("performanceMonitoringInterval").toLong()
+                dictionary.getDouble("performanceMonitoringInterval").toLong()
         config.isMemoryWarningEnabled = dictionary.getBoolean("memoryWarning")
         config.isTrackNetworkStateEnabled = dictionary.getBoolean("trackNetworkState")
         config.trackAnrIntervalSec = dictionary.getInt("trackAnrIntervalSec")
@@ -63,16 +64,14 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         promise.resolve(Tracker.instance?.configuration?.sessionId)
     }
 
-    //private var timer: Timer?=null
+    // private var timer: Timer?=null
     private var timerMap: MutableMap<String, Timer> = mutableMapOf()
     private var networkTrackerMap: MutableMap<String, CapturedRequest> = mutableMapOf()
     private var screenTrackerMap: MutableMap<String, BTTScreenTracker> = mutableMapOf()
 
     fun generateRandomString(length: Int): String {
         val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-        return (1..length)
-            .map { allowedChars.random() }
-            .joinToString("")
+        return (1..length).map { allowedChars.random() }.joinToString("")
     }
 
     @ReactMethod
@@ -106,24 +105,34 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
         timer?.apply {
             dictionary.runIfHasValue("cartValue", dictionary::getDouble, this::setCartValue)
-            dictionary.runIfHasValue("orderTime", dictionary::getString) { setOrderTime(parseLong(it))}
+            dictionary.runIfHasValue("orderTime", dictionary::getString) {
+                setOrderTime(parseLong(it))
+            }
             dictionary.runIfHasValue("orderNumber", dictionary::getString, this::setOrderNumber)
             dictionary.runIfHasValue("brandValue", dictionary::getDouble, this::setBrandValue)
             dictionary.runIfHasValue("cartCount", dictionary::getInt, this::setCartCount)
-            dictionary.runIfHasValue("cartCountCheckout", dictionary::getInt, timer::setCartCountCheckout)
+            dictionary.runIfHasValue(
+                    "cartCountCheckout",
+                    dictionary::getInt,
+                    timer::setCartCountCheckout
+            )
         }
         timer?.submit()
         timerMap.remove(timerID)
     }
 
     /**
-     * If the corresponding key is present in the ReadableMap and it's @param retrieve function call's result not null it forwards it to the @param forward function
+     * If the corresponding key is present in the ReadableMap and it's @param retrieve function
+     * call's result not null it forwards it to the @param forward function
      */
-    private fun <T, U> ReadableMap.runIfHasValue(key:String, retrieve:(String)->T?, forward: (T)-> U) {
-        if(hasKey(key)) {
+    private fun <T, U> ReadableMap.runIfHasValue(
+            key: String,
+            retrieve: (String) -> T?,
+            forward: (T) -> U
+    ) {
+        if (hasKey(key)) {
             val result = retrieve(key)
-            if(result != null)
-                forward(result)
+            if (result != null) forward(result)
         }
     }
 
@@ -208,11 +217,15 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
             responseStatusCode = 600
         }
 
-        Tracker.instance?.configuration?.logger?.debug("Android :: networkTrackerID." + networkTrackerID.toString())
+        Tracker.instance?.configuration?.logger?.debug(
+                "Android :: networkTrackerID." + networkTrackerID.toString()
+        )
 
         val capturedRequest: CapturedRequest = networkTrackerMap?.get(networkTrackerID) ?: return
         Log.d("capturedRequest", capturedRequest.toString())
-        Tracker.instance?.configuration?.logger?.debug("Android :: capturedRequest." + capturedRequest.toString())
+        Tracker.instance?.configuration?.logger?.debug(
+                "Android :: capturedRequest." + capturedRequest.toString()
+        )
 
         capturedRequest?.encodedBodySize = encodedBodySize?.toLong() ?: 0
         capturedRequest?.requestType = RequestType.fromFilePath(requestType)
@@ -225,7 +238,11 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         Tracker.instance?.submitCapturedRequest(capturedRequest)
         Tracker.instance?.configuration?.logger?.debug("Android :: submitCapturedRequest.")
         networkTrackerMap.remove(networkTrackerID)
-
     }
 
+    @ReactMethod
+    fun trackJsError(stack: String) {
+        Log.e("JS_STACK_TRACE", stack)
+        Tracker.instance?.trackError(stack)
+    }
 }
