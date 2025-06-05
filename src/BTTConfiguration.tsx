@@ -31,7 +31,9 @@ class BTTConfiguration {
       `Configuration Done. Options: ${bttOptions}, Session ID: ${sessionId}`
     );
 
-    BTTCrashTracker.init(bttOptions.crashTrack, bttOptions.crashLevel);
+    if(bttOptions.crashLevel !== CrashLevel.None) {
+      BTTCrashTracker.init();
+    }
   }
 
   static getSessionId() {

@@ -36,7 +36,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         config.siteId = dictionary.getString("btt_site_id")
         config.isDebug = dictionary.getBoolean("debug")
         config.isTrackCrashesEnabled =
-                dictionary.getString("crashLevel").let { !it.isNullOrEmpty() && it == "All" }
+                dictionary.getString("crashLevel").let { !it.isNullOrEmpty() && it == "1" }
         config.isScreenTrackingEnabled = dictionary.getBoolean("screenTracking")
         config.isTrackAnrEnabled = dictionary.getBoolean("trackAnr")
         config.isPerformanceMonitorEnabled = dictionary.getBoolean("performanceMonitoring")
@@ -64,7 +64,6 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         promise.resolve(Tracker.instance?.configuration?.sessionId)
     }
 
-    // private var timer: Timer?=null
     private var timerMap: MutableMap<String, Timer> = mutableMapOf()
     private var networkTrackerMap: MutableMap<String, CapturedRequest> = mutableMapOf()
     private var screenTrackerMap: MutableMap<String, BTTScreenTracker> = mutableMapOf()
@@ -151,7 +150,6 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     fun loadStarted(page: String, pageId: String) {
         val tracker: BTTScreenTracker? = getScreenTracker(page, pageId)
         tracker?.onLoadStarted()
-        Tracker.instance?.configuration?.logger?.debug("Android :: loadStarted.")
         Tracker.instance?.configuration?.logger?.debug("Android :: loadStarted." + tracker)
     }
 
@@ -159,7 +157,6 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     fun loadFinish(page: String, pageId: String) {
         val tracker: BTTScreenTracker? = getScreenTracker(page, pageId)
         tracker?.onLoadEnded()
-        Tracker.instance?.configuration?.logger?.debug("Android :: loadFinish.")
         Tracker.instance?.configuration?.logger?.debug("Android :: loadFinish." + tracker)
     }
 
@@ -242,7 +239,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun trackJsError(stack: String) {
-        Log.e("JS_STACK_TRACE", stack)
+        Tracker.instance?.configuration?.logger?.error("JS_STACK_TRACE : $stack")
         Tracker.instance?.trackError(stack)
     }
 }

@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 const CrashScreen = () => {
@@ -22,7 +21,7 @@ const CrashScreen = () => {
 
   const handleUndefinedOjbectError = () => {
     const newObj = {
-      name: 'Sandesh',
+      name: 'John Doe',
     };
     console.log(newObj.unknownProperty);
   };

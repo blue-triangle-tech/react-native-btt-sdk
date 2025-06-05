@@ -12,9 +12,6 @@ class BTTOptions {
   networkSampleRate = 0.05;
   cacheMemoryLimit = 30 * 1024;
   cacheExpiryDuration = 48 * 60 * 1000;
-  
-  // crash track is activated
-  crashTrack  = true;
 }
 
 export default BTTOptions;

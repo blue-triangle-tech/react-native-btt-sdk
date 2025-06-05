@@ -19,7 +19,7 @@ class BttSdk: NSObject {
             }
 
              if let crashLevel = dictionary["crashLevel"] as? String {
-                if crashLevel == "None"{
+                if crashLevel == "0"{
                      config.crashTracking = .none
                 }else{
                      config.crashTracking  = .nsException
@@ -47,11 +47,6 @@ class BttSdk: NSObject {
                 config.enableDebugLogging = debug
             }
             
-            if let sessionID = dictionary["btt_session_id"] as? String {
-                if let uintValue = UInt64(sessionID) {
-                    config.sessionID = uintValue
-                }
-            }
             if let screenTracking = dictionary["screenTracking"] as? Bool {
                 config.enableScreenTracking = screenTracking
             }
@@ -252,18 +247,13 @@ class BttSdk: NSObject {
         }
     }
 
-   @objc
-    
-        func trackJsError(_ stack: String) {
-            struct JsStackError: Error, CustomStringConvertible {
-                let description: String
-            }
-            let error = JsStackError(description: stack)
-            BlueTriangle.logError(error)
+    @objc
+    func trackJsError(_ stack: String) {
+        struct JsStackError: Error, CustomStringConvertible {
+            let description: String
         }
-
-
-
-
+        let error = JsStackError(description: stack)
+        BlueTriangle.logError(error)
+    }
 
 }
