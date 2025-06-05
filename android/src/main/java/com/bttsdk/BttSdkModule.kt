@@ -285,7 +285,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     }
 
     fun trackJsError(stack: String) {
-        Log.e("JS_STACK_TRACE", stack)
+        Tracker.instance?.configuration?.logger?.error("JS_STACK_TRACE : $stack")
         Tracker.instance?.trackError(stack)
     }
 }

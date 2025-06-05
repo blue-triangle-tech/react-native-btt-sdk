@@ -286,18 +286,13 @@ class BttSdk: NSObject {
     func clearAllCustomVariables() {
         BlueTriangle.clearAllCustomVariables()
     }
-   @objc
-    
-        func trackJsError(_ stack: String) {
-            struct JsStackError: Error, CustomStringConvertible {
-                let description: String
-            }
-            let error = JsStackError(description: stack)
-            BlueTriangle.logError(error)
+    @objc
+    func trackJsError(_ stack: String) {
+        struct JsStackError: Error, CustomStringConvertible {
+            let description: String
         }
-
-
-
-
+        let error = JsStackError(description: stack)
+        BlueTriangle.logError(error)
+    }
 
 }
