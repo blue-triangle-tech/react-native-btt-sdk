@@ -284,4 +284,8 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         Tracker.instance?.clearAllCustomVariables()
     }
 
+    fun trackJsError(stack: String) {
+        Log.e("JS_STACK_TRACE", stack)
+        Tracker.instance?.trackError(stack)
+    }
 }
