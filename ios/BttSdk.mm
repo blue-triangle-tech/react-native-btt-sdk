@@ -25,9 +25,8 @@ RCT_EXTERN_METHOD(networkTrackerSubmit:(NSDictionary *)dictionary)
 RCT_EXTERN_METHOD(networkTrackerStart:(NSDictionary *)dictionary
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
-                 
 // method exposed for getting the js stack
-RCT_EXTERN_METHOD(trackJsError:(NSDictionary *)stack)
+RCT_EXTERN_METHOD(trackJsError:(NSString *)stack)
 
 + (BOOL)requiresMainQueueSetup
 {
