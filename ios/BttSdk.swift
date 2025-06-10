@@ -248,16 +248,6 @@ class BttSdk: NSObject {
     }
 
     @objc
-    func trackJsError(_ stack: String) {
-        struct JsStackError: Error, CustomStringConvertible {
-            let description: String
-        }
-        let error = JsStackError(description: stack)
-        BlueTriangle.logError(error)
-    }
-
-
-    @objc
     func setCustomVariable(_ name: String, value: String) {
         BlueTriangle.setCustomVariable(name, value: value)
     }
