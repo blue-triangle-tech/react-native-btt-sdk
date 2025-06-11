@@ -236,12 +236,6 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         Tracker.instance?.configuration?.logger?.debug("Android :: submitCapturedRequest.")
         networkTrackerMap.remove(networkTrackerID)
     }
-
-    @ReactMethod
-    fun trackJsError(stack: String) {
-        Tracker.instance?.configuration?.logger?.error("JS_STACK_TRACE : $stack")
-        Tracker.instance?.trackError(stack)
-    }
     
     fun setCustomVariable(name: String, value: String) {
         Tracker.instance?.setCustomVariable(name,value)
