@@ -236,9 +236,9 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         Tracker.instance?.configuration?.logger?.debug("Android :: submitCapturedRequest.")
         networkTrackerMap.remove(networkTrackerID)
     }
-    
+
     fun setCustomVariable(name: String, value: String) {
-        Tracker.instance?.setCustomVariable(name,value)
+        Tracker.instance?.setCustomVariable(name, value)
     }
 
     @ReactMethod
@@ -251,9 +251,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         val writableMap = Arguments.createMap()
 
         Tracker.instance?.getCustomVariables().apply {
-            this?.forEach {
-                writableMap.putString(it.key, it.value)
-            }
+            this?.forEach { writableMap.putString(it.key, it.value) }
             promise.resolve(writableMap)
         }
     }
@@ -262,23 +260,23 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     fun setCustomVariables(variables: ReadableMap) {
         val cv = hashMapOf<String, String>()
 
-        variables.toHashMap().forEach {
-            cv[it.key] = it.value.toString()
-        }
+        variables.toHashMap().forEach { cv[it.key] = it.value.toString() }
         Tracker.instance?.setCustomVariables(cv)
     }
 
     @ReactMethod
-    fun clearCustomVariable(name: String){
+    fun clearCustomVariable(name: String) {
         Tracker.instance?.clearCustomVariable(name)
     }
 
     @ReactMethod
-    fun clearAllCustomVariables(){
+    fun clearAllCustomVariables() {
         Tracker.instance?.clearAllCustomVariables()
     }
 
+    @ReactMethod
     fun trackJsError(stack: String) {
+        // Log.e("BttSdkModule", "Received JS stack trace: $stack")
         Tracker.instance?.configuration?.logger?.error("JS_STACK_TRACE : $stack")
         Tracker.instance?.trackError(stack)
     }
