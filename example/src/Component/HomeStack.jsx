@@ -20,7 +20,6 @@ const HomeStack = () => {
       <Stack.Screen
         name={'Tab Navigation Demo'}
         component={TabNavigationDemo}
-        options={{ tabBarStyle: { display: 'none' } }}
       />
       <Stack.Screen
         name={'Stack Navigation Demo'}

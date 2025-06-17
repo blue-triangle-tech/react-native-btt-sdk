@@ -34,6 +34,8 @@ RCT_EXTERN_METHOD(getCustomVariables)
 RCT_EXTERN_METHOD(clearCustomVariable:(NSString *)name)
 RCT_EXTERN_METHOD(clearAllCustomVariables)
 
+// method exposed for getting the js stack
+RCT_EXTERN_METHOD(trackJsError:(NSString *)stack)
 
 + (BOOL)requiresMainQueueSetup
 {
