@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.4.0] Blue Triangle - Latest
+## [0.4.1] Blue Triangle - Latest
+- Added support for tracking Crashes appearing in Javascript.
+- Fixed Launch time issue in Android
+- Changed Traffic Segment name and Page type to "ScreenTracker" for Automatic Screen Tracking payloads
+- Sending custom variables along with error payloads
+
+## [0.4.0] Blue Triangle - May 21 2025
 
 ### New Features
 - Added support for Blutriange and Microsoft clarity session mapping. Added ability to detect clarity sdk present in host app, if present associate clarity session url with timers

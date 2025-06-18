@@ -35,7 +35,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         val config = BlueTriangleConfiguration()
         config.siteId = dictionary.getString("btt_site_id")
         config.isDebug = dictionary.getBoolean("debug")
-        config.isTrackCrashesEnabled = dictionary.getString("crashLevel").let { !it.isNullOrEmpty() && it == "All" }
+        config.isTrackCrashesEnabled = dictionary.getString("crashLevel").let { !it.isNullOrEmpty() && it == "1" }
         config.isScreenTrackingEnabled = dictionary.getBoolean("screenTracking")
         config.isTrackAnrEnabled = dictionary.getBoolean("trackAnr")
         config.isPerformanceMonitorEnabled = dictionary.getBoolean("performanceMonitoring")
@@ -270,4 +270,9 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         Tracker.instance?.clearAllCustomVariables()
     }
 
+    @ReactMethod
+    fun trackJsError(stack: String) {
+        Tracker.instance?.configuration?.logger?.error("JS_STACK_TRACE : $stack")
+        Tracker.instance?.trackError(stack)
+    }
 }

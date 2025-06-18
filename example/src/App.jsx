@@ -52,7 +52,7 @@ const App = () => {
           name={'Drawer Navigation Demo'}
           component={DrawerNavigationDemo}
         />
-        <Stack.Screen name={'crash-tracking'} component={CrashTracking} />
+        <Stack.Screen name={'Crash Tracking'} component={CrashTracking} />
         <Stack.Screen
           name={'network calls axios'}
           component={NetworkCallsAxios}
