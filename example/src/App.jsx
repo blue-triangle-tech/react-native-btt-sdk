@@ -40,6 +40,9 @@ const App = () => {
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name={'ScreenTracking'} component={ScreenTracking} />
         <Stack.Screen
+        options={{
+          headerTitle: "Test"
+        }}
           name={'Tab Navigation Demo'}
           component={TabNavigationDemo}
         />

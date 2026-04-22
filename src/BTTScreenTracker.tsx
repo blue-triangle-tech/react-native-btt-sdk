@@ -13,18 +13,14 @@ class BTTScreenTracker {
 
   startTracking() {
     Logger.instance.log(`Started tracking ${this.pageName}`);
-    BTTScreenTracker.viewStart(this.pageName, this.customPageID);
+    BTTScreenTracker.viewingManualStart(this.pageName, this.customPageID);
     console.log('Started Tracking Page : ', this.pageName);
   }
 
   stopTracking() {
     Logger.instance.log(`Stopped tracking ${this.pageName}`);
     console.log('Stopped Tracking Page :', this.pageName);
-    BTTScreenTracker.viewingEnd(this.pageName, this.customPageID);
-  }
-
-  static loadStarted(name: String, pageId: String) {
-    BttSdk.loadStarted(name, pageId);
+    BTTScreenTracker.viewingManualEnd(this.pageName, this.customPageID);
   }
 
   static viewStart(name: String, pageId: String) {
@@ -35,6 +31,14 @@ class BTTScreenTracker {
 
   static viewingEnd(name: String, pageId: String) {
     BttSdk.viewingEnd(name, pageId);
+  }
+
+  static viewingManualStart(name: String, pageId: String) {
+    BttSdk.viewingManualStart(name, pageId);
+  }
+
+  static viewingManualEnd(name: String, pageId: String) {
+    BttSdk.viewingManualEnd(name, pageId);
   }
 }
 

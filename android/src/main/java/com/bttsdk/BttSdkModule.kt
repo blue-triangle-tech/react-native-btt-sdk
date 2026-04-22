@@ -9,7 +9,6 @@ import android.util.Log
 import com.bluetriangle.analytics.BlueTriangleConfiguration
 import com.bluetriangle.analytics.Timer
 import com.bluetriangle.analytics.Tracker
-import com.bluetriangle.analytics.screenTracking.BTTScreenTracker
 import com.bluetriangle.analytics.networkcapture.CapturedRequest
 import com.bluetriangle.analytics.networkcapture.RequestType
 import com.facebook.react.bridge.Arguments
@@ -127,11 +126,11 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         }
     }
 
-    private fun getScreenTracker(page: String, pageId: String): BTTScreenTracker {
+    private fun getScreenTracker(page: String, pageId: String, automated: Boolean): BTTScreenTracker {
         // create a captured request object
         val tracker: BTTScreenTracker? = screenTrackerMap.get(pageId)
         if (tracker == null) {
-            val newTracker = BTTScreenTracker(page)
+            val newTracker = BTTScreenTracker(page, automated)
             this.screenTrackerMap[pageId] = newTracker
             return newTracker
         }
@@ -140,7 +139,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun loadStarted(page: String, pageId: String) {
-        val tracker: BTTScreenTracker? = getScreenTracker(page, pageId)
+        val tracker: BTTScreenTracker? = getScreenTracker(page, pageId, true)
         tracker?.onLoadStarted()
         Tracker.instance?.configuration?.logger?.debug("Android :: loadStarted.")
         Tracker.instance?.configuration?.logger?.debug("Android :: loadStarted." + tracker)
@@ -148,7 +147,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun loadFinish(page: String, pageId: String) {
-        val tracker: BTTScreenTracker? = getScreenTracker(page, pageId)
+        val tracker: BTTScreenTracker? = getScreenTracker(page, pageId, true)
         tracker?.onLoadEnded()
         Tracker.instance?.configuration?.logger?.debug("Android :: loadFinish.")
         Tracker.instance?.configuration?.logger?.debug("Android :: loadFinish." + tracker)
@@ -156,16 +155,33 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun viewStart(page: String, pageId: String) {
-        val tracker: BTTScreenTracker? = getScreenTracker(page, pageId)
+        val tracker: BTTScreenTracker? = getScreenTracker(page, pageId, true)
         tracker?.onViewStarted()
         Tracker.instance?.configuration?.logger?.debug("Android :: viewStart." + tracker)
     }
 
     @ReactMethod
     fun viewingEnd(page: String, pageId: String) {
-        val tracker: BTTScreenTracker? = getScreenTracker(page, pageId)
+        val tracker: BTTScreenTracker? = getScreenTracker(page, pageId, true)
         tracker?.onViewEnded()
         Tracker.instance?.configuration?.logger?.debug("Android :: viewingEnd." + tracker)
+        screenTrackerMap.remove(pageId)
+    }
+
+    @ReactMethod
+    fun viewingManualStart(page: String, pageId: String) {
+        val tracker: BTTScreenTracker? = getScreenTracker(page, pageId, false)
+        tracker?.onLoadStarted()
+        tracker?.onLoadEnded()
+        tracker?.onViewStarted()
+        Tracker.instance?.configuration?.logger?.debug("Android :: viewingManualStart." + tracker)
+    }
+
+     @ReactMethod
+    fun viewingManualEnd(page: String, pageId: String) {
+        val tracker: BTTScreenTracker? = getScreenTracker(page, pageId, false)
+        tracker?.onViewEnded()
+        Tracker.instance?.configuration?.logger?.debug("Android :: viewingManualEnd." + tracker)
         screenTrackerMap.remove(pageId)
     }
 
@@ -268,6 +284,56 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun clearAllCustomVariables(){
         Tracker.instance?.clearAllCustomVariables()
+    }
+
+    @ReactMethod
+    fun setAbTestID(value : String?){
+        Tracker.instance?.setSessionAbTestIdentifier(value)
+    }
+
+    @ReactMethod
+    fun setDataCenter(value : String?){
+        Tracker.instance?.setSessionDataCenter(value)
+    }
+
+    @ReactMethod
+    fun setCampaignName(value : String?){
+        Tracker.instance?.setSessionCampaignName(value)
+    }
+
+    @ReactMethod
+    fun setCampaignMedium(value : String?){
+        Tracker.instance?.setSessionCampaignMedium(value)
+    }
+
+    @ReactMethod
+    fun setCampaignSource(value : String?){
+        Tracker.instance?.setSessionCampaignSource(value)
+    }
+
+    @ReactMethod
+    fun setCustomCategory1(value : String?){
+        Tracker.instance?.setCustomCategory1(value)
+    }
+
+    @ReactMethod
+    fun setCustomCategory2(value : String?){
+        Tracker.instance?.setCustomCategory2(value)
+    }
+
+    @ReactMethod
+    fun setCustomCategory3(value : String?){
+        Tracker.instance?.setCustomCategory3(value)
+    }
+
+    @ReactMethod
+    fun setCustomCategory4(value : String?){
+        Tracker.instance?.setCustomCategory4(value)
+    }
+
+    @ReactMethod
+    fun setCustomCategory5(value : String?){
+        Tracker.instance?.setCustomCategory5(value)
     }
 
     @ReactMethod

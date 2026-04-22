@@ -145,13 +145,20 @@ class BttSdk: NSObject {
         }
     }
     
-    private func getScreenTracker(_ page : String, pageId : String) -> BTTScreenTracker{
+    private func getScreenTracker(_ page : String, pageId : String, automated : Bool = true) -> BTTScreenTracker{
         if let screenTracker:BTTScreenTracker = screenTrackerDict[pageId]{
             return screenTracker
         }
-        let screenTracker = BTTScreenTracker(page)
-        screenTrackerDict[pageId] = screenTracker
-        return screenTracker
+
+        if automated {
+            let screenTracker = BTTScreenTracker(page)
+            screenTrackerDict[pageId] = screenTracker
+            return screenTracker
+        } else {
+            let screenTracker = BTTScreenTracker(page)
+            screenTrackerDict[pageId] = screenTracker
+            return screenTracker
+        }
     }
     
     @objc
@@ -180,7 +187,25 @@ class BttSdk: NSObject {
     func viewingEnd(_ page : String, pageId : String){
         print("viewingEnd")
 
-        let screenTracker:BTTScreenTracker = self.getScreenTracker(page, pageId: pageId)
+        let screenTracker:BTTScreenTracker = self.getScreenTracker(page, pageId: pageId, automated: false)
+        screenTracker.viewingEnd()
+        screenTrackerDict.removeValue(forKey: pageId)
+    }
+
+    @objc
+    func viewingManualStart(_ page : String, pageId : String){
+        print("viewingManualStart")
+
+        let screenTracker:BTTScreenTracker = self.getScreenTracker(page, pageId: pageId, automated: false)
+        screenTracker.loadStarted()
+        screenTracker.loadEnded()
+        screenTracker.viewStart()
+    }
+    @objc
+    func viewingManualEnd(_ page : String, pageId : String){
+        print("viewingManualEnd")
+
+        let screenTracker:BTTScreenTracker = self.getScreenTracker(page, pageId: pageId, automated: false)
         screenTracker.viewingEnd()
         screenTrackerDict.removeValue(forKey: pageId)
     }
@@ -276,6 +301,56 @@ class BttSdk: NSObject {
     @objc
     func clearAllCustomVariables() {
         BlueTriangle.clearAllCustomVariables()
+    }
+
+    @objc
+    func setAbTestID(_ value : String){
+        BlueTriangle.setAbTestID(value)
+    }
+
+    @objc
+    func setDataCenter(_ value : String){
+        BlueTriangle.setDataCenter(value)
+    }
+
+    @objc
+    func setCampaignName(_ value : String){
+        BlueTriangle.setCampaignName(value)
+    }
+
+    @objc
+    func setCampaignMedium(_ value : String){
+        BlueTriangle.setCampaignMedium(value)
+    }
+
+    @objc
+    func setCampaignSource(_ value : String){
+        BlueTriangle.setCampaignSource(value)
+    }
+
+    @objc
+    func setCustomCategory1(_ value : String){
+        BlueTriangle.setCustomCategory1(value)
+    }
+
+    @objc
+    func setCustomCategory2(_ value : String){
+        BlueTriangle.setCustomCategory2(value)
+    }
+
+    @objc
+    func setCustomCategory3(_ value : String){
+        BlueTriangle.setCustomCategory3(value)
+    }
+
+    @objc
+    func setCustomCategory4(_ value : String){
+        BlueTriangle.setCustomCategory4(value)
+    }
+
+     @objc
+    func setCustomCategory5(_ value : String){
+        BlueTriangle.setCustomCategory5(value)
     }
 
     @objc
