@@ -1,18 +1,17 @@
 package com.bttsdk
 
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.Promise
 import android.app.Application
 import android.util.Log
 import com.bluetriangle.analytics.BlueTriangleConfiguration
 import com.bluetriangle.analytics.Timer
 import com.bluetriangle.analytics.Tracker
-import com.bluetriangle.analytics.screenTracking.BTTScreenTracker
 import com.bluetriangle.analytics.networkcapture.CapturedRequest
 import com.bluetriangle.analytics.networkcapture.RequestType
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReactContextBaseJavaModule
+import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import java.lang.Long.parseLong
@@ -52,10 +51,13 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         if (sessionID?.isNotEmpty() == true) {
             config.sessionId = sessionID
         }
-        Tracker.init(reactApplicationContext.applicationContext as Application, config)
+        val tracker = Tracker.init(reactApplicationContext.applicationContext as Application, config)
         Log.d("BlueTriangle", "Logger" + config.logger)
         config.logger?.debug("configure")
+
         promise.resolve(config.sessionId)
+        Thread.sleep(500)
+        ActivityRegisterer.registerActivity(tracker, reactApplicationContext)
     }
 
     @ReactMethod
