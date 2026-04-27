@@ -8,7 +8,7 @@ import com.bluetriangle.analytics.model.ScreenType
 class BTTScreenTracker(private val pageName: String, private val automated: Boolean) {
 
     private val id = "${pageName}#${System.currentTimeMillis()}"
-    var screenType: String = "react"
+    var screenType: String = "ReactNative"
     private var isConsumed = false
 
     fun onLoadStarted() {

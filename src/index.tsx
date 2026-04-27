@@ -6,6 +6,7 @@ import BTTOptions, { CrashLevel } from './BTTOptions';
 import BTTNavigationContainerTracker from './BTTNavigationContainerTracker';
 import BTTWebViewTracker from './BTTWebViewTracker';
 import PurchaseConfirmation from './PurchaseConfirmation';
+import BlueTriangle from './BlueTriangle';
 
 export { BTTCustomVariable };
 export { BTTScreenTracker };
@@ -16,3 +17,5 @@ export { CrashLevel };
 export { BTTNavigationContainerTracker };
 export { BTTWebViewTracker };
 export { PurchaseConfirmation };
+export { BlueTriangle };
+
