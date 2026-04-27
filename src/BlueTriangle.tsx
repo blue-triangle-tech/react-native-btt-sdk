@@ -47,7 +47,6 @@ class BlueTriangle {
     static setCustomCategory4(value?: String) {
          BttSdk.setCustomCategory4(value)
         Logger.instance.log(`Set Custom Category4 ${value}`);
-
     }
 
     static setCustomCategory5(value?: String) {

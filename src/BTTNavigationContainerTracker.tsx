@@ -1,3 +1,4 @@
+import { AppState } from 'react-native';
 import BTTScreenTracker from './BTTScreenTracker';
 
 let trackerName = '';
@@ -13,37 +14,75 @@ interface Route {
 }
 
 class BTTNavigationContainerTracker {
+
+  private static isListenerAttached: Boolean = false
+
   static applicationDidEnterBackground(navigationRef: NavigationRef) {
-    let currentKey = navigationRef.getCurrentRoute().key;
-    let currentName = navigationRef.getCurrentRoute().name;
-    if (currentName != null) {
+    const route = navigationRef?.getCurrentRoute?.();
+
+    if (!route) return;
+
+    const currentKey = route?.key;
+    const currentName = route?.name;
+
+    if (currentName && currentKey) {
       BTTScreenTracker.viewingEnd(currentName, currentKey);
     }
   }
-
+  
   static onContainerStateChange(navigationRef: NavigationRef) {
-    let currentKey = navigationRef.getCurrentRoute().key;
-    let currentName = navigationRef.getCurrentRoute().name;
+    const route = navigationRef?.getCurrentRoute?.();
+
+    if (!route) return;
+
+    const currentKey = route?.key;
+    const currentName = route?.name;
+
+    // Extra safety
+    if (!currentKey || !currentName) return;
+
+    if (!this.isListenerAttached) {
+      this.attachBackgroundListener(navigationRef);
+      this.isListenerAttached = true;
+    }
 
     const previousRouteName = trackerName;
     const previousRouteId = trackerID;
 
+    // First screen load
     if (previousRouteId == null) {
       BTTScreenTracker.viewStart(currentName, currentKey);
       trackerName = currentName;
       trackerID = currentKey;
+      return;
     }
 
-    const currentRouteName = currentName;
-    const currentRouteId = currentKey;
+    // Route change
+    if (previousRouteId !== currentKey) {
+      if (previousRouteName && previousRouteId) {
+        BTTScreenTracker.viewingEnd(previousRouteName, previousRouteId);
+      }
 
-    if (previousRouteId !== currentRouteId) {
-      BTTScreenTracker.viewingEnd(previousRouteName, previousRouteId);
-      BTTScreenTracker.viewStart(currentRouteName, currentRouteId);
+      BTTScreenTracker.viewStart(currentName, currentKey);
 
       trackerName = currentName;
       trackerID = currentKey;
     }
+  }
+
+  private static attachBackgroundListener(navigationRef: NavigationRef) {
+    console.log("Attached Background Listener..")
+    AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        console.log("App moved to foreground")
+        // do this
+        BTTNavigationContainerTracker.onContainerStateChange(navigationRef);
+      } else if (state === 'background') {
+        console.log("App moved to background")
+        // do that
+        BTTNavigationContainerTracker.applicationDidEnterBackground(navigationRef);
+      }
+    });
   }
 }
 
