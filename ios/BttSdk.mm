@@ -34,6 +34,17 @@ RCT_EXTERN_METHOD(getCustomVariables)
 RCT_EXTERN_METHOD(clearCustomVariable:(NSString *)name)
 RCT_EXTERN_METHOD(clearAllCustomVariables)
 
+RCT_EXTERN_METHOD(setAbTestID:(NSString *)value)
+RCT_EXTERN_METHOD(setCampaignMedium:(NSString *)value)
+RCT_EXTERN_METHOD(setCampaignName:(NSString *)value)
+RCT_EXTERN_METHOD(setCampaignSource:(NSString *)value)
+RCT_EXTERN_METHOD(setDataCenter:(NSString *)value)
+RCT_EXTERN_METHOD(setCustomCategory1:(NSString *)value)
+RCT_EXTERN_METHOD(setCustomCategory2:(NSString *)value)
+RCT_EXTERN_METHOD(setCustomCategory3:(NSString *)value)
+RCT_EXTERN_METHOD(setCustomCategory4:(NSString *)value)
+RCT_EXTERN_METHOD(setCustomCategory5:(NSString *)value)
+
 // method exposed for getting the js stack
 RCT_EXTERN_METHOD(trackJsError:(NSString *)stack)
 

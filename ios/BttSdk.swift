@@ -304,52 +304,52 @@ class BttSdk: NSObject {
     }
 
     @objc
-    func setAbTestID(_ value : String){
+    func setAbTestID(_ value : String?){
         BlueTriangle.setAbTestID(value)
     }
 
     @objc
-    func setDataCenter(_ value : String){
+    func setDataCenter(_ value : String?){
         BlueTriangle.setDataCenter(value)
     }
 
     @objc
-    func setCampaignName(_ value : String){
+    func setCampaignName(_ value : String?){
         BlueTriangle.setCampaignName(value)
     }
 
     @objc
-    func setCampaignMedium(_ value : String){
+    func setCampaignMedium(_ value : String?){
         BlueTriangle.setCampaignMedium(value)
     }
 
     @objc
-    func setCampaignSource(_ value : String){
+    func setCampaignSource(_ value : String?){
         BlueTriangle.setCampaignSource(value)
     }
 
     @objc
-    func setCustomCategory1(_ value : String){
+    func setCustomCategory1(_ value : String?){
         BlueTriangle.setCustomCategory1(value)
     }
 
     @objc
-    func setCustomCategory2(_ value : String){
+    func setCustomCategory2(_ value : String?){
         BlueTriangle.setCustomCategory2(value)
     }
 
     @objc
-    func setCustomCategory3(_ value : String){
+    func setCustomCategory3(_ value : String?){
         BlueTriangle.setCustomCategory3(value)
     }
 
     @objc
-    func setCustomCategory4(_ value : String){
+    func setCustomCategory4(_ value : String?){
         BlueTriangle.setCustomCategory4(value)
     }
 
      @objc
-    func setCustomCategory5(_ value : String){
+    func setCustomCategory5(_ value : String?){
         BlueTriangle.setCustomCategory5(value)
     }
 
