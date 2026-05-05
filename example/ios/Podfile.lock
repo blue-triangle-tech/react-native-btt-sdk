@@ -1,5 +1,5 @@
 PODS:
-  - BlueTriangleSDK-Swift (3.15.10)
+  - BlueTriangleSDK-Swift (3.15.11)
   - boost (1.84.0)
   - DoubleConversion (1.1.6)
   - fast_float (6.1.4)
@@ -1239,8 +1239,8 @@ PODS:
     - React-jsiexecutor
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
-  - react-native-btt-sdk (0.4.2):
-    - BlueTriangleSDK-Swift (= 3.15.10)
+  - react-native-btt-sdk (1.0.1):
+    - BlueTriangleSDK-Swift (= 3.15.11)
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2052,7 +2052,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  BlueTriangleSDK-Swift: 0194e77cd811ca408f55ba5f7f643806802e0737
+  BlueTriangleSDK-Swift: 4f56f2521008dc7ce110e5c9359a420fdf4915ad
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
@@ -2090,7 +2090,7 @@ SPEC CHECKSUMS:
   React-logger: 763728cf4eebc9c5dc9bfc3649e22295784f69f3
   React-Mapbuffer: 63278529b5cf531a7eaf8fc71244fabb062ca90c
   React-microtasksnativemodule: 6a39463c32ce831c4c2aa8469273114d894b6be9
-  react-native-btt-sdk: 2a35a3f2f4d8fb588d56ea252752f4bce80bcb4a
+  react-native-btt-sdk: fad3fd2b815217856626aebbc9c1e4655e5a76ab
   react-native-safe-area-context: afcc2e2b3e78ae8ef90d81e658aacee34ebc27ea
   React-NativeModulesApple: fd0545efbb7f936f78edd15a6564a72d2c34bb32
   React-perflogger: 5f8fa36a8e168fb355efe72099efe77213bc2ac6
