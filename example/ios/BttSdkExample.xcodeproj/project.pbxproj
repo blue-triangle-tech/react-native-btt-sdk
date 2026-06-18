@@ -38,7 +38,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = BttSdkExample/main.m; sourceTree = "<group>"; };
 		2978F06AC808E27E340AA5BE /* libPods-BttSdkExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BttSdkExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FB1F19757AB03FA67228067 /* Pods-BttSdkExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BttSdkExample.release.xcconfig"; path = "Target Support Files/Pods-BttSdkExample/Pods-BttSdkExample.release.xcconfig"; sourceTree = "<group>"; };
-		302D93D82B76AC76ABBBAEAD /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = BttSdkExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		302D93D82B76AC76ABBBAEAD /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = BttSdkExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		43FCE134D8199F00A91AB76B /* Pods-BttSdkExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BttSdkExample.debug.xcconfig"; path = "Target Support Files/Pods-BttSdkExample/Pods-BttSdkExample.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = BttSdkExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -421,6 +421,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RFX6NF2RC6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = BttSdkExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -449,6 +450,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RFX6NF2RC6;
 				INFOPLIST_FILE = BttSdkExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (

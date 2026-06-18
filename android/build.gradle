@@ -99,7 +99,7 @@ dependencies {
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-  implementation ('com.github.blue-triangle-tech.btt-android-sdk:btt-android-sdk:2.19.4') {
+  implementation ('com.github.blue-triangle-tech.btt-android-sdk:btt-android-sdk:2.19.5') {
     exclude(group: "androidx.compose.ui")
     exclude(group: "androidx.compose.foundation")
   }
