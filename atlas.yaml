@@ -1,0 +1,18 @@
+# Repo Atlas application manifest. repository.slug is the GitHub repository name.
+schema_version: "1.0"
+
+repository:
+  slug: react-native-btt-sdk
+  display_name: React Native SDK
+
+applications:
+  - id: react-native-sdk
+    path: "."
+    name: Blue Triangle React Native SDK
+    kind: other
+    purpose: Client library published as @bluetriangle/react-native-btt-sdk. It tracks performance and network timings inside React Native apps. This repository does not deploy a service.
+    lifecycle: production
+    entrypoint: src
+    runbook:
+      url: https://github.com/blue-triangle-tech/react-native-btt-sdk/blob/master/README.md
+      path: README.md
