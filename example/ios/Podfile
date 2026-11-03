@@ -14,8 +14,12 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+load File.join(__dir__, '../../react-native-btt-sdk.podspec')
+
 target 'BttSdkExample' do
   config = use_native_modules!
+
+  pod 'BlueTriangleSDK-Swift', :git => BTT_SWIFT_GIT_URL, :tag => BTT_SWIFT_VERSION
 
   use_react_native!(
     :path => config[:reactNativePath],
