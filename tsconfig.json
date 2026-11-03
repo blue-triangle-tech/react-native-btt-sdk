@@ -1,4 +1,4 @@
-pod {
+{
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
