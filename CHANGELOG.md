@@ -2,7 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.4.1] Blue Triangle - Latest
+## [1.1.0] Blue Triangle - Latest
+- Updated native SDKs: iOS BlueTriangleSDK-Swift 3.16.0, Android btt-android-sdk 2.20.0.
+- Fixed custom network tracking host and domain extraction issue from network URLs
+- iOS (React Native 0.75+): native SDK is pulled directly from GitHub via Swift Package Manager and (React Native < 0.75): native SDK is resolved from CocoaPods.
+
+## [0.4.1] Blue Triangle July 29 2026
 - Added support for tracking Crashes appearing in Javascript.
 - Fixed Launch time issue in Android
 - Changed Traffic Segment name and Page type to "ScreenTracker" for Automatic Screen Tracking payloads
