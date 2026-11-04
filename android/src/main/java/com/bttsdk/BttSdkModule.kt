@@ -195,6 +195,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         // create a captured request object
         val capturedRequest = CapturedRequest()
         capturedRequest.url = networkUrl
+        capturedRequest.method = requestMethod
 
         val networkTrackerID: String = generateRandomString(10)
         this.networkTrackerMap?.put(networkTrackerID, capturedRequest)

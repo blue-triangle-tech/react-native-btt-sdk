@@ -151,11 +151,11 @@ class BttSdk: NSObject {
         }
 
         if automated {
-            let screenTracker = BTTScreenTracker(page)
+            let screenTracker = BTTScreenTracker(page, type: ScreenType.ReactNative)
             screenTrackerDict[pageId] = screenTracker
             return screenTracker
         } else {
-            let screenTracker = BTTScreenTracker(page)
+            let screenTracker = BTTScreenTracker(page, type: ScreenType.ReactNative)
             screenTrackerDict[pageId] = screenTracker
             return screenTracker
         }
@@ -359,6 +359,6 @@ class BttSdk: NSObject {
             let description: String
         }
         let error = JsStackError(description: stack)
-        BlueTriangle.logError(error)
+        BlueTriangle.logError(error, isFatal: true)
     }
 }
