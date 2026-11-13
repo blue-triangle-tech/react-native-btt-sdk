@@ -1,69 +1,55 @@
 import BttSdk from './BttSdk';
+import BTTStackTraceFormatter from './BTTStackTraceFormatter';
+import Logger from './Logger';
 
+type GlobalErrorHandler = (error: any, isFatal?: boolean) => void;
+
+/**
+ * Captures JS errors and reports them through the native Blue Triangle SDKs.
+ *
+ * JS global errors are reported as fatal or non-fatal.
+ * Fatal / non-fatal sampling is applied by the native SDKs.
+ */
 class BTTCrashTracker {
+  private static isInitialized = false;
+
   static init() {
-    const prevError = ErrorUtils.getGlobalHandler?.();
+    if (BTTCrashTracker.isInitialized) {
+      return;
+    }
+    BTTCrashTracker.isInitialized = true;
+
+    BTTCrashTracker.trackGlobalErrors();
+  }
+
+  // MARK: - Global JS errors
+
+  private static trackGlobalErrors() {
+    const previousHandler: GlobalErrorHandler | undefined =
+      ErrorUtils.getGlobalHandler?.();
 
     ErrorUtils.setGlobalHandler((error: any, isFatal?: boolean) => {
-      const errorPayload = {
-        message: error.message,
-        stack: error.stack,
-        isFatal: isFatal,
-        timestamp: Date.now().toString(),
-      };
+      BTTCrashTracker.report(error, isFatal === true);
 
-      console.log('JS Error Captured by BTTCrashTracker:', errorPayload.stack);
-
-      // console.log(error.stack);
-      let result = BTTCrashTracker.exceptionToStacktrace(error.message, error);
-      console.log(result);
-      // passing the result to sdk
-      BttSdk.trackJsError(result);
-
-      // Call previous handler to preserve default behavior
-      if (typeof prevError === 'function') {
-        prevError(error, isFatal);
-      } else {
-        console.log('Failed to capture Error!');
-      }
+      // Preserve default behavior (red box / app termination)
+      previousHandler?.(error, isFatal);
     });
   }
 
-  private static exceptionToStacktrace(message: string, error: any) {
-    const resultLines = [];
-    const rawStack = new String(error?.stack);
-    const lines = rawStack
-      .split(/\r?\n/) // splits on newline
-      .map((line) => line.trim()) // removes starting and ending spaces from each line
-      .filter(Boolean); // removes empty lines
+  // MARK: - Reporting
 
-    // checks if error is availble , and if available then its not duplicate, then only push
-    if (message && message !== error?.message) {
-      resultLines.push(message + '~~');
+  private static report(error: unknown, isFatal: boolean) {
+    try {
+      const { title, stackTrace } = BTTStackTraceFormatter.format(error);
+      Logger.instance.log(
+        `BTTCrashTracker: ${isFatal ? 'Fatal' : 'Non-fatal'} JS error: ${title}`
+      );
+      BttSdk.trackJsError(title, stackTrace, isFatal);
+    } catch (e) {
+      // Crash reporting must never break the app's own error handling.
+      Logger.instance.log(`BTTCrashTracker: Failed to report JS error: ${e}`);
     }
-
-    // this checks if the error.message avaialble, and then only push to the stack trace
-
-    if (
-      error?.message &&
-      error.message.trim() !== '' &&
-      !lines[0]?.includes(error.message)
-    ) {
-      resultLines.push(error.message.trim() + '~~');
-    }
-
-    // this loops through each line of the stack trace and adds ~ at end of every line
-
-    lines.forEach((line, index) => {
-      if (index === lines.length - 1) {
-        resultLines.push(line); // last line: no separator
-      } else {
-        resultLines.push(line + '~~');
-      }
-    });
-
-    // joins all the elements in the resultLines into single string
-    return resultLines.join('');
   }
 }
+
 export default BTTCrashTracker;

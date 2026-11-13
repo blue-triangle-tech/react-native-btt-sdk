@@ -46,7 +46,9 @@ RCT_EXTERN_METHOD(setCustomCategory4:(NSString *)value)
 RCT_EXTERN_METHOD(setCustomCategory5:(NSString *)value)
 
 // method exposed for getting the js stack
-RCT_EXTERN_METHOD(trackJsError:(NSString *)stack)
+RCT_EXTERN_METHOD(trackJsError:(NSString *)title
+                  stackTrace:(NSString *)stackTrace
+                  isFatal:(BOOL)isFatal)
 
 + (BOOL)requiresMainQueueSetup
 {

@@ -4,6 +4,10 @@ import BTTDM from './BTTDM';
 import BttSdk from './BttSdk';
 import Logger from './Logger';
 import BTTCrashTracker from './BTTCrashTracker';
+import packageJson from '../package.json';
+
+// Identifies React Native traffic in the native SDKs (User-Agent, payload sdkId / sdkVersion).
+const SDK_ID = 'btt-react-native-sdk';
 
 class BTTConfiguration {
   static async configure(siteId: String, bttOptions: BTTOptions) {
@@ -22,6 +26,8 @@ class BTTConfiguration {
       cacheMemoryLimit: bttOptions.cacheMemoryLimit,
       cacheExpiryDuration: bttOptions.cacheExpiryDuration,
       crashLevel: bttOptions.crashLevel.toString(),
+      sdkId: SDK_ID,
+      sdkVersion: packageJson.version,
     };
     setUpInterceptors();
     const sessionId = await BttSdk.bttConfigure(dictionary);

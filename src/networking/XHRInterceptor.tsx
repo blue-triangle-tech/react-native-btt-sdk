@@ -19,6 +19,17 @@ type HeaderReceivedCallback =
       request?: XMLHttpRequest
     ) => void)
   | undefined;
+/**
+ * Why a request finished without a response.
+ * - error:   network failure (no connectivity, DNS, TLS, connection reset, ...)
+ * - timeout: request exceeded `xhr.timeout`
+ * - abort:   request cancelled by the app (`xhr.abort()` / AbortController)
+ */
+export type NetworkFailure = {
+  type: 'error' | 'timeout' | 'abort';
+  message: string;
+};
+
 type ResponseCallback =
   | ((
       status: number,
@@ -26,7 +37,8 @@ type ResponseCallback =
       response: any,
       responseURL: string,
       responseType: XMLHttpRequestResponseType,
-      request: XMLHttpRequest
+      request: XMLHttpRequest,
+      failure?: NetworkFailure
     ) => void)
   | undefined;
 
@@ -45,6 +57,24 @@ var isInterceptorEnabled = false;
  * This supports interception with XMLHttpRequest API, including Fetch API
  * and any other third party libraries that depend on XMLHttpRequest.
  */
+/**
+ * On failure React Native stores the native error description in the
+ * response text (e.g. "The Internet connection appears to be offline.").
+ */
+const errorMessageOf = (request: XMLHttpRequest): string => {
+  try {
+    if (request.responseType === '' || request.responseType === 'text') {
+      const text = request.responseText;
+      if (typeof text === 'string' && text.trim() !== '') {
+        return text.trim();
+      }
+    }
+  } catch {
+    // responseText is not readable for this response type
+  }
+  return 'Network request failed.';
+};
+
 const XHRInterceptor = {
   /**
    * Invoked before XMLHttpRequest.open(...) is called.
@@ -68,7 +98,8 @@ const XHRInterceptor = {
   },
 
   /**
-   * Invoked after xhr's readyState becomes xhr.DONE.
+   * Invoked once the request has finished (`loadend`), after any
+   * `error` / `timeout` / `abort` event, so `failure` is known.
    */
   setResponseCallback(callback: ResponseCallback) {
     responseCallback = callback;
@@ -138,18 +169,33 @@ const XHRInterceptor = {
               );
             }
           }
-          if (this.readyState === this.DONE) {
-            if (responseCallback) {
-              responseCallback(
-                this.status,
-                this.timeout,
-                this.response,
-                this.responseURL,
-                this.responseType,
-                this
-              );
-            }
+        });
+
+        // `loadend` fires after `load` / `error` / `timeout` / `abort`,
+        // so the failure reason is known when the response is reported.
+        let failure: NetworkFailure | undefined;
+        this.addEventListener('error', () => {
+          failure = { type: 'error', message: errorMessageOf(this) };
+        });
+        this.addEventListener('timeout', () => {
+          failure = { type: 'timeout', message: 'The request timed out.' };
+        });
+        this.addEventListener('abort', () => {
+          failure = { type: 'abort', message: 'The request was aborted.' };
+        });
+        this.addEventListener('loadend', () => {
+          if (!isInterceptorEnabled || !responseCallback) {
+            return;
           }
+          responseCallback(
+            this.status,
+            this.timeout,
+            failure ? undefined : this.response,
+            this.responseURL,
+            this.responseType,
+            this,
+            failure
+          );
         });
       }
       originalXHRSend.apply(this, [data]);

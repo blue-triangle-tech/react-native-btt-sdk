@@ -31,6 +31,21 @@ The Blue Triangle SDK for React Native enables application owners to track their
 - Network Type
 - Custom Variables
 
+## Requirements
+
+| Platform     | Minimum version |
+| ------------ | --------------- |
+| React Native | 0.75            |
+| iOS          | 15.0            |
+| Android      | API 21          |
+
+On iOS, the native Blue Triangle SDK is added through **Swift Package Manager** by React Native's
+`spm_dependency` helper (available from React Native 0.75). No change to your `Podfile` is needed;
+`pod install` resolves the package automatically. React Native versions below 0.75 are not supported.
+
+> **Note:** If you are using Xcode 15 or earlier, close and reopen the Xcode workspace after `pod install`
+> so the Swift package is resolved.
+
 ## Mandatory Installation Steps
 
 ### SDK Installation

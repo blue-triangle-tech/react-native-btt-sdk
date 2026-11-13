@@ -1,11 +1,25 @@
 require "json"
 
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
-folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
 
+# Native iOS SDK (btt-swift-sdk), resolved through Swift Package Manager.
+# An app can pin a different version by defining these constants in its Podfile
+# before `use_native_modules!`.
 unless defined?(BTT_SWIFT_GIT_URL)
   BTT_SWIFT_GIT_URL = "https://github.com/blue-triangle-tech/btt-swift-sdk.git"
   BTT_SWIFT_VERSION = "3.16.0"
+end
+
+# `spm_dependency` and `install_modules_dependencies` are provided by React Native's
+# `react_native_pods.rb`. `spm_dependency` was added in React Native 0.75, which is the
+# minimum version this SDK supports (CocoaPods trunk is no longer used for btt-swift-sdk).
+unless respond_to?(:spm_dependency, true) && respond_to?(:install_modules_dependencies, true)
+  raise Pod::Informative, <<~MSG
+    [react-native-btt-sdk] React Native 0.75 or newer is required.
+    The Blue Triangle iOS SDK is integrated through Swift Package Manager using React Native's
+    `spm_dependency` helper, which is not available in this React Native version.
+    Please upgrade React Native to 0.75 or newer.
+  MSG
 end
 
 Pod::Spec.new do |s|
@@ -17,43 +31,16 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => "15.0" }
-  s.source       = { :git => "https://github.com/JP-aloha/react-native-btt-sdk.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/blue-triangle-tech/react-native-btt-sdk.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
-  # Native iOS SDK (btt-swift-sdk):
-  #  - React Native >= 0.75: taken directly from git via Swift Package Manager (spm_dependency helper).
-  #  - React Native <  0.75: CocoaPods dependency (BlueTriangleSDK-Swift from CocoaPods trunk).
-  if respond_to?(:spm_dependency, true)
-    spm_dependency(s,
-      url: BTT_SWIFT_GIT_URL,
-      requirement: { kind: "exactVersion", version: BTT_SWIFT_VERSION },
-      products: ["BlueTriangle"]
-    )
-  else
-    s.dependency "BlueTriangleSDK-Swift", BTT_SWIFT_VERSION
-  end
+  spm_dependency(s,
+    url: BTT_SWIFT_GIT_URL,
+    requirement: { kind: "exactVersion", version: BTT_SWIFT_VERSION },
+    products: ["BlueTriangle"]
+  )
 
-  # Use install_modules_dependencies helper to install the dependencies if React Native version >=0.71.0.
-  # See https://github.com/facebook/react-native/blob/febf6b7f33fdb4904669f99d795eba4c0f95d7bf/scripts/cocoapods/new_architecture.rb#L79.
-  if respond_to?(:install_modules_dependencies, true)
-    install_modules_dependencies(s)
-  else
-  s.dependency "React-Core"
-
-  # Don't install the dependencies when we run `pod install` in the old architecture.
-  if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
-    s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"
-    s.pod_target_xcconfig    = {
-        "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
-        "OTHER_CPLUSPLUSFLAGS" => "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-        "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
-    }
-    s.dependency "React-Codegen"
-    s.dependency "RCT-Folly"
-    s.dependency "RCTRequired"
-    s.dependency "RCTTypeSafety"
-    s.dependency "ReactCommon/turbomodule/core"
-   end
-  end    
+  # Adds React-Core and, when the New Architecture is enabled, the codegen / TurboModule dependencies.
+  install_modules_dependencies(s)
 end

@@ -12,6 +12,13 @@ class BttSdk: NSObject {
     func bttConfigure(_ dictionary: [String: Any], resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) {
         
         debugPrint(" configure Dictionary Print Here")
+        // Must be set before configure: used in the User-Agent, config URL and payloads.
+        if let sdkId = dictionary["sdkId"] as? String, !sdkId.isEmpty {
+            BlueTriangle.sdkId = sdkId
+        }
+        if let sdkVersion = dictionary["sdkVersion"] as? String, !sdkVersion.isEmpty {
+            BlueTriangle.sdkVersion = sdkVersion
+        }
         BlueTriangle.configure { config in
             
             if let siteID = dictionary["btt_site_id"] as? String {
@@ -54,7 +61,7 @@ class BttSdk: NSObject {
             if let networkState = dictionary["trackNetworkState"] as? Bool {
                 config.enableTrackingNetworkState = networkState
             }
-            config.ignoreViewControllers = ["RNSScreen", "UIViewController"]
+            config.ignoreViewControllers = ["RNSScreen", "UIViewController", "RCTViewComponentView", "RCTView", "RCTTextView"]
             
             if let anrWarningTimeInterval = dictionary["trackAnrIntervalSec"] as? Double  {
                 config.ANRWarningTimeInterval = anrWarningTimeInterval //config.ANRWarningTimeInterval = 1
@@ -266,7 +273,14 @@ class BttSdk: NSObject {
                 
                 print("networkTrackerSubmit:statusCode: \(statusCode) bodyLength:\(bodyLength) requestType:\(requestType)")
                 
-                tracker.submit(Int64(statusCode), responseBodyLength: Int64(bodyLength) ?? 0, contentType: requestType)
+                if let errorMessage = dictionary["errorMessage"] as? String {
+                    // Request failed without a response: captured with status 600 (networkSampleRate) and
+                    // reported as a network error by NetworkErrorWatchDog (nonFatalErrorSampleRate).
+                    let error = NSError(domain: "ReactNativeNetworkError", code: NSURLErrorUnknown, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+                    tracker.failled(error)
+                } else {
+                    tracker.submit(Int64(statusCode), responseBodyLength: Int64(bodyLength) ?? 0, contentType: requestType)
+                }
                 networkTrackerDict.removeValue(forKey: networkTrackerID)
             }
         }
@@ -353,12 +367,18 @@ class BttSdk: NSObject {
         BlueTriangle.setCustomCategory5(value)
     }
 
+    /// Reports a JS error captured by BTTCrashTracker.
+    /// - Parameters:
+    ///   - title: "<Name>: <message>~~<culprit frame>", sent as the error message.
+    ///   - stackTrace: Structured JSON stack trace ({"meta":{"fVersion"},"threads":[...]}), sent as `NATIVEAPP.stackTrace`.
+    ///   - isFatal: `true` persists the error and reports it on next launch (like a native crash),
+    ///     `false` uploads it immediately as a non-fatal error.
     @objc
-    func trackJsError(_ stack: String) {
-        struct JsStackError: Error, CustomStringConvertible {
+    func trackJsError(_ title: String, stackTrace: String?, isFatal: Bool) {
+        struct JsError: Error, CustomStringConvertible {
             let description: String
         }
-        let error = JsStackError(description: stack)
-        BlueTriangle.logError(error, isFatal: true)
+        let trace = (stackTrace?.isEmpty ?? true) ? nil : stackTrace
+        BlueTriangle.logError(JsError(description: title), isFatal: isFatal, stackTrace: trace)
     }
 }

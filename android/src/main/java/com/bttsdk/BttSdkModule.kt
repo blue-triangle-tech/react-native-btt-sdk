@@ -9,6 +9,7 @@ import android.util.Log
 import com.bluetriangle.analytics.BlueTriangleConfiguration
 import com.bluetriangle.analytics.Timer
 import com.bluetriangle.analytics.Tracker
+import com.bluetriangle.analytics.event.CrashSource
 import com.bluetriangle.analytics.networkcapture.CapturedRequest
 import com.bluetriangle.analytics.networkcapture.RequestType
 import com.facebook.react.bridge.Arguments
@@ -50,6 +51,12 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
         if (sessionID?.isNotEmpty() == true) {
             config.sessionId = sessionID
+        }
+        // Must be set before init: used in the User-Agent, config URL and payloads.
+        val sdkId = dictionary.getString("sdkId")
+        val sdkVersion = dictionary.getString("sdkVersion")
+        if (!sdkId.isNullOrEmpty() && !sdkVersion.isNullOrEmpty()) {
+            Tracker.setSdkInfo(Tracker.SdkInfo(sdkVersion = sdkVersion, sdkId = sdkId))
         }
         Tracker.init(reactApplicationContext.applicationContext as Application, config)
         Log.d("BlueTriangle", "Logger" + config.logger)
@@ -243,6 +250,19 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         Tracker.instance?.configuration?.logger?.debug("Android :: submitCapturedRequest.")
         networkTrackerMap.remove(networkTrackerID)
 
+        // Network error: no response (600) or HTTP error status, same rule as the native OkHttp tracking.
+        // Sampling (nonFatalErrorSampleRate) and enablement are applied inside reportNetworkError.
+        val errorMessage = if (dictionary.hasKey("errorMessage")) dictionary.getString("errorMessage") else null
+        if (errorMessage != null || responseStatusCode >= 400) {
+            Tracker.instance?.reportNetworkError(
+                url = capturedRequest.url ?: "",
+                method = capturedRequest.method ?: "",
+                statusCode = responseStatusCode,
+                statusText = errorMessage,
+                source = CrashSource.ReactFetch
+            )
+        }
+
     }
 
     @ReactMethod
@@ -337,9 +357,10 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         Tracker.instance?.setCustomCategory5(value)
     }
 
+
     @ReactMethod
-    fun trackJsError(stack: String) {
-        Tracker.instance?.configuration?.logger?.error("JS_STACK_TRACE : $stack")
-        Tracker.instance?.trackError(stack)
+    fun trackJsError(title: String, stackTrace: String?, isFatal: Boolean) {
+        Tracker.instance?.configuration?.logger?.error("JS_ERROR (fatal: $isFatal) : $title")
+        Tracker.instance?.trackError(title, stackTrace?.takeIf { it.isNotBlank() })
     }
 }
