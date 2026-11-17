@@ -1,5 +1,6 @@
 import { AppState } from 'react-native';
 import BTTScreenTracker from './BTTScreenTracker';
+import BTTRemoteConfig from './BTTRemoteConfig';
 
 let trackerName = '';
 let trackerID = '';
@@ -18,6 +19,9 @@ class BTTNavigationContainerTracker {
   private static isListenerAttached: Boolean = false
 
   static applicationDidEnterBackground(navigationRef: NavigationRef) {
+    // Automatic screen tracking disabled by the native SDK's configuration.
+    if (!BTTRemoteConfig.enableScreenTracking()) return;
+
     const route = navigationRef?.getCurrentRoute?.();
 
     if (!route) return;
@@ -31,6 +35,9 @@ class BTTNavigationContainerTracker {
   }
   
   static onContainerStateChange(navigationRef: NavigationRef) {
+    // Automatic screen tracking disabled by the native SDK's configuration.
+    if (!BTTRemoteConfig.enableScreenTracking()) return;
+
     const route = navigationRef?.getCurrentRoute?.();
 
     if (!route) return;

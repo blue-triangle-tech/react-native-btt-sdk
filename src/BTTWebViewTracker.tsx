@@ -1,13 +1,14 @@
 import packageJson from '../package.json';
 import BTTDM from './BTTDM';
+import BTTRemoteConfig from './BTTRemoteConfig';
 import Logger from './Logger';
 
 class BTTWebViewTracker {
   static injectSession() {
     const sessionId: string | undefined = BTTDM.instance.sessionID;
     const version: string = packageJson.version;
-    const networkSampleRate = BTTDM.instance.bttOptions?.networkSampleRate;
-    const networkCaptureEnabled = networkSampleRate === 0 ? 'on' : 'off';
+    const networkCaptureEnabled =
+      BTTRemoteConfig.shouldNetworkCapture() ? 'on' : 'off';
     const sdkVersion = 'iOS_' + version + '';
 
     const expirationTime = new Date(new Date().getTime() + 1800000);

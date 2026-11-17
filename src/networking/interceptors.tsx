@@ -1,5 +1,6 @@
 import BTTHTTPTracker from './BTTHTTPTracker';
 import XHRInterceptor from './XHRInterceptor';
+import BTTRemoteConfig from '../BTTRemoteConfig';
 
 type RequestState = {
   method: string;
@@ -21,7 +22,8 @@ const setUpXMLHTTPRequestInterceptor = () => {
 
   XHRInterceptor.setSendCallback((data, request) => {
     const state = request && requests.get(request);
-    if (!state) {
+    // Session not sampled for network capture: never start a native tracker.
+    if (!state || !BTTRemoteConfig.shouldNetworkCapture()) {
       return;
     }
     try {

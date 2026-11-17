@@ -18,6 +18,8 @@ RCT_EXTERN_METHOD(viewStart:(NSString *)page
                   pageId:(NSString *)pageId)
 RCT_EXTERN_METHOD(viewingEnd:(NSString *)page
                   pageId:(NSString *)pageId)
+RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(getShouldNetworkCapture)
+RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(getEnableScreenTracking)
 RCT_EXTERN_METHOD(getSessionId:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 

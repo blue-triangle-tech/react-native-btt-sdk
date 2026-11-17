@@ -7,6 +7,8 @@ import com.facebook.react.bridge.Promise
 import android.app.Application
 import android.util.Log
 import com.bluetriangle.analytics.BlueTriangleConfiguration
+import com.bluetriangle.analytics.IConfigListener
+import com.bluetriangle.analytics.SdkConfiguration
 import com.bluetriangle.analytics.Timer
 import com.bluetriangle.analytics.Tracker
 import com.bluetriangle.analytics.event.CrashSource
@@ -58,6 +60,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         if (!sdkId.isNullOrEmpty() && !sdkVersion.isNullOrEmpty()) {
             Tracker.setSdkInfo(Tracker.SdkInfo(sdkVersion = sdkVersion, sdkId = sdkId))
         }
+        RemoteConfig.start()
         Tracker.init(reactApplicationContext.applicationContext as Application, config)
         Log.d("BlueTriangle", "Logger" + config.logger)
         config.logger?.debug("configure")
@@ -146,6 +149,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun loadStarted(page: String, pageId: String) {
+        if (!RemoteConfig.enableScreenTracking) return
         val tracker: BTTScreenTracker? = getScreenTracker(page, pageId, true)
         tracker?.onLoadStarted()
         Tracker.instance?.configuration?.logger?.debug("Android :: loadStarted.")
@@ -154,6 +158,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun loadFinish(page: String, pageId: String) {
+        if (!RemoteConfig.enableScreenTracking) return
         val tracker: BTTScreenTracker? = getScreenTracker(page, pageId, true)
         tracker?.onLoadEnded()
         Tracker.instance?.configuration?.logger?.debug("Android :: loadFinish.")
@@ -162,6 +167,7 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun viewStart(page: String, pageId: String) {
+        if (!RemoteConfig.enableScreenTracking) return
         val tracker: BTTScreenTracker? = getScreenTracker(page, pageId, true)
         tracker?.onViewStarted()
         Tracker.instance?.configuration?.logger?.debug("Android :: viewStart." + tracker)
@@ -169,8 +175,10 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun viewingEnd(page: String, pageId: String) {
-        val tracker: BTTScreenTracker? = getScreenTracker(page, pageId, true)
-        tracker?.onViewEnded()
+        // Only end a screen that was started; never create a tracker just to end it
+        // (its view was skipped while screen tracking was disabled).
+        val tracker: BTTScreenTracker = screenTrackerMap[pageId] ?: return
+        tracker.onViewEnded()
         Tracker.instance?.configuration?.logger?.debug("Android :: viewingEnd." + tracker)
         screenTrackerMap.remove(pageId)
     }
@@ -363,4 +371,48 @@ class BttSdkModule(reactContext: ReactApplicationContext) :
         Tracker.instance?.configuration?.logger?.error("JS_ERROR (fatal: $isFatal) : $title")
         Tracker.instance?.trackError(title, stackTrace?.takeIf { it.isNotBlank() })
     }
+
+    // region Remote config
+    //
+    // Configuration the native SDK applies for the current session (remote config + per-session
+    // sampling), delivered through IConfigListener.onConfigurationChanged. All remote-config
+    // decisions in the bridge read from here, so new fields only need an accessor in this section.
+
+    /** Per-session network capture decision made by the native SDK (sampling + remote config). */
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    fun getShouldNetworkCapture(): Boolean = RemoteConfig.shouldNetworkCapture
+
+    /** Automatic screen tracking enabled by the native SDK's applied configuration. */
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    fun getEnableScreenTracking(): Boolean = RemoteConfig.enableScreenTracking
+
+    private object RemoteConfig : IConfigListener {
+
+        /** Null until the native SDK applies its first configuration. */
+        @Volatile
+        private var configuration: SdkConfiguration? = null
+
+        /** Starts listening. Must be called before `Tracker.init` so the first configuration is received. */
+        fun start() {
+            Tracker.setConfigurationListener(this)
+        }
+
+        override fun onConfigurationChanged(config: SdkConfiguration) {
+            configuration = config
+            Log.d("BttSdk", "remote config updated: $config")
+        }
+
+        // Values (defaults apply until the first configuration arrives)
+
+        val enableScreenTracking: Boolean
+            get() = configuration?.enableScreenTracking ?: true
+
+        // UNRELEASED: SdkConfiguration.shouldNetworkCapture arrives in btt-android-sdk 2.20.1, so it's
+        // commented out to keep this compiling with the live 2.20.0. Uncomment when testing with the
+        // local SDK and once 2.20.1 is released.
+        val shouldNetworkCapture: Boolean
+            get() = /* UNRELEASED: configuration?.shouldNetworkCapture ?: */ true
+    }
+
+    // endregion
 }

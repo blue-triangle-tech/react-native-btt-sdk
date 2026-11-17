@@ -86,6 +86,7 @@ class BttSdk: NSObject {
         // Process the dictionary as needed
         // For example, log its contents
         print("Received dictionary: \(dictionary)")
+        BttSdk.startRemoteConfig()
         let sessionID = BlueTriangle.sessionID
         resolve(String(sessionID))
     }
@@ -171,6 +172,7 @@ class BttSdk: NSObject {
     @objc
     func loadStarted(_ page : String, pageId : String){
         print("loadStarted")
+        guard BttSdk.enableScreenTracking else { return }
         let screenTracker:BTTScreenTracker = self.getScreenTracker(page, pageId: pageId)
         screenTracker.loadStarted()
     }
@@ -178,6 +180,7 @@ class BttSdk: NSObject {
     @objc
     func loadFinish(_ page : String, pageId : String){
         print("loadFinish")
+        guard BttSdk.enableScreenTracking else { return }
         let screenTracker:BTTScreenTracker = self.getScreenTracker(page, pageId: pageId)
         screenTracker.loadEnded()
     }
@@ -185,6 +188,7 @@ class BttSdk: NSObject {
     @objc
     func viewStart(_ page : String, pageId : String){
         print("viewStart")
+        guard BttSdk.enableScreenTracking else { return }
 
         let screenTracker:BTTScreenTracker = self.getScreenTracker(page, pageId: pageId)
         screenTracker.viewStart()
@@ -193,8 +197,9 @@ class BttSdk: NSObject {
     @objc
     func viewingEnd(_ page : String, pageId : String){
         print("viewingEnd")
-
-        let screenTracker:BTTScreenTracker = self.getScreenTracker(page, pageId: pageId, automated: false)
+        // Only end a screen that was started; never create a tracker just to end it
+        // (its view was skipped while screen tracking was disabled).
+        guard let screenTracker = screenTrackerDict[pageId] else { return }
         screenTracker.viewingEnd()
         screenTrackerDict.removeValue(forKey: pageId)
     }
@@ -380,5 +385,63 @@ class BttSdk: NSObject {
         }
         let trace = (stackTrace?.isEmpty ?? true) ? nil : stackTrace
         BlueTriangle.logError(JsError(description: title), isFatal: isFatal, stackTrace: trace)
+    }
+}
+
+// MARK: - Remote config
+//
+// Configuration the native SDK applies for the current session (remote config + per-session
+// sampling), delivered through `BlueTriangle.onConfigurationChanged`. All remote-config decisions
+// in the bridge read from here, so new fields only need an accessor in this section.
+//
+// NOTE: `BlueTriangle.onConfigurationChanged` / `SdkConfiguration` are not in the live
+// btt-swift-sdk (3.16.0) yet, so the code using them is commented out (marked `UNRELEASED`) to
+// keep this compiling. Uncomment it when testing with the local SDK and once it's released;
+// until then every value returns its default.
+extension BttSdk {
+
+    private static let remoteConfigLock = NSLock()
+    /// Nil until the native SDK applies its first configuration.
+    // UNRELEASED: private static var remoteConfig: SdkConfiguration?
+
+    /// Starts listening. Called on every app launch / new session, and at once with the latest one.
+    static func startRemoteConfig() {
+        // UNRELEASED:
+        // BlueTriangle.onConfigurationChanged = { config in
+        //     remoteConfigLock.lock()
+        //     remoteConfig = config
+        //     remoteConfigLock.unlock()
+        //     print("BttSdk remote config updated: \(config)")
+        // }
+    }
+
+    // UNRELEASED:
+    // private static func remoteValue<T>(_ keyPath: KeyPath<SdkConfiguration, T>, default defaultValue: T) -> T {
+    //     remoteConfigLock.lock(); defer { remoteConfigLock.unlock() }
+    //     return remoteConfig?[keyPath: keyPath] ?? defaultValue
+    // }
+
+    // Values (defaults apply until the first configuration arrives)
+
+    static var enableScreenTracking: Bool {
+        // UNRELEASED: remoteValue(\.enableScreenTracking, default: true)
+        true
+    }
+
+    static var shouldNetworkCapture: Bool {
+        // UNRELEASED: remoteValue(\.shouldNetworkCapture, default: true)
+        true
+    }
+
+    /// Per-session network capture decision made by the native SDK (sampling + remote config).
+    @objc
+    func getShouldNetworkCapture() -> NSNumber {
+        NSNumber(value: BttSdk.shouldNetworkCapture)
+    }
+
+    /// Automatic screen tracking enabled by the native SDK's applied configuration.
+    @objc
+    func getEnableScreenTracking() -> NSNumber {
+        NSNumber(value: BttSdk.enableScreenTracking)
     }
 }
