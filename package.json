@@ -51,9 +51,9 @@
   "author": "BlueTriangle <support@bluetriangle.com> (https://bluetriangle.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/blue-triangle-tech/react-native-btt-sdk.git/issues"
+    "url": "https://github.com/blue-triangle-tech/react-native-btt-sdk/issues"
   },
-  "homepage": "https://github.com/blue-triangle-tech/react-native-btt-sdk.git",
+  "homepage": "https://github.com/blue-triangle-tech/react-native-btt-sdk#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
