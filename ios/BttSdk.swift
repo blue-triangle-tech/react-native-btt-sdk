@@ -97,20 +97,6 @@ class BttSdk: NSObject {
         resolve(String(sessionID))
     }
     
-    @objc func bttDefaultConfigure() {
-      debugPrint(" Print Here ")
-      // Configure BlueTriangle
-      BlueTriangle.configure { config in
-        config.siteID = "sdkdemo26621z"
-        config.enableDebugLogging = true
-        config.performanceMonitorSampleRate = 1
-        config.crashTracking  = .nsException
-        config.ANRMonitoring = true
-        config.ANRWarningTimeInterval = 1
-        config.enableScreenTracking = true
-      }
-    }
-    
     @objc(bttStartTimer:withResolver:withRejecter:)
     func bttStartTimer(_ pageDict: [String: Any], resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
          

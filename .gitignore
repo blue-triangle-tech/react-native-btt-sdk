@@ -85,6 +85,9 @@ package-lock.json
 .env.local
 .eslintcache
 
+# Example app site ID (copy example/btt.config.example.js)
+example/btt.config.js
+
 # Build Artifacts
 /build/
 /dist/
